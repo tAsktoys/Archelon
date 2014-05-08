@@ -35,5 +35,6 @@
     <bean name="indexController"
           class="org.springframework.web.servlet.mvc.ParameterizableViewController"
           p:viewName="index" />
-
+    <bean name="helloController" class="com.tasktoys.archelon.controller.HelloController" p:helloService-ref="helloService"/>
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
 </beans>
