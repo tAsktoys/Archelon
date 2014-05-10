@@ -1,19 +1,36 @@
+<%-- 
+    Document   : index
+    Author     : mikan
+--%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
-
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Welcome to Spring Web MVC project</title>
+        <title><spring:message code="app.name" /></title>
     </head>
-
     <body>
-        <p>Hello! This is the default welcome page for a Spring Web MVC project.</p>
-        <p><i>To display a different welcome page for this project, modify</i>
-            <tt>index.jsp</tt> <i>, or create your own welcome page then change
-                the redirection in</i> <tt>redirect.jsp</tt> <i>to point to the new
-                welcome page and also update the welcome-file setting in</i>
-            <tt>web.xml</tt>.</p>
+        <h1><spring:message code="app.name" /></h1>
+        <form action="" method="post">
+            <div>
+            <spring:message code="home.category1" />:
+            <select name="category1">
+                <option value="category1-a">Category 1-A</option>
+                <option value="category1-b">Category 1-B</option>
+                <option value="category1-c">Category 1-C</option>
+            </select>
+            </div>
+            <div>
+            <spring:message code="home.category2" />:
+            <select name="category2">
+                <option value="category2-a">Category 2-A</option>
+                <option value="category2-b">Category 2-B</option>
+                <option value="category2-c">Category 2-C</option>
+            </select>
+            </div>
+        </form>
+        <p><spring:message code="app.hello" /></p>
     </body>
 </html>

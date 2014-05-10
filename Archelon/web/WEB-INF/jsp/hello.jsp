@@ -1,5 +1,5 @@
 <%-- 
-    Document   : helloView
+    Document   : hello
     Created on : 2014/05/08, 22:29:24
     Author     : mikan
 --%>
