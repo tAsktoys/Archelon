@@ -19,6 +19,8 @@
     p:url="${jdbc.url}"
     p:username="${jdbc.username}"
     p:password="${jdbc.password}" /-->
+    
+    <import resource="locale.xml" />
 
     <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
     <bean name="helloService" class="com.tasktoys.archelon.service.HelloService" />
