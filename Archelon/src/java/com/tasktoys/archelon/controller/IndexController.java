@@ -3,7 +3,6 @@
  */
 package com.tasktoys.archelon.controller;
 
-import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
