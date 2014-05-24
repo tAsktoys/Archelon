@@ -137,6 +137,17 @@
         </form>
                     
                     <hr />
+                    
+        <h2><spring:message code="activity.names" /></h2>
+        <table border="1">
+            <tr><td>mikan が「私はだれでしょう？」という話題を作りました！</td></tr>
+            <tr><td>まりしが「who I am?」で発言しました！</td></tr>
+            <tr><td>ほげほげという話題がランキングにのりました！</td></tr>
+            <tr><td>ほげほげ！</td></tr>
+            <tr><td>ほげほげ！</td></tr>
+        </table>
+
+                    <hr />
 
         <p><spring:message code="app.copyright" /></p>
     </body>
