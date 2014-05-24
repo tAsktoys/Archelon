@@ -13,6 +13,18 @@
     </head>
     <body>
         <h1><spring:message code="app.name" /></h1>
+        
+        <hr />
+        
+        <!-- Seach form -->
+        <form action="" method="get">
+            <div style="text-align: right">
+                <input type="text" name="search" />
+                <input type="submit" value="Search" />
+            </div>
+        </form>
+        
+        <hr />
 
         <!-- Login form -->
         <form action="" method="post">
@@ -25,12 +37,17 @@
                 <input type="submit" value="Login" />
             </div>
         </form>
+                
+        <hr />
 
         <!-- Category selection -->
         <form action="" method="post">
             <div>
                 <spring:message code="category.category1" />:
                 <select name="category1">
+                    <option value="category1-all">
+                        <spring:message code="category.category1.all" />
+                    </option>
                     <option value="category1-a">Category 1-A</option>
                     <option value="category1-b">Category 1-B</option>
                     <option value="category1-c">Category 1-C</option>
@@ -39,12 +56,17 @@
             <div>
                 <spring:message code="category.category2" />:
                 <select name="category2">
+                    <option value="category2-all">
+                        <spring:message code="category.category2.all" />
+                    </option>
                     <option value="category2-a">Category 2-A</option>
                     <option value="category2-b">Category 2-B</option>
                     <option value="category2-c">Category 2-C</option>
                 </select>
             </div>
         </form>
+                    
+                    <hr />
 
         <!-- Table of discussions -->
         <h2><spring:message code="discussion.names" /></h2>
@@ -58,6 +80,8 @@
             <tr><td>2</td><td>私はだれでしょう？</td><td>mikan</td><td>2014/05/16 23:59</td></tr>
             <tr><td>1</td><td>Who am I?</td><td>mikan</td><td>2014/05/16 0:00</td></tr>
         </table>
+            
+            <hr />
 
         <!-- Create a discussion -->
         <h2><spring:message code="discussion.new" /></h2>
@@ -87,6 +111,9 @@
                         <div>
                 <spring:message code="category.category1" />:
                 <select name="category1">
+                    <option value="category1-all">
+                        <spring:message code="category.category1.all" />
+                    </option>
                     <option value="category1-a">Category 1-A</option>
                     <option value="category1-b">Category 1-B</option>
                     <option value="category1-c">Category 1-C</option>
@@ -95,6 +122,9 @@
             <div>
                 <spring:message code="category.category2" />:
                 <select name="category2">
+                    <option value="category2-all">
+                        <spring:message code="category.category2.all" />
+                    </option>
                     <option value="category2-a">Category 2-A</option>
                     <option value="category2-b">Category 2-B</option>
                     <option value="category2-c">Category 2-C</option>
@@ -105,6 +135,8 @@
             </table>
             <input type="submit" value="Confirm" />
         </form>
+                    
+                    <hr />
 
         <p><spring:message code="app.copyright" /></p>
     </body>
