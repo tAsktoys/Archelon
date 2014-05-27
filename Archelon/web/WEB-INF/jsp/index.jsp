@@ -9,6 +9,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <%--<link rel="stylesheet" href="<spring:theme code=""/>" type="text/css"/> --%>
+        <%-- --%>
         <title><spring:message code="app.name" /></title>
     </head>
     <body>
@@ -82,7 +84,7 @@
             <tr><td>1</td><td>Who am I?</td><td>mikan</td><td>2014/05/16 0:00</td></tr>
             <tr><td>1</td><td>foo baa</td><td>bearing</td><td>2014/05/16 0:00</td></tr>
         </table>
-            ...<a href="discussion.jsp">more</a>
+            ...<a >more</a>
         <hr />
 
         <!-- Create a discussion -->
