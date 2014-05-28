@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.AbstractController;
 /**
  * The Hello Controller.
  *
- * @see https://netbeans.org/kb/docs/web/quickstart-webapps-spring_ja.html
  * @author mikan
  */
 public class HelloController extends AbstractController {
