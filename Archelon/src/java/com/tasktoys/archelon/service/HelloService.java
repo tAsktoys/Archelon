@@ -6,7 +6,6 @@ package com.tasktoys.archelon.service;
 /**
  * The Hello Service.
  *
- * @see https://netbeans.org/kb/docs/web/quickstart-webapps-spring_ja.html
  * @author mikan
  */
 public class HelloService {
