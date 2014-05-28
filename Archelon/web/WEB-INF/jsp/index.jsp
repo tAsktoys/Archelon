@@ -83,7 +83,7 @@
             <tr><td>1</td><td>Who am I?</td><td>mikan</td><td>2014/05/16 0:00</td></tr>
             <tr><td>1</td><td>foo baa</td><td>bearing</td><td>2014/05/16 0:00</td></tr>
         </table>
-            ...<a >more</a>
+        Page: [1]<br />
         <hr />
 
         <!-- Create a discussion -->
