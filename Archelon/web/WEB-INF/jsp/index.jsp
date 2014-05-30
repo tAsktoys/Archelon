@@ -8,6 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="<spring:theme code="styleSheet"/>" type="text/css"/>
         <%--<link rel="stylesheet" href="<spring:theme code=""/>" type="text/css"/> --%>
         <%-- --%>
         <title><spring:message code="app.name" /></title>

@@ -38,6 +38,7 @@
     p:viewName="index" />
     -->
     <bean name="indexController" class="com.tasktoys.archelon.controller.IndexController"/>
+    <bean name="DiscussionController" class="com.tasktoys.archelon.controller.DiscussionController"/>
     <bean name="helloController" class="com.tasktoys.archelon.controller.HelloController" p:helloService-ref="helloService"/>
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
 </beans>
