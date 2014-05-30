@@ -14,7 +14,7 @@
         <title><spring:message code="app.name" /></title>
     </head>
     <body>
-        <h1><spring:message code="app.name" /></h1>
+        <h1 id="title"><spring:message code="app.name" /></h1>
 
         <hr />
 
