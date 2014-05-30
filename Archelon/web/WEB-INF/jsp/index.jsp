@@ -80,9 +80,9 @@
                 <th><spring:message code="discussion.owner" /></th>
                 <th><spring:message code="discussion.createdate" /></th>
             </tr>
-            <tr><td>2</td><td>私はだれでしょう？</td><td>mikan</td><td>2014/05/16 23:59</td></tr>
-            <tr><td>1</td><td>Who am I?</td><td>mikan</td><td>2014/05/16 0:00</td></tr>
-            <tr><td>1</td><td>foo baa</td><td>bearing</td><td>2014/05/16 0:00</td></tr>
+            <tr><td>3</td><td><a href="discussion.htm?id=3">私はだれでしょう？</a></td><td>mikan</td><td>2014/05/16 23:59</td></tr>
+            <tr><td>2</td><td><a href="discussion.htm?id=2">Who am I?</a></td><td>mikan</td><td>2014/05/16 0:00</td></tr>
+            <tr><td>1</td><td><a href="discussion.htm?id=1">foo baa</a></td><td>bearing</td><td>2014/05/16 0:00</td></tr>
         </table>
         Page: [1]<br />
         <hr />
@@ -144,8 +144,8 @@
 
         <h2><spring:message code="activity.names" /></h2>
         <table border="1">
-            <tr><td>たった今</td><td>mikan が「私はだれでしょう？」という話題を作りました！</td></tr>
-            <tr><td>1分前</td><td>まりしが「who I am?」で発言しました！</td></tr>
+            <tr><td>たった今</td><td>mikan が <a href="discussion.htm?id=3">私はだれでしょう？</a> という話題を作りました！</td></tr>
+            <tr><td>1分前</td><td>まりしが <a href="discussion.htm?id=2">who I am?</a> で発言しました！</td></tr>
             <tr><td>10分前</td><td>ほげほげという話題がランキングにのりました！</td></tr>
             <tr><td>3時間前</td><td>ほげほげ！</td></tr>
             <tr><td>3時間前</td><td>ほげほげ！</td></tr>
