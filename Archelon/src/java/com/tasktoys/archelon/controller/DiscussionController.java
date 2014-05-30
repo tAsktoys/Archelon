@@ -13,14 +13,13 @@ import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  *
- * @author 拓海
+ * @author Yuichiro
  */
-public class DiscussionController extends AbstractController{
+public class DiscussionController extends AbstractController {
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
         ModelAndView mv = new ModelAndView("discussion");
         return mv;
     }
-    
 }
