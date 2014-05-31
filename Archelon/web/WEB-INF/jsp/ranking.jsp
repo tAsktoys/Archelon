@@ -8,11 +8,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="<spring:theme code="styleSheet"/>" type="text/css"/>
-          <title><spring:message code="ranking.title" /></title>
+        <!-- Style fragment -->
+        <%@include file="/WEB-INF/jspf/style.jspf" %>
+        
+        <title><spring:message code="ranking.title" /></title>
     </head>
     <body>
+        <!-- Header fragment -->
+        <%@include file="/WEB-INF/jspf/header.jspf" %>
+
         <h1><spring:message code="ranking.title" /></h1>
         <select name="sort-type">
             <option value="all-type">Sort by...</option>
