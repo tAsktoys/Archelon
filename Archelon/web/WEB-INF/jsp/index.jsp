@@ -78,11 +78,12 @@
                 <th><spring:message code="discussion.no" /></th>
                 <th><spring:message code="discussion.title" /></th>
                 <th><spring:message code="discussion.owner" /></th>
+                <th><spring:message code="discussion.participants" /></th>
                 <th><spring:message code="discussion.createdate" /></th>
             </tr>
-            <tr><td>3</td><td><a href="discussion.htm?id=3">私はだれでしょう？</a></td><td>mikan</td><td>2014/05/16 23:59</td></tr>
-            <tr><td>2</td><td><a href="discussion.htm?id=2">Who am I?</a></td><td>mikan</td><td>2014/05/16 0:00</td></tr>
-            <tr><td>1</td><td><a href="discussion.htm?id=1">foo baa</a></td><td>bearing</td><td>2014/05/16 0:00</td></tr>
+            <tr><td>3</td><td><a href="discussion.htm?id=3">私はだれでしょう？</a></td><td>mikan</td><td>12</td><td>2014/05/16 23:59</td></tr>
+            <tr><td>2</td><td><a href="discussion.htm?id=2">Who am I?</a></td><td>mikan</td><td>7</td><td>2014/05/16 0:00</td></tr>
+            <tr><td>1</td><td><a href="discussion.htm?id=1">foo baa</a></td><td>bearing</td><td>9</td><td>2014/05/16 0:00</td></tr>
         </table>
         Page: [1]<br />
         <hr />
