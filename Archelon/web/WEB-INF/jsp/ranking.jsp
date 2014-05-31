@@ -18,11 +18,39 @@
         <%@include file="/WEB-INF/jspf/header.jspf" %>
 
         <h1><spring:message code="ranking.title" /></h1>
-        <select name="sort-type">
-            <option value="all-type">Sort by...</option>
-            <option value="type1"><spring:message code="discussion.participants" /></option>
-            <option value="type2"><spring:message code="ranking.hottest" /></option>
-        </select>
+                <form action="" method="post">
+            <div>
+                <spring:message code="category.category1" />:
+                <select name="category1">
+                    <option value="category1-all">
+                        <spring:message code="category.category1.all" />
+                    </option>
+                    <option value="category1-a">Category 1-A</option>
+                    <option value="category1-b">Category 1-B</option>
+                    <option value="category1-c">Category 1-C</option>
+                </select>
+            </div>
+            <div>
+                <spring:message code="category.category2" />:
+                <select name="category2">
+                    <option value="category2-all">
+                        <spring:message code="category.category2.all" />
+                    </option>
+                    <option value="category2-a">Category 2-A</option>
+                    <option value="category2-b">Category 2-B</option>
+                    <option value="category2-c">Category 2-C</option>
+                </select>
+            </div>
+            <div>
+                <spring:message code="ranking.sort-type" />:
+                <select name="sort-type">
+                    <option value="all-type">Sort by...</option>
+                    <option value="type1"><spring:message code="discussion.participants" /></option>
+                    <option value="type2"><spring:message code="ranking.hottest" /></option>
+                </select>
+            </div>
+        </form>
+
         <table border="1" style="width: 80%">
             <tr>
                 <th><spring:message code="ranking.rank" /></th>
