@@ -38,5 +38,9 @@
             <tr><td>5</td><td><a href="discussion.htm?id=2">What is best unko?</a></td><td>mikan</td><td>2</td><td>2014/05/16 0:00</td></tr>
             <tr><td>6</td><td><a href="discussion.htm?id=1">Spring4.0の変更点でよかったところとは</a></td><td>bearing</td><td>1</td><td>2014/05/16 0:00</td></tr>
         </table>
+        
+        <!-- Footer fragment -->
+        <%@include file="/WEB-INF/jspf/footer.jspf" %>
+        
     </body>
 </html>
