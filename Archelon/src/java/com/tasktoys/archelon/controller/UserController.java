@@ -9,14 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
- *
- * @author Yuichiro
+ * Controller of profile.jsp
+ * 
+ * @author mikan
  */
-public class DiscussionController extends AbstractController {
-
+public class UserController extends AbstractController {
+    
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
-        ModelAndView mv = new ModelAndView("discussion");
+        ModelAndView mv = new ModelAndView("user");
+        mv.addObject("id", "Guest");
         return mv;
     }
 }

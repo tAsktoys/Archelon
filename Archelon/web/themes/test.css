@@ -9,8 +9,15 @@ body {
 
 #title {
     color:  #008800;
+    margin-bottom: 3px;
 }
 
 #copyright {
     text-align: center;
+}
+
+#welcome {
+    font-size: small;
+    margin: 0;
+    padding: 0;
 }

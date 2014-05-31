@@ -16,8 +16,6 @@
         <!-- Header fragment -->
         <%@include file="/WEB-INF/jspf/header.jspf" %>
 
-        
-
         <!-- Category selection -->
         <form action="" method="post">
             <div>

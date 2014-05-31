@@ -26,7 +26,7 @@
                 <table>
                     <tr>
                         <td>
-                            <img src="" alt="" width=50 height=50>
+                            <img src="" alt="" width=50 height=50 />
                         </td>
                         <td>
                             <a href="">Sato</a>:<br>
@@ -39,7 +39,7 @@
                 <table>
                     <tr>
                         <td>
-                            <img src="" alt="" width=50 height=50>
+                            <img src="" alt="" width=50 height=50 />
                         </td>
                         <td>
                             anonymous:<br>
@@ -56,7 +56,7 @@
                             俺はコショウ！
                         </td>
                         <td>
-                            <img src="" alt="" width=50 height=50>
+                            <img src="" alt="" width=50 height=50 />
                         </td>
                     </tr>
                 </table>

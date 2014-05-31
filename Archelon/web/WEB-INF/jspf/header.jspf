@@ -4,6 +4,9 @@
 
 <!-- Title -->
 <h1 id="title"><spring:message code="app.name" /></h1>
+<p id="welcome"><spring:message code="auth.welcome.prefix" /> 
+    <spring:message code="auth.guest" /> 
+    <spring:message code="auth.welcome.suffix" /></p>
 <hr />
 
 <!-- Login form -->
@@ -18,7 +21,7 @@
         <input type="submit" value="Register" />
     </div>
 </form>
-        
+
 <!-- Seach form -->
 <form action="" method="get">
     <div style="text-align: left">

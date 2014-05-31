@@ -41,5 +41,6 @@
     <bean name="discussionController" class="com.tasktoys.archelon.controller.DiscussionController"/>
     <bean name="helloController" class="com.tasktoys.archelon.controller.HelloController" p:helloService-ref="helloService"/>
     <bean name="rankingController" class="com.tasktoys.archelon.controller.RankingController"/>
+    <bean name="userController" class="com.tasktoys.archelon.controller.UserController"/>
      <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
 </beans>
