@@ -7,41 +7,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="<spring:theme code="styleSheet"/>" type="text/css"/>
-        <%--<link rel="stylesheet" href="<spring:theme code=""/>" type="text/css"/> --%>
-        <%-- --%>
+        <!-- Style fragment -->
+        <%@include file="/WEB-INF/jspf/style.jspf" %>
+        
         <title><spring:message code="app.name" /></title>
     </head>
     <body>
-        <h1 id="title"><spring:message code="app.name" /></h1>
+        <!-- Header fragment -->
+        <%@include file="/WEB-INF/jspf/header.jspf" %>
 
-        <hr />
-
-
-
-        <!-- Login form -->
-        <form action="" method="post">
-            <div style="text-align: right; float: right">
-                <spring:message code="auth.userid" />
-                <input type="text" name="userid" />
-                &nbsp;
-                <spring:message code="auth.userpassword" />
-                <input type="text" name="userpassword" />
-                <input type="submit" value="Login" />
-                <input type="submit" value="Register" />
-            </div>
-        </form>
-
-        <!-- Seach form -->
-        <form action="" method="get">
-            <div style="text-align: left">
-                <input type="text" name="search" />
-                <input type="submit" value="Search" />
-            </div>
-        </form>
-
-        <hr />
+        
 
         <!-- Category selection -->
         <form action="" method="post">
@@ -151,8 +126,7 @@
             <tr><td>3時間前</td><td>ほげほげ！</td></tr>
         </table>
 
-        <hr />
-
-        <p><spring:message code="app.copyright" /></p>
+        <!-- Footer fragment -->
+        <%@include file="/WEB-INF/jspf/footer.jspf" %>
     </body>
 </html>

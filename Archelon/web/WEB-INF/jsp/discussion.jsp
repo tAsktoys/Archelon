@@ -8,10 +8,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Style fragment -->
+        <%@include file="/WEB-INF/jspf/style.jspf" %>
+        
         <title>Chat</title>
     </head>
     <body>
+        <!-- Header fragment -->
+        <%@include file="/WEB-INF/jspf/header.jspf" %>
+        
         <div style="text-align: center">
             質問
         </div>
@@ -65,5 +70,8 @@
             <input type="submit" value="submit" name="submit">
             <input type="submit" value="clear" name="clear">
         </form>
+        
+        <!-- Footer fragment -->
+        <%@include file="/WEB-INF/jspf/footer.jspf" %>
     </body>
 </html>
