@@ -7,9 +7,55 @@ body {
     background-color: white;
 }
 
+h2, h3 {
+    border-bottom: 2px green solid;
+}
+
+table, th, td {
+    border: 1px silver solid;
+}
+
+#header, #footer, #main {
+    max-width:  1200px;
+    min-width:  750px;
+    margin: 0 auto;
+}
+
+#content {
+    width: 75%;
+}
+
+#menu {
+    float:right;
+    width: 22%;
+    background: whitesmoke;
+}
+
+#menu h2, h3 {
+    font-size: small;
+    border-bottom: 1px gray solid;
+}
+
+#menu p {
+    margin-left: 5px;
+}
+
 #title {
     color:  #008800;
     margin-bottom: 3px;
+}
+
+#login {
+    text-align: left;
+    margin: 5px 0px;
+    padding: 5px 0px;
+    border-top: 1px gray solid;
+    border-bottom: 1px gray solid;
+}
+
+#search {
+    float:  right;
+    margin-top: 23px;
 }
 
 #copyright {
@@ -20,4 +66,25 @@ body {
     font-size: small;
     margin: 0;
     padding: 0;
+}
+
+#discussions table {
+    width: 100%;
+}
+
+#activities table {
+    width: 100%;
+}
+
+.category {
+    margin: 5px 0px;
+    padding: 5px 0px;
+    text-align: right;
+}
+
+img.ad_image {
+    text-align: center;
+    width: 80%;
+    height: 150px;
+    border: 1px white solid;
 }

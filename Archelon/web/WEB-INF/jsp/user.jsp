@@ -10,17 +10,19 @@
     <head>
         <!-- Style fragment -->
         <%@include file="/WEB-INF/jspf/style.jspf" %>
-        
         <title><spring:message code="app.name" /> mikan</title>
     </head>
     <body>
         <!-- Header fragment -->
         <%@include file="/WEB-INF/jspf/header.jspf" %>
-        
-        <h2>${id}<spring:message code="user.title.suffix" /></h2>
-        
-        
-        
+
+        <div id="main">
+
+            <h2>${id}<spring:message code="user.title.suffix" /></h2>
+
+
+        </div>
+
         <!-- Footer fragment -->
         <%@include file="/WEB-INF/jspf/footer.jspf" %>
     </body>

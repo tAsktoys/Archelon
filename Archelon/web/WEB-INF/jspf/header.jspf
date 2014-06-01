@@ -2,32 +2,34 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ page pageEncoding="UTF-8" %>
 
-<!-- Title -->
-<h1 id="title"><spring:message code="app.name" /></h1>
-<p id="welcome"><spring:message code="auth.welcome.prefix" /> 
-    <spring:message code="auth.guest" /> 
-    <spring:message code="auth.welcome.suffix" /></p>
-<hr />
+<div id="header">
 
-<!-- Login form -->
-<form action="" method="post">
-    <div style="text-align: right; float: right">
-        <spring:message code="auth.userid" />
-        <input type="text" name="userid" />
-        &nbsp;
-        <spring:message code="auth.userpassword" />
-        <input type="text" name="userpassword" />
-        <input type="submit" value="Login" />
-        <input type="submit" value="Register" />
-    </div>
-</form>
+    <!-- Seach form -->
+    <form action="" method="get">
+        <div id="search">
+            <input type="text" name="search" />
+            <input type="submit" value="<spring:message code="search" />" />
+        </div>
+    </form>
 
-<!-- Seach form -->
-<form action="" method="get">
-    <div style="text-align: left">
-        <input type="text" name="search" />
-        <input type="submit" value="Search" />
-    </div>
-</form>
+    <!-- Title -->
+    <h1 id="title"><spring:message code="app.name" /></h1>
 
-<hr />
+    <p id="welcome"><spring:message code="auth.welcome.prefix" /> 
+        <spring:message code="auth.guest" /> 
+        <spring:message code="auth.welcome.suffix" /></p>
+
+    <!-- Login form -->
+    <form action="" method="post">
+        <div id="login">
+            <spring:message code="auth.userid" />
+            <input type="text" name="userid" />
+            &nbsp;
+            <spring:message code="auth.userpassword" />
+            <input type="text" name="userpassword" />
+            <input type="submit" value="<spring:message code="auth.login" />" />
+            <input type="submit" value="<spring:message code="auth.login.twitter" />" />
+            <input type="submit" value="<spring:message code="auth.register" />" />
+        </div>
+    </form>
+</div>
