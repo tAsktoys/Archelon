@@ -12,8 +12,10 @@ import org.springframework.web.servlet.mvc.AbstractController;
  *
  * @author Yuichiro
  */
+
 public class RankingController extends AbstractController {
 
+    
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
         ModelAndView mv = new ModelAndView("ranking");
