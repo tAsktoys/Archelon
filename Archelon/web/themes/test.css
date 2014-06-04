@@ -88,3 +88,57 @@ img.ad_image {
     height: 150px;
     border: 1px white solid;
 }
+
+#discussion_thema {
+    text-align: center;
+}
+#discussion_type {
+    text-align: center;
+    font-size: larger;
+}
+
+#discussion_detail {
+    text-align: center;
+    font-size: larger;
+}
+
+#discussion_log ul {
+    width: 80%;
+}
+
+#discussion_form {
+    width: 50em;
+    margin: 0 auto;
+}
+
+#discussion_selectors {
+    clear: both;
+}
+
+#discussion_field {
+    width: 50em;
+    height: 5em;
+    text-align: left;
+    clear: both;
+}
+
+#discussion_bottons {
+    clear : both;
+}
+il.others {
+    text-align: left;
+}
+
+il.me {
+    text-align: right;
+}
+
+img.others {
+    float: left;
+    border: 1px white solid;
+}
+
+img.me {
+    float: right;
+    border: 1px green solid;
+}
