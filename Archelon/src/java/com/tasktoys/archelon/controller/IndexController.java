@@ -3,21 +3,22 @@
  */
 package com.tasktoys.archelon.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Controller for index.htm.
  *
  * @author mikan
  */
-public class IndexController extends AbstractController {
-
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
-        ModelAndView mv = new ModelAndView("index");
-        return mv;
-    }
+@Controller
+@RequestMapping(value="/")
+public class IndexController {
+    
+    @RequestMapping(method = RequestMethod.GET)
+    public String getIndex(Model model) {
+        return "index";
+    } 
 }

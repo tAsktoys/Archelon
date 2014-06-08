@@ -38,7 +38,7 @@ public class HelloController {
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public String test(Model model) {
+    public String getHello(Model model) {
         model.addAttribute("helloMessage", helloService.sayHello("ほげほげ"));
         return "hello";
     } 
