@@ -18,38 +18,34 @@
         <%@include file="/WEB-INF/jspf/header.jspf" %>
         <div id="main">
             <div id="menu">
-                <!-- Category selection -->
-                <h2><spring:message code="category.name" /></h2>
-                <form action="" method="post" class="category">
-                    <div>
-                        <spring:message code="category.category1" />:
-                        <select name="category1">
-                            <option value="category1-all">
-                                <spring:message code="category.category1.all" />
-                            </option>
-                            <option value="category1-a">Category 1-A</option>
-                            <option value="category1-b">Category 1-B</option>
-                            <option value="category1-c">Category 1-C</option>
-                        </select>
-                    </div>
-                    <div>
-                        <spring:message code="category.category2" />:
-                        <select name="category2">
-                            <option value="category2-all">
-                                <spring:message code="category.category2.all" />
-                            </option>
-                            <option value="category2-a">Category 2-A</option>
-                            <option value="category2-b">Category 2-B</option>
-                            <option value="category2-c">Category 2-C</option>
-                        </select>
-                    </div>
-                </form>
                 <!-- Ranking -->
                 <h2><spring:message code="ranking.title" /></h2>
                 <p><a href="ranking.htm">Show ranking</a></p>
             </div>
             <div id="content">
                 <h2><spring:message code="ranking.title" /></h2>
+                <!-- Category selection -->
+                <form action="" method="post" class="category">
+                    <spring:message code="category.category1" />
+                    <select name="category1">
+                        <option value="category1-all">
+                            <spring:message code="category.category1.all" />
+                        </option>
+                        <option value="category1-a">Category 1-A</option>
+                        <option value="category1-b">Category 1-B</option>
+                        <option value="category1-c">Category 1-C</option>
+                    </select>
+                    <spring:message code="category.category2" />
+                    <select name="category2">
+                        <option value="category2-all">
+                            <spring:message code="category.category2.all" />
+                        </option>
+                        <option value="category2-a">Category 2-A</option>
+                        <option value="category2-b">Category 2-B</option>
+                        <option value="category2-c">Category 2-C</option>
+                    </select>
+                </form>
+                <!-- Sorting -->
                 <form action="" method="post">
                     <div>
                         <spring:message code="ranking.sort-type" />:
@@ -60,6 +56,7 @@
                         </select>
                     </div>
                 </form>
+                <!-- Table of ranking -->
                 <table border="1" style="width: 80%">
                     <tr>
                         <th><spring:message code="ranking.rank" /></th>
