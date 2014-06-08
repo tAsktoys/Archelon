@@ -16,11 +16,19 @@
         <%@include file="/WEB-INF/jspf/header.jspf" %>
         <div id="main">
             <div id="menu">
-                <!-- Category selection -->
-                <h2><spring:message code="category.name" /></h2>
-                <form action="" method="post" class="category">
-                    <div>
-                        <spring:message code="category.category1" />:
+                <!-- Ranking -->
+                <h2><spring:message code="ranking.title" /></h2>
+                <p><a href="ranking.htm">Show ranking</a></p>
+                <!-- Ads fragment -->
+                <%@include file="/WEB-INF/jspf/ads.jspf" %>
+            </div>
+            <div id="content">
+                <!-- Discussions -->
+                <div id="discussions">
+                    <h2><spring:message code="discussion.names" /></h2>
+                    <!-- Category selection -->
+                    <form action="" method="post" class="category">
+                        <spring:message code="category.category1" />
                         <select name="category1">
                             <option value="category1-all">
                                 <spring:message code="category.category1.all" />
@@ -29,9 +37,7 @@
                             <option value="category1-b">Category 1-B</option>
                             <option value="category1-c">Category 1-C</option>
                         </select>
-                    </div>
-                    <div>
-                        <spring:message code="category.category2" />:
+                        <spring:message code="category.category2" />
                         <select name="category2">
                             <option value="category2-all">
                                 <spring:message code="category.category2.all" />
@@ -40,18 +46,8 @@
                             <option value="category2-b">Category 2-B</option>
                             <option value="category2-c">Category 2-C</option>
                         </select>
-                    </div>
-                </form>
-                <!-- Ranking -->
-                <h2><spring:message code="ranking.title" /></h2>
-                <p><a href="ranking.htm">Show ranking</a></p>
-                <!-- Ads fragment -->
-                <%@include file="/WEB-INF/jspf/ads.jspf" %>
-            </div>
-            <div id="content">
-                <!-- Table of discussions -->
-                <div id="discussions">
-                    <h2><spring:message code="discussion.names" /></h2>
+                    </form>
+                    <!-- Table of discussions -->
                     <table>
                         <tr>
                             <th><spring:message code="discussion.no" /></th>

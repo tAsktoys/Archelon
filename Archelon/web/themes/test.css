@@ -77,9 +77,14 @@ table, th, td {
 }
 
 .category {
-    margin: 5px 0px;
+    margin: 0px 0px;
     padding: 5px 0px;
-    text-align: right;
+}
+.category select {
+    margin-right: 10px;
+}
+.category form {
+    display: inline;
 }
 
 img.ad_image {
