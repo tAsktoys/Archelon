@@ -18,7 +18,7 @@
             <div id="menu">
                 <!-- Ranking -->
                 <h2><spring:message code="ranking.title" /></h2>
-                <p><a href="ranking.htm">Show ranking</a></p>
+                <p><a href="ranking">Show ranking</a></p>
                 <!-- Ads fragment -->
                 <%@include file="/WEB-INF/jspf/ads.jspf" %>
             </div>
@@ -56,9 +56,9 @@
                             <th><spring:message code="discussion.participants" /></th>
                             <th><spring:message code="discussion.createdate" /></th>
                         </tr>
-                        <tr><td>3</td><td><a href="discussion.htm?id=3">私はだれでしょう？</a></td><td><a href="user.htm?id=mikan">mikan</a></td><td>12</td><td>2014/05/16 23:59</td></tr>
-                        <tr><td>2</td><td><a href="discussion.htm?id=2">Who am I?</a></td><td><a href="user.htm?id=mikan">mikan</a></td><td>7</td><td>2014/05/16 0:00</td></tr>
-                        <tr><td>1</td><td><a href="discussion.htm?id=1">foo baa</a></td><td><a href="user.htm?id=bearing">bearing</a></td><td>9</td><td>2014/05/16 0:00</td></tr>
+                        <tr><td>3</td><td><a href="discussion/3">私はだれでしょう？</a></td><td><a href="user/mikan">mikan</a></td><td>12</td><td>2014/05/16 23:59</td></tr>
+                        <tr><td>2</td><td><a href="discussion/2">Who am I?</a></td><td><a href="user/mikan">mikan</a></td><td>7</td><td>2014/05/16 0:00</td></tr>
+                        <tr><td>1</td><td><a href="discussion/1">foo baa</a></td><td><a href="user/bearing">bearing</a></td><td>9</td><td>2014/05/16 0:00</td></tr>
                     </table>
                     Page: [1]<br />
                 </div>
@@ -119,8 +119,8 @@
                 <div id="activities">
                     <h2><spring:message code="activity.names" /></h2>
                     <table border="1">
-                        <tr><td>たった今</td><td><a href="user.htm?id=mikan">mikan</a> が <a href="discussion.htm?id=3">私はだれでしょう？</a> という話題を作りました！</td></tr>
-                        <tr><td>1分前</td><td><a href="user.htm?id=marishi">まりし</a>が <a href="discussion.htm?id=2">who I am?</a> で発言しました！</td></tr>
+                        <tr><td>たった今</td><td><a href="user/mikan">mikan</a> が <a href="discussion/3">私はだれでしょう？</a> という話題を作りました！</td></tr>
+                        <tr><td>1分前</td><td><a href="user/marishi">まりし</a>が <a href="discussion/2">who I am?</a> で発言しました！</td></tr>
                         <tr><td>10分前</td><td>ほげほげという話題がランキングにのりました！</td></tr>
                         <tr><td>3時間前</td><td>ほげほげ！</td></tr>
                         <tr><td>3時間前</td><td>ほげほげ！</td></tr>

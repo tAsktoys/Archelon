@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller for index.htm.
+ * Controller of index.jsp
  *
  * @author mikan
+ * @since 0.1
  */
 @Controller
-@RequestMapping(value="/")
+@RequestMapping(value = "/")
 public class IndexController {
-    
+
     @RequestMapping(method = RequestMethod.GET)
     public String getIndex(Model model) {
         return "index";
-    } 
+    }
 }

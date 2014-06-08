@@ -3,16 +3,14 @@
  */
 package com.tasktoys.archelon.service;
 
-import org.springframework.stereotype.Service;
-
 /**
- * The Hello Service.
+ * Interface of Hello Service.
  *
  * @author mikan
+ * @since 0.1
  */
-@Service
-public class HelloService {
-
+public interface HelloService {
+    
     /**
      * Say hello.
      * 
@@ -20,9 +18,5 @@ public class HelloService {
      * @return hello string
      * @throws NullPointerException If name is null.
      */
-    public String sayHello(String name) {
-        if (name == null)
-            throw new NullPointerException("name is null");
-        return "Hello " + name + "!";
-    }
+    public String sayHello(String name);
 }

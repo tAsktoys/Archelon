@@ -3,20 +3,25 @@
  */
 package com.tasktoys.archelon.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- *
- * @author Yuichiro
+ * Controller of discussion.jsp
+ * 
+ * @author mikan
+ * @since 0.1
  */
-public class DiscussionController extends AbstractController {
+@Controller
+@RequestMapping(value = "/discussion")
+public class DiscussionController {
 
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
-        ModelAndView mv = new ModelAndView("discussion");
-        return mv;
+    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    public String getDiscussion(@PathVariable String id, Model model) {
+        model.addAttribute("id", id);
+        return "discussion";
     }
 }
