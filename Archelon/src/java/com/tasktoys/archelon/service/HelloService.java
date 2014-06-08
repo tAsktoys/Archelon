@@ -3,11 +3,14 @@
  */
 package com.tasktoys.archelon.service;
 
+import org.springframework.stereotype.Service;
+
 /**
  * The Hello Service.
  *
  * @author mikan
  */
+@Service
 public class HelloService {
 
     /**
