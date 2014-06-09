@@ -20,7 +20,7 @@
             <div id="menu">
                 <!-- Ranking -->
                 <h2><spring:message code="ranking.title" /></h2>
-                <p><a href="ranking.htm">Show ranking</a></p>
+                <p><a href="ranking">Show ranking</a></p>
             </div>
             <div id="content">
                 <h2><spring:message code="ranking.title" /></h2>
@@ -65,12 +65,12 @@
                         <th><spring:message code="discussion.participants" /></th>
                         <th><spring:message code="discussion.createdate" /></th>
                     </tr>
-                    <tr><td>1</td><td><a href="discussion.htm?id=3">私はだれでしょう？</a></td><td>mikan</td><td>12</td><td>2014/05/16 23:59</td></tr>
-                    <tr><td>2</td><td><a href="discussion.htm?id=2">Who am I?</a></td><td>mikan</td><td>7</td><td>2014/05/16 0:00</td></tr>
-                    <tr><td>3</td><td><a href="discussion.htm?id=1">foo baa</a></td><td>bearing</td><td>4</td><td>2014/05/16 0:00</td></tr>
-                    <tr><td>4</td><td><a href="discussion.htm?id=3">hoggeeee!</a></td><td>mikan</td><td>3</td><td>2014/05/16 23:59</td></tr>
-                    <tr><td>5</td><td><a href="discussion.htm?id=2">What is best unko?</a></td><td>mikan</td><td>2</td><td>2014/05/16 0:00</td></tr>
-                    <tr><td>6</td><td><a href="discussion.htm?id=1">Spring4.0の変更点でよかったところとは</a></td><td>bearing</td><td>1</td><td>2014/05/16 0:00</td></tr>
+                    <tr><td>1</td><td><a href="discussion/3">私はだれでしょう？</a></td><td>mikan</td><td>12</td><td>2014/05/16 23:59</td></tr>
+                    <tr><td>2</td><td><a href="discussion/2">Who am I?</a></td><td>mikan</td><td>7</td><td>2014/05/16 0:00</td></tr>
+                    <tr><td>3</td><td><a href="discussion/1">foo baa</a></td><td>bearing</td><td>4</td><td>2014/05/16 0:00</td></tr>
+                    <tr><td>4</td><td><a href="discussion/3">hoggeeee!</a></td><td>mikan</td><td>3</td><td>2014/05/16 23:59</td></tr>
+                    <tr><td>5</td><td><a href="discussion/2">What is best unko?</a></td><td>mikan</td><td>2</td><td>2014/05/16 0:00</td></tr>
+                    <tr><td>6</td><td><a href="discussion/1">Spring4.0の変更点でよかったところとは</a></td><td>bearing</td><td>1</td><td>2014/05/16 0:00</td></tr>
                 </table>
             </div>
 

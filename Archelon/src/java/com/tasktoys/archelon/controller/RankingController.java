@@ -3,22 +3,23 @@
  */
 package com.tasktoys.archelon.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- *
- * @author Yuichiro
+ * Controller of <code>ranking.jsp</code>.
+ * 
+ * @author mikan
+ * @since 0.1
  */
+@Controller
+@RequestMapping(value = "/ranking")
+public class RankingController {
 
-public class RankingController extends AbstractController {
-
-    
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest hsr, HttpServletResponse hsr1) throws Exception {
-        ModelAndView mv = new ModelAndView("ranking");
-        return mv;
+    @RequestMapping(method = RequestMethod.GET)
+    public String getRanking(Model model) {
+        return "ranking";
     }
 }

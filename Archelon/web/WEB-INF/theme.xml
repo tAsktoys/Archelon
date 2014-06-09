@@ -11,6 +11,9 @@
                 http://www.springframework.org/schema/context/spring-context-4.0.xsd"
 >
     
+    <!-- Handles HTTP GET requests for /themes/** by efficiently serving up static resources in the ${webappRoot}/themes/ directory -->
+    <mvc:resources mapping="/themes/**" location="/themes/" />
+    
     <bean id="themeResolver" class="org.springframework.web.servlet.theme.FixedThemeResolver">
         <property name="defaultThemeName" value="themes-test"/>
     </bean>
