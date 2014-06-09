@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.service;
 
+import com.tasktoys.archelon.service.impl.HelloServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test code for {@link HelloService}.
+ * Test code for {@link HelloServiceImpl}.
  *
  * @author mikan
  */
@@ -41,7 +42,7 @@ public class HelloServiceTest {
      */
     @Test
     public void testSayHello_NormalInput() {
-        HelloService instance = new HelloService();
+        HelloServiceImpl instance = new HelloServiceImpl();
         String name = "test";
         String expResult = "Hello test!";
         String result = instance.sayHello(name);
@@ -53,7 +54,7 @@ public class HelloServiceTest {
      */
     @Test(expected=NullPointerException.class)
     public void testSayHello_NullInput() {
-        HelloService instance = new HelloService();
+        HelloServiceImpl instance = new HelloServiceImpl();
         instance.sayHello(null);
         fail();
     }
