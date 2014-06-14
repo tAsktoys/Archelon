@@ -18,7 +18,7 @@ public class SandboxController {
  @RequestMapping(method = RequestMethod.GET)
     public String getUserGuest(Model model) {
         model.addAttribute("id", "Guest");
-        return "sandbox";//return the name of jsp file without ".jsp"
+        return "sandbox";//return the name of jsp file without  ".jsp"
     }
     
     @RequestMapping(value="/{id},{test}", method = RequestMethod.GET)
