@@ -147,3 +147,23 @@ img.me {
     float: right;
     border: 1px green solid;
 }
+
+#user_information {
+    width: 20%;
+    margin: 0px 0px 0px 0px;
+    float: left;
+}
+
+#user_activities {
+    width: 75%;
+    margin: 0px 0px 0px 0px;
+    float: right;
+}
+
+div.user_activity {
+    width: 90%;
+    margin: 7px 0px 0px 7px;
+    text-align: left;
+    float: left;
+    border: 1px green solid;
+}

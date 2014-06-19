@@ -20,7 +20,43 @@
 
             <h2>${id}<spring:message code="user.title.suffix" /></h2>
 
-
+            <div id="user_information">
+                <h3>User Information</h3>
+                <p>one comment: I am a high school student in Isikawa. I have an interest in Computer Science. I have been challenging to invent a web service by Common Lisp :-)</p>
+                <ul>
+                    <li>name :Hoge</li>
+                    <li>age : 17</li>
+                    <li>school : High scool</li>
+                    <li>contact information</li>
+                    <ul>
+                        <li>facebook :</li>
+                        <li>twitter : twitterid</li>
+                        <li>skype :</li>
+                    </ul>
+                    <li>activity: around-a-clock</li>
+                    <li>hiralcy : master</li>
+                </ul>
+            </div>
+            
+            <div id="user_activities">
+                <h3>user activities</h3>
+                    <div class="user_activity">
+                        hogeさんは「うぬうぬ」という話題で「ほげほげほげっっっっっっっっっほっっっっっっっっっっっっｈ」と言った
+                    </div>
+                    <div class="user_activity">
+                        hogeさんは「うぬうぬ」という話題で「ほげほげほげほ！！！！！ほげほげほげっっっっっっっっっほっっっっっっっっっっっっｈほああああああああああああああああああああああああああああああああああああああああああ」と言った
+                    </div>
+                    <div class="user_activity">
+                        hogeさんは「うぬうぬ」という話題で「」
+                    </div>
+                    <div class="user_activity">
+                        hogeさんは「うぬうぬ」という話題で「」
+                    </div>
+                    <div class="user_activity">
+                        hogeさんは「うぬうぬ」という話題で「」
+                    </div>
+            </div>
+            
         </div>
 
         <!-- Footer fragment -->
