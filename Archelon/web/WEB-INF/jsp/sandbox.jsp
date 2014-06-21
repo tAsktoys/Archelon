@@ -1,8 +1,9 @@
 <%-- 
-    Document   : profile
-    Created on : 2014/05/31, 13:02:42
-    Author     : mikan
+    Document   : sandbox.jsp
+    Created on : 2014/06/14, 12:15:42
+    Author     : bearing
 --%>
+
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -10,7 +11,7 @@
     <head>
         <!-- Style fragment -->
         <%@include file="/WEB-INF/jspf/style.jspf" %>
-        <title><spring:message code="app.name" /> ${id}</title>
+        <title><spring:message code="app.name" /> boo</title>
     </head>
     <body>
         <!-- Header fragment -->
@@ -19,6 +20,7 @@
         <div id="main">
 
             <h2>${id}<spring:message code="user.title.suffix" /></h2>
+            <p>test is ${test} </p>
 
 
         </div>
