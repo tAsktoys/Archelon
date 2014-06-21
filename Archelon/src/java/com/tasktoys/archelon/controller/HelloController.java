@@ -3,7 +3,7 @@
  */
 package com.tasktoys.archelon.controller;
 
-import com.tasktoys.archelon.service.impl.HelloServiceImpl;
+import com.tasktoys.archelon.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class HelloController {
 
     @Autowired
-    private HelloServiceImpl helloService;
+    private HelloService helloService;
 
     public HelloController() {
     }
 
-    public void setHelloService(HelloServiceImpl helloService) {
+    public void setHelloService(HelloService helloService) {
         this.helloService = helloService;
     }
 
