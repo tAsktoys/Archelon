@@ -18,8 +18,8 @@
 
         <div id="main">
 
-            <h2>${id}<spring:message code="user.title.suffix" /></h2>
-
+            this is serch result<br/>
+            search word is ${search_word}
 
         </div>
 

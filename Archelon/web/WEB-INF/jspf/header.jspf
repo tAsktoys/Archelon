@@ -10,7 +10,7 @@
     <!-- Seach form -->
     <form action="<%=PATH_PREFIX%>search" method="get">
         <div id="search">
-            <input type="text" name="search" />
+            <input type="text" name="search_word" />
             <input type="submit" value="<spring:message code="search" />" />
         </div>
     </form>
