@@ -19,7 +19,7 @@
         <div id="main">
 
             this is serch result<br/>
-            search word is ${search_word}
+            search word is ${attrSearchWword}
 
         </div>
 
