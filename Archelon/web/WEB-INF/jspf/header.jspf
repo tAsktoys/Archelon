@@ -1,11 +1,15 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ page pageEncoding="UTF-8" %>
+<%!
+    // TODO: もっと良い定数定義があれば、置き換えたい
+    String PATH_PREFIX ="/Archelon/";
+%>
 
 <div id="header">
 
     <!-- Seach form -->
-    <form action="" method="get">
+    <form action="<%=PATH_PREFIX%>search" method="get">
         <div id="search">
             <input type="text" name="search" />
             <input type="submit" value="<spring:message code="search" />" />
@@ -20,16 +24,16 @@
         <spring:message code="auth.welcome.suffix" /></p>
 
     <!-- Login form -->
-    <form action="" method="post">
+    <form action="<%=PATH_PREFIX%>login" method="post">
         <div id="login">
             <spring:message code="auth.userid" />
             <input type="text" name="userid" />
             &nbsp;
             <spring:message code="auth.userpassword" />
             <input type="text" name="userpassword" />
-            <input type="submit" value="<spring:message code="auth.login" />" />
-            <input type="submit" value="<spring:message code="auth.login.twitter" />" />
-            <input type="submit" value="<spring:message code="auth.register" />" />
+            <input type="submit" name="normalLogin" value="<spring:message code="auth.login" />" />
+            <input type="submit" name="twitterLogin"value="<spring:message code="auth.login.twitter" />" />
+            <input type="submit" name="register" value="<spring:message code="auth.register" />" />
         </div>
     </form>
 </div>
