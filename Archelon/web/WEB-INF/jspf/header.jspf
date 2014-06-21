@@ -5,7 +5,6 @@
     // TODO: もっと良い定数定義があれば、置き換えたい
     String PATH_PREFIX ="/Archelon/";
 %>
-
 <div id="header">
 
     <!-- Seach form -->
