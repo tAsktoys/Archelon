@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- *
- * @author 
+ * Controller of  search 
+ * @author bearing
  */
 @Controller
 @RequestMapping("/search")
