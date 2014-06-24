@@ -15,44 +15,55 @@ import org.springframework.web.servlet.tags.Param;
 /**
  * Controller of <code>user.jsp</code>.
  * 
- * @author mikan, ysato
+ * @author mikan
+ * @author ysato
  * @since 0.1
  */
 @Controller
 @RequestMapping(value="/user")
 public class UserController {
     
+    final String ID = "id";
+    final String user_profile = "user_profile";
+    final String user_information = "user_information";
+    final String user_activity = "user_activity";
+    
     @RequestMapping(method = RequestMethod.GET)
     public String getUserGuest(Model model) {
-        model.addAttribute("id", "Guest");
-        getUserInformation(model);
-        getUserActivity(model);
+        model.addAttribute(ID, "Guest");
+        updatePage(model);
         return "user";
     }
     
     @RequestMapping(value="{id}", method = RequestMethod.GET)
     public String getUser(@PathVariable String id, Model model) {
-        model.addAttribute("id", id);
+        model.addAttribute(ID, id);
+        updatePage(model);
         return "user";
     }
     
-    private void getUserInformation(Model model) {
+    private void updatePage(Model model) {
+        updateUserInformation(model);
+        updateUserActivity(model);
+    }
+    
+    private void updateUserInformation(Model model) {
         String profile = "one comment: I am a high school student in Isikawa. I have an interest in Computer Science. I have been challenging to invent a web service by Common Lisp :-)";
-        model.addAttribute("user_profile", profile);
+        model.addAttribute(user_profile, profile);
         
         List<String> list = new ArrayList<>();
         list.add("nisino");
         list.add("16");
         list.add("High School");
-        model.addAttribute("user_information", list);
+        model.addAttribute(user_information, list);
     }
     
-    private void getUserActivity(Model model) {
+    private void updateUserActivity(Model model) {
         List<String> list = new ArrayList<>();
         list.add("\"hoge!hoge!hoge!\"");
         list.add("\"Hooaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\"");
         list.add("Discussion title \"Foo\" is made");
-        model.addAttribute("user_activity", list);
+        model.addAttribute(user_activity, list);
     }
 
 }

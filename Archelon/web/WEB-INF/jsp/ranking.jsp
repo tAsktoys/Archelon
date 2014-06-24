@@ -48,7 +48,7 @@
                 <!-- Sorting -->
                 <form action="" method="post">
                     <div>
-                        <spring:message code="ranking.sort-type" />:
+                        <spring:message code="ranking.sort.type" />:
                         <select name="sort-type">
                             <option value="all-type">Sort by...</option>
                             <option value="type1"><spring:message code="discussion.participants" /></option>

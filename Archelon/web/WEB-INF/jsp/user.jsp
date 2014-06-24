@@ -2,6 +2,7 @@
     Document   : profile
     Created on : 2014/05/31, 13:02:42
     Author     : mikan
+    Author     : ysato
 --%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,9 +23,9 @@
             <h2>${id}<spring:message code="user.title.suffix" /></h2>
 
             <div id="user_information">
-                <h3><spring:message code="user.user_information.title" /></h3>
+                <h3><spring:message code="user.information.title" /></h3>
                 <p>${user_profile}</p>
-                <ul style="list-style:none;">
+                <ul style="list-style:none;"> <!-- 消すとなぜかうまくいかない -->
                     <c:forEach var="info" items="${user_information}">
                         <li class="user_information_list"><c:out value="${info}"/></li>
                     </c:forEach>
@@ -32,7 +33,7 @@
             </div>
             
             <div id="user_activities">
-                <h3><spring:message code="user.user_activity.title" /></h3>
+                <h3><spring:message code="user.activity.title" /></h3>
                 <c:forEach var="activity" items="${user_activity}">
                     <div class="user_activity">${activity}</div>
                 </c:forEach>
