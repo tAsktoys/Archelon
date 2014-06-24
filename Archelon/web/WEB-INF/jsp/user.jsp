@@ -5,6 +5,7 @@
 --%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,40 +22,20 @@
             <h2>${id}<spring:message code="user.title.suffix" /></h2>
 
             <div id="user_information">
-                <h3>User Information</h3>
-                <p>one comment: I am a high school student in Isikawa. I have an interest in Computer Science. I have been challenging to invent a web service by Common Lisp :-)</p>
-                <ul>
-                    <li>name :Hoge</li>
-                    <li>age : 17</li>
-                    <li>school : High scool</li>
-                    <li>contact information</li>
-                    <ul>
-                        <li>facebook :</li>
-                        <li>twitter : twitterid</li>
-                        <li>skype :</li>
-                    </ul>
-                    <li>activity: around-a-clock</li>
-                    <li>hiralcy : master</li>
+                <h3><spring:message code="user.user_information.title" /></h3>
+                <p>${user_profile}</p>
+                <ul style="list-style:none;">
+                    <c:forEach var="info" items="${user_information}">
+                        <li class="user_information_list"><c:out value="${info}"/></li>
+                    </c:forEach>
                 </ul>
             </div>
             
             <div id="user_activities">
-                <h3>user activities</h3>
-                    <div class="user_activity">
-                        hogeさんは「うぬうぬ」という話題で「ほげほげほげっっっっっっっっっほっっっっっっっっっっっっｈ」と言った
-                    </div>
-                    <div class="user_activity">
-                        hogeさんは「うぬうぬ」という話題で「ほげほげほげほ！！！！！ほげほげほげっっっっっっっっっほっっっっっっっっっっっっｈほああああああああああああああああああああああああああああああああああああああああああ」と言った
-                    </div>
-                    <div class="user_activity">
-                        hogeさんは「うぬうぬ」という話題で「」
-                    </div>
-                    <div class="user_activity">
-                        hogeさんは「うぬうぬ」という話題で「」
-                    </div>
-                    <div class="user_activity">
-                        hogeさんは「うぬうぬ」という話題で「」
-                    </div>
+                <h3><spring:message code="user.user_activity.title" /></h3>
+                <c:forEach var="activity" items="${user_activity}">
+                    <div class="user_activity">${activity}</div>
+                </c:forEach>
             </div>
             
         </div>

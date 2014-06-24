@@ -154,6 +154,10 @@ img.me {
     float: left;
 }
 
+li.user_infomation_list {
+    list-style: none;
+}
+
 #user_activities {
     width: 75%;
     margin: 0px 0px 0px 0px;
