@@ -2,9 +2,11 @@
     Document   : profile
     Created on : 2014/05/31, 13:02:42
     Author     : mikan
+    Author     : ysato
 --%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,7 +22,23 @@
 
             <h2>${id}<spring:message code="user.title.suffix" /></h2>
 
-
+            <div id="user_information">
+                <h3><spring:message code="user.information.title" /></h3>
+                <p>${user_profile}</p>
+                <ul id="user_information_list">
+                    <c:forEach var="info" items="${user_information}">
+                        <li class="user_information_item"><c:out value="${info}"/></li>
+                    </c:forEach>
+                </ul>
+            </div>
+            
+            <div id="user_activities">
+                <h3><spring:message code="user.activity.title" /></h3>
+                <c:forEach var="activity" items="${user_activity}">
+                    <div class="user_activity">${activity}</div>
+                </c:forEach>
+            </div>
+            
         </div>
 
         <!-- Footer fragment -->
