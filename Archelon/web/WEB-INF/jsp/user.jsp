@@ -25,9 +25,9 @@
             <div id="user_information">
                 <h3><spring:message code="user.information.title" /></h3>
                 <p>${user_profile}</p>
-                <ul style="list-style:none;"> <!-- 消すとなぜかうまくいかない -->
+                <ul id="user_information_list">
                     <c:forEach var="info" items="${user_information}">
-                        <li class="user_information_list"><c:out value="${info}"/></li>
+                        <li class="user_information_item"><c:out value="${info}"/></li>
                     </c:forEach>
                 </ul>
             </div>
