@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,13 +20,19 @@
 
         <div id="main">
 
-            <div id="discussion_theme"> 
-                <p id="discussion_type">質問</p>
-                <p id="discussion_detail">目玉焼きに一番合う調味料は？</p>
+            <div id="discussion_theme">
+                ${theme}
             </div>
             
-            <div style="margin-left: auto; margin-right : auto">
-                <ul id="discussion_log">
+            <div id="discussion_log">
+                <ul id="discussion_log_list">
+                    <c:forEach var="item" items="${discussion_log}">
+                        <li class="${item.type}">
+                            <img src="${item.icon}" alt="" width="50" heigth="50" class="${item.type}">
+                            <p><a href="${item.userpage}">${item.username}</a></p>
+                            <p>${item.message}</p>
+                        </li>
+                    </c:forEach>
                     <il class="others">
                         <img src="" alt="" width=50 height=50 class="others"/>
                         <p><a href="">Sato</a>:</p>

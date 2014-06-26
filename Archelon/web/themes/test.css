@@ -94,21 +94,20 @@ img.ad_image {
     border: 1px white solid;
 }
 
-#discussion_thema {
+#discussion_theme {
     text-align: center;
-}
-#discussion_type {
-    text-align: center;
-    font-size: larger;
+    margin-left: auto;
+    margin-right : auto;
 }
 
-#discussion_detail {
-    text-align: center;
-    font-size: larger;
+#discussion_log {
+    margin-left: auto;
+    margin-right : auto;
 }
 
-#discussion_log ul {
+#discussion_log_list {
     width: 80%;
+    list-style: none;
 }
 
 #discussion_form {
