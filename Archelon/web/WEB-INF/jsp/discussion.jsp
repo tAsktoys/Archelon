@@ -33,6 +33,7 @@
                             <p>${item.message}</p>
                         </li>
                     </c:forEach>
+                        <!--
                     <il class="others">
                         <img src="" alt="" width=50 height=50 class="others"/>
                         <p><a href="">Sato</a>:</p>
@@ -52,17 +53,17 @@
                         <img src="" alt="" width=50 height=50 class="others"/>
                         <p><a href="">nobuko</a>:</p>
                         <p>ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！</p>
-                    </il>
+                    </il> -->
                 </ul>
             </div>
             
-            <form action="" method="post" id="discussion_form">
+            <form action="/Archelon/discussion" method="post" id="discussion_form">
                 <div id="discussion_selectors">
                     <input type="checkbox" name="q1" value="text" checked>text
                     <input type="checkbox" name="q1" value="figure">fig
                     <input type="checkbox" name="q1" value="equation">math
                 </div>
-                <textarea wrap="off" name="MESSAGE" id="discussion_field"></textarea>
+                <textarea wrap="off" type="text" name="postedMessage" id="discussion_field"></textarea>
                 <div id="discussion_bottons">
                     <input type="submit" value="submit" name="submit">
                     <input type="submit" value="clear" name="clear">
