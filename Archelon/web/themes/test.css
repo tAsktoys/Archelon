@@ -132,10 +132,12 @@ img.ad_image {
 
 il.others {
     text-align: left;
+    border: 1px white solid;
 }
 
 il.me {
     text-align: right;
+    border: 1px green solid;
 }
 
 img.others {
@@ -145,7 +147,14 @@ img.others {
 
 img.me {
     float: right;
-    border: 1px green solid;
+}
+
+div.others {
+    text-align: left;
+}
+
+div.me {
+    text-align: right;
 }
 
 #user_information {

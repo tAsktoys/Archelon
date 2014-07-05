@@ -29,8 +29,10 @@
                     <c:forEach var="item" items="${discussion_log}">
                         <li class="${item.type}">
                             <img src="${item.icon}" alt="" width="50" heigth="50" class="${item.type}">
-                            <p><a href="${item.userpage}">${item.username}</a></p>
-                            <p>${item.message}</p>
+                            <div class="${item.type}">
+                                <p><a href="${item.userpage}">${item.username}</a></p>
+                                <p>${item.message}</p>
+                            </div>
                         </li>
                     </c:forEach>
                         <!--
