@@ -12,7 +12,7 @@
     <head>
         <!-- Style fragment -->
         <%@include file="/WEB-INF/jspf/style.jspf" %>
-        <title><spring:message code="app.name" /> mikan</title>
+        <title><spring:message code="app.name" /> ${id}</title>
     </head>
     <body>
         <!-- Header fragment -->
