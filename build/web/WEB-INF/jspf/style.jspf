@@ -1,5 +1,0 @@
-<%-- any content can be specified here e.g.: --%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ page pageEncoding="UTF-8" %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<spring:theme code="styleSheet"/>" type="text/css"/>
