@@ -20,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  *
  * @author Yuichiro
+ * @version 0.1
  */
 @Controller
 @RequestMapping(value="/userupdate")
 public class UserupdateController {
     
+    final static private String USER = "user";
+    final static private String USERINFORMATION = "user_information";
+    final static private String USERPROFILE = "user_profile";
     final static private String USERUPDATE = "userupdate";
     final static private String ID = "id";
     final static private String INPUTFORMLIST = "input_form_list";
@@ -71,12 +75,13 @@ public class UserupdateController {
     
     @RequestMapping(method = RequestMethod.POST)
     public String getPostedMessage(@RequestParam Map<String, String> params, Model model) {
+        model.addAttribute(USERPROFILE, params.get(USERPROFILE));
         
-         List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         list.add(params.get(NAME));
         list.add(params.get(AGE));
         list.add(params.get(SCHOOL));
-        model.addAttribute("user_information", list);
-        return "user";
+        model.addAttribute(USERINFORMATION, list);
+        return USER;
     }
 }

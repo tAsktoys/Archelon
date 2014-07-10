@@ -20,6 +20,8 @@
         <div id="main">
             <h2><spring:message code="userupdate.title" /></h2>
             <form action="/archelon/userupdate" method="post">
+                <p><spring:message code="user.profile" /></p>
+                <textarea wrap="off" type="text" name="user_profile" id="discussion_field"></textarea>
                 <table>
                     <c:forEach var="item" items="${input_form_list}">
                         <tr>
