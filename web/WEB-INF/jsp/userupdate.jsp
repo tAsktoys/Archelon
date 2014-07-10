@@ -19,7 +19,7 @@
         
         <div id="main">
             <h2><spring:message code="userupdate.title" /></h2>
-            <form>
+            <form action="/archelon/userupdate" method="post">
                 <table>
                     <c:forEach var="item" items="${input_form_list}">
                         <tr>
@@ -28,6 +28,7 @@
                         </tr>
                     </c:forEach>
                 </table>
+                <input type="submit" value="submit" name="submit">
             </form>
         </div>
 
