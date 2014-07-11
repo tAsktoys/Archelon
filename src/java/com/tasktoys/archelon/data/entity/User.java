@@ -134,7 +134,7 @@ public final class User implements Serializable {
     /**
      * Build user object.
      *
-     * @see Effective Java Second Edition Item 2
+     * Consultation: Effective Java Second Edition Item 2
      */
     public static class Builder {
 
