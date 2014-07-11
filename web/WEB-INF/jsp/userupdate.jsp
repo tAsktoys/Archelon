@@ -23,10 +23,10 @@
                 <p><spring:message code="user.profile" /></p>
                 <textarea wrap="off" type="text" name="user_profile" id="discussion_field"></textarea>
                 <table>
-                    <c:forEach var="item" items="${input_form_list}">
+                    <c:forEach var="item" items="${inputform_list}">
                         <tr>
-                            <td><c:out value="${item.entity}"/></td>
-                            <td><input type="text" name="<c:out value="${item.entity}"/>" size="30" value="<c:out value="${item.data}"/>"></td>
+                            <td><c:out value="${item.field}"/></td>
+                            <td><input type="text" name="<c:out value="${item.field}"/>" size="30" value="<c:out value="${item.entity}"/>"></td>
                         </tr>
                     </c:forEach>
                 </table>

@@ -27,14 +27,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserupdateController {
     
     final static private String USER = "user";
-    final static private String USERINFORMATION = "user_information";
-    final static private String USERPROFILE = "user_profile";
+    final static private String USER_INFORMATION = "user_information";
+    final static private String USER_PROFILE = "user_profile";
     final static private String USERUPDATE = "userupdate";
     final static private String ID = "id";
-    final static private String INPUTFORMLIST = "input_form_list";
+    final static private String INPUTFORM_LIST = "inputform_list";
     
+    final static private String FIELD = "field";
     final static private String ENTITY = "entity";
-    final static private String DATA = "data";
     
     final static private String NAME = "name";
     final static private String AGE = "age";
@@ -59,29 +59,29 @@ public class UserupdateController {
     }
     
     private void updateForm(String id, Model model) {
-        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        List<Map<String, String>> list = new ArrayList<>();
         list.add(makeMap(NAME, id));
         list.add(makeMap(AGE,"16"));
         list.add(makeMap(SCHOOL,""));
-        model.addAttribute(INPUTFORMLIST, list);
+        model.addAttribute(INPUTFORM_LIST, list);
     }
     
-    private HashMap<String, String> makeMap(String entity, String data) {
-        HashMap<String, String> map = new HashMap<>();
+    private Map<String, String> makeMap(String field, String entity) {
+        Map<String, String> map = new HashMap<>();
+        map.put(FIELD, field);
         map.put(ENTITY, entity);
-        map.put(DATA, data);
         return map;
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public String getPostedMessage(@RequestParam Map<String, String> params, Model model) {
-        model.addAttribute(USERPROFILE, params.get(USERPROFILE));
+        model.addAttribute(USER_PROFILE, params.get(USER_PROFILE));
         
         List<String> list = new ArrayList<>();
         list.add(params.get(NAME));
         list.add(params.get(AGE));
         list.add(params.get(SCHOOL));
-        model.addAttribute(USERINFORMATION, list);
+        model.addAttribute(USER_INFORMATION, list);
         return USER;
     }
 }
