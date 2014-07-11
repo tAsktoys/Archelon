@@ -40,5 +40,6 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <import resource="data.xml"/>
     <import resource="theme.xml" />
 </beans>

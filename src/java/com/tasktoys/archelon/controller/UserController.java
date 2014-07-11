@@ -3,14 +3,16 @@
  */
 package com.tasktoys.archelon.controller;
 
+import com.tasktoys.archelon.data.entity.User;
+import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.tags.Param;
 
 /**
  * Controller of <code>user.jsp</code>.
@@ -23,21 +25,30 @@ import org.springframework.web.servlet.tags.Param;
 @RequestMapping(value="/user")
 public class UserController {
     
-    final String ID = "id";
-    final String user_profile = "user_profile";
-    final String user_information = "user_information";
-    final String user_activity = "user_activity";
+    @Autowired
+    private UserService userService;
+    
+    private final String NAME = "name";
+    private final String user_profile = "user_profile";
+    private final String user_information = "user_information";
+    private final String user_activity = "user_activity";
     
     @RequestMapping(method = RequestMethod.GET)
     public String getUserGuest(Model model) {
-        model.addAttribute(ID, "Guest");
+        model.addAttribute(NAME, "Guest");
         updatePage(model);
         return "user";
     }
     
-    @RequestMapping(value="{id}", method = RequestMethod.GET)
-    public String getUser(@PathVariable String id, Model model) {
-        model.addAttribute(ID, id);
+    @RequestMapping(value="{name}", method = RequestMethod.GET)
+    public String getUser(@PathVariable String name, Model model) {
+        
+        User user = userService.findUserWithName(name);
+        if (user == null) {
+            model.addAttribute(NAME, "[NOT FOUND]");
+            return "user";
+        }
+        model.addAttribute(NAME, name);
         updatePage(model);
         return "user";
     }
