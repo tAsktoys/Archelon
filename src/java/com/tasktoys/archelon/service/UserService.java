@@ -11,7 +11,5 @@ import com.tasktoys.archelon.data.entity.User;
  */
 public interface UserService {
 
-    public User findUser(long id);
-
-    public User findUserWithName(String name);
+    public User findUserByName(String name);
 }

@@ -1,5 +1,5 @@
 <%-- 
-    Document   : profile
+    Document   : user
     Created on : 2014/05/31, 13:02:42
     Author     : mikan
     Author     : ysato
@@ -24,9 +24,9 @@
 
             <div id="user_information">
                 <h3><spring:message code="user.information.title" /></h3>
-                <p>${user_profile}</p>
+                <p>${profile}</p>
                 <ul id="user_information_list">
-                    <c:forEach var="info" items="${user_information}">
+                    <c:forEach var="info" items="${overview}">
                         <li class="user_information_item"><c:out value="${info}"/></li>
                     </c:forEach>
                 </ul>

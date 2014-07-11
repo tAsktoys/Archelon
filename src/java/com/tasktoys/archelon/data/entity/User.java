@@ -4,6 +4,11 @@
 package com.tasktoys.archelon.data.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -48,9 +53,9 @@ public final class User implements Serializable {
     private final String birthdate;
     
     /**
-     * User group. e.g. schools, companies, and associations.
+     * User place. e.g. locations, schools, companies, and associations.
      */
-    private final String group;
+    private final String place;
 
     private User(Builder builder) {
         this.id = builder.id;
@@ -59,14 +64,9 @@ public final class User implements Serializable {
         this.password = builder.password;
         this.profile = builder.profile;
         this.birthdate = builder.birthdate;
-        this.group = builder.group;
+        this.place = builder.place;
     }
 
-    /**
-     * Get user id.
-     *
-     * @return id
-     */
     public long getId() {
         return id;
     }
@@ -86,6 +86,20 @@ public final class User implements Serializable {
     public String getProfile() {
         return profile;
     }
+    
+    public Date getBirthdate() {
+        try {
+            if (birthdate != null)
+                return new SimpleDateFormat(Builder.dateFormat).parse(birthdate);
+        } catch (ParseException e) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+    
+    public String getPlace() {
+        return place;
+    }
 
     public User withName(String name) {
         Builder builder = new Builder(this);
@@ -104,15 +118,28 @@ public final class User implements Serializable {
         builder.password(password);
         return builder.build();
     }
+    
+    public User withProfile(String profile) {
+        Builder builder = new Builder(this);
+        builder.profile(profile);
+        return builder.build();
+    }
+    
+    public User withPlace(String place) {
+        Builder builder = new Builder(this);
+        builder.place(place);
+        return builder.build();
+    }
 
     /**
      * Build user object.
      *
      * @see Effective Java Second Edition Item 2
      */
-    public static class Builder implements Serializable {
+    public static class Builder {
 
         private static final long ILLEGAL_ID = -1;
+        private static final String dateFormat = "yyyyMMdd";
 
         private long id = ILLEGAL_ID;
         private String name = null;
@@ -120,7 +147,7 @@ public final class User implements Serializable {
         private String password = null;
         private String profile = null;
         private String birthdate = null;
-        private String group = null;
+        private String place = null;
 
         public Builder() {
             // do nothing
@@ -133,7 +160,7 @@ public final class User implements Serializable {
             this.password = user.password;
             this.profile = user.profile;
             this.birthdate = user.birthdate;
-            this.group = user.group;
+            this.place = user.place;
         }
 
         /**
@@ -144,7 +171,7 @@ public final class User implements Serializable {
          */
         public void id(long id) {
             if (id < 0) {
-                throw new IllegalArgumentException("negative value specified.");
+                throw new IllegalArgumentException("wrong id: " + id);
             }
             // TODO: check duplicate id here.
             this.id = id;
@@ -176,7 +203,7 @@ public final class User implements Serializable {
                 throw new NullPointerException("email is null.");
             }
             if (!isValidEmailAddress(email)) {
-                throw new IllegalArgumentException("email not valid.");
+                throw new IllegalArgumentException("wrong email.");
             }
             this.email = email;
         }
@@ -196,6 +223,32 @@ public final class User implements Serializable {
                 throw new IllegalArgumentException();
             }
             this.password = password;
+        }
+        
+        public void profile(String profile) {
+            if (profile == null)
+                return;
+            this.profile = profile;
+        }
+        
+        /**
+         * Set birthdate.
+         * 
+         * @param birthdate birthdate
+         * @throws IllegalArgumentException If specify invalid date
+         */
+        public void birthdate(String birthdate) {
+            if (birthdate == null)
+                return;
+            if (!isValidDate(birthdate))
+                throw new IllegalArgumentException("wring date: " + birthdate);
+            this.birthdate = birthdate;
+        }
+        
+        public void place(String place) {
+            if (place == null)
+                return;
+            this.place = place;
         }
 
         /**
@@ -234,6 +287,17 @@ public final class User implements Serializable {
                 emailAddr.validate();
                 return true;
             } catch (AddressException ex) {
+                return false;
+            }
+        }
+        
+        private boolean isValidDate(String date) {
+            if (date == null)
+                throw new NullPointerException("date is null.");
+            try {
+                new SimpleDateFormat(Builder.dateFormat).parse(date);
+                return true;
+            } catch (ParseException e) {
                 return false;
             }
         }

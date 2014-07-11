@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <bean id="userDao" class="com.tasktoys.archelon.data.dao.impl.UserDaoImpl">
+    <bean id="userDao" class="com.tasktoys.archelon.data.dao.UserDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
     
