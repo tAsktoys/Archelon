@@ -16,7 +16,8 @@
     </form>
 
     <!-- Title -->
-    <h1 id="title" onclick="location.href='<%=PATH_PREFIX%>'"><spring:message code="app.name" /></h1>
+    <h1 id="title" onclick="location.href='<%=PATH_PREFIX%>'"><spring:message code="app.name" />
+        <small><spring:message code="app.title" /></small></h1>
 
     <p id="welcome"><spring:message code="auth.welcome.prefix" /> 
         <spring:message code="auth.guest" /> 

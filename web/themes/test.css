@@ -45,6 +45,11 @@ table, th, td {
     margin-bottom: 3px;
 }
 
+#title small {
+    color:  gray;
+    font-size: 15px;
+}
+
 #login {
     text-align: left;
     margin: 5px 0px;
