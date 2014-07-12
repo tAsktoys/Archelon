@@ -24,7 +24,7 @@
 
             <div id="user_information">
                 <h3><spring:message code="user.information.title" /></h3>
-                <p>${profile}</p>
+                <p>${description}</p>
                 <ul id="user_information_list">
                     <c:forEach var="info" items="${overview}">
                         <li class="user_information_item"><c:out value="${info}"/></li>

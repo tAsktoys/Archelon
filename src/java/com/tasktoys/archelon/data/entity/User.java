@@ -4,11 +4,8 @@
 package com.tasktoys.archelon.data.entity;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -176,47 +173,6 @@ public final class User implements Serializable {
         return builder.build();
     }
 
-    public static class OAuthAccount {
-
-        private String id;
-        private String accessToken;
-        private String accessSecret;
-
-        public OAuthAccount() {
-            //
-        }
-
-        public OAuthAccount(String id, String accessToken, String accessSecret) {
-            this.id = id;
-            this.accessToken = accessToken;
-            this.accessSecret = accessSecret;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getAccessToken() {
-            return accessToken;
-        }
-
-        public String getAccessSecret() {
-            return accessSecret;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setAccessToken(String accessToken) {
-            this.accessToken = accessToken;
-        }
-
-        public void setAccessSecret(String accessSecret) {
-            this.accessSecret = accessSecret;
-        }
-    }
-
     /**
      * Build user object.
      *
@@ -346,12 +302,12 @@ public final class User implements Serializable {
             this.password = password;
         }
 
-        public void description(String profile) {
-            if (profile == null) {
+        public void description(String description) {
+            if (description == null) {
                 return;
             }
             // TODO: length check
-            this.description = profile;
+            this.description = description;
         }
 
         /**
@@ -472,15 +428,13 @@ public final class User implements Serializable {
                 throw new IllegalStateException("password not specified.");
             }
             if (twitter != null) {
-                if (twitter.id == null || twitter.accessToken == null || 
-                        twitter.accessSecret == null) {
+                if (!twitter.validate()) {
                     throw new IllegalStateException(
                             "twitter creation incomplete.");
                 }
             }
             if (facebook != null) {
-                if (facebook.id == null || facebook.accessToken == null || 
-                        facebook.accessSecret == null) {
+                if (facebook.validate()) {
                     throw new IllegalStateException(
                             "facebook creation incomplete.");
                 }

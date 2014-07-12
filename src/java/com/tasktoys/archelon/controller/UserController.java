@@ -32,7 +32,7 @@ public class UserController {
 
     private final String ID = "id";
     private final String NAME = "name";
-    private final String PROFILE = "profile";
+    private final String DESCRIPTION = "description";
     private final String OVERVIEW = "overview";
     private final String user_activity = "user_activity";
 
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     private void updateUserInformation(Model model, User user) {
-        model.addAttribute(PROFILE, user.getDescription());
+        model.addAttribute(DESCRIPTION, user.getDescription());
 
         long id = user.getId();
         String name = user.getName();
