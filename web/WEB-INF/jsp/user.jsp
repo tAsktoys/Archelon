@@ -1,5 +1,5 @@
 <%-- 
-    Document   : user
+    Document   : profile
     Created on : 2014/05/31, 13:02:42
     Author     : mikan
     Author     : ysato
@@ -12,7 +12,7 @@
     <head>
         <!-- Style fragment -->
         <%@include file="/WEB-INF/jspf/style.jspf" %>
-        <title><spring:message code="app.name" /> ${name}</title>
+        <title><spring:message code="app.name" /> ${id}</title>
     </head>
     <body>
         <!-- Header fragment -->
@@ -20,13 +20,13 @@
 
         <div id="main">
 
-            <h2>${name}<spring:message code="user.title.suffix" /></h2>
+            <h2>${id}<spring:message code="user.title.suffix" /></h2>
 
             <div id="user_information">
                 <h3><spring:message code="user.information.title" /></h3>
-                <p>${profile}</p>
+                <p>${user_profile}</p>
                 <ul id="user_information_list">
-                    <c:forEach var="info" items="${overview}">
+                    <c:forEach var="info" items="${user_information}">
                         <li class="user_information_item"><c:out value="${info}"/></li>
                     </c:forEach>
                 </ul>
