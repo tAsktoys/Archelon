@@ -4,6 +4,10 @@
 package com.tasktoys.archelon.data.entity;
 
 import com.tasktoys.archelon.data.entity.User.Builder;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -40,7 +44,7 @@ public class UserTest {
         String email = "test@test.com";
         String password = "password";
         String profile = "This is sample profile.";
-        String birthdate = "20141231";
+        Date birthdate = parseDate("20141231");
         String place = "JAIST";
         
         Builder builder = new Builder();
@@ -157,23 +161,16 @@ public class UserTest {
         new Builder().birthdate(null);
     }
     
-    @Test(expected=IllegalArgumentException.class)
-    public void testBuilderBirthdate_invalidCase1() {
-        new Builder().birthdate("1234567");
-    }
-    
-    @Test(expected=IllegalArgumentException.class)
-    public void testBuilderBirthdate_invalidCase2() {
-        new Builder().birthdate("123456789");
-    }
-    
-    @Test(expected=IllegalArgumentException.class)
-    public void testBuilderBirthdate_invalidCase3() {
-        new Builder().birthdate("abcdefgh");
-    }
-    
     @Test // want value, not thrown NPE
     public void testBuilderPlace_nullCase() {
         new Builder().location(null);
+    }
+    
+    private Date parseDate(String dateStr) {
+        try {
+            return Builder.DATE_FORMAT.parse(dateStr);
+        } catch (ParseException e) {
+            throw new AssertionError("invalid date format.");
+        }
     }
 }

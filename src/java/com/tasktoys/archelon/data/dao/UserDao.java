@@ -6,6 +6,7 @@ package com.tasktoys.archelon.data.dao;
 import com.tasktoys.archelon.data.entity.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -77,7 +78,7 @@ public class UserDao {
             builder.email(result.getString(Column.EMAIL.toString()));
             builder.password(result.getString(Column.PASSWORD.toString()));
             builder.description(result.getString(Column.DESCRIPTION.toString()));
-            builder.birthdate(result.getString(Column.BIRTHDATE.toString()));
+            builder.birthdate(result.getDate(Column.BIRTHDATE.toString()));
             builder.location(result.getString(Column.LOCATION.toString()));
             builder.affiliate(result.getString(Column.AFFILIATE.toString()));
             builder.url(result.getString(Column.URL.toString()));

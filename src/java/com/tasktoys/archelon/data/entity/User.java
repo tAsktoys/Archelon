@@ -55,7 +55,7 @@ public final class User implements Serializable {
     /**
      * Birth date. Format is yyyyMMdd.
      */
-    private final String birthdate;
+    private final Date birthdate;
 
     /**
      * User place. e.g. locations, schools, companies, and associations.
@@ -123,14 +123,7 @@ public final class User implements Serializable {
     }
 
     public Date getBirthdate() {
-        try {
-            if (birthdate != null) {
-                return new SimpleDateFormat(Builder.DATE_FORMAT).parse(birthdate);
-            }
-        } catch (ParseException e) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return null;
+        return birthdate;
     }
 
     public String getLocation() {
@@ -231,8 +224,11 @@ public final class User implements Serializable {
      */
     public static class Builder {
 
+        private static final String DATE_FORMAT_STRING = "yyyyMMdd";
+        public static final SimpleDateFormat DATE_FORMAT = 
+                new SimpleDateFormat(DATE_FORMAT_STRING);
+        
         private static final long ILLEGAL_ID = -1;
-        private static final String DATE_FORMAT = "yyyyMMdd";
 
         private long id = ILLEGAL_ID;
         private State state = null;
@@ -240,7 +236,7 @@ public final class User implements Serializable {
         private String email = null;
         private String password = null;
         private String description = null;
-        private String birthdate = null;
+        private Date birthdate = null;
         private String location = null;
         private String affiliate = null;
         private String url = null;
@@ -286,13 +282,14 @@ public final class User implements Serializable {
         /**
          * Set user state.
          *
-         * @param state state
+         * @param stateValue state
          * @throws NullPointerException If specify null
          */
         public void state(int stateValue) {
             for (State s : State.values()) {
                 if (stateValue == s.ordinal()) {
                     this.state = s;
+                    return;
                 }
             }
             throw new IllegalArgumentException("illegal state: " + stateValue);
@@ -363,16 +360,9 @@ public final class User implements Serializable {
          * @param birthdate birthdate
          * @throws IllegalArgumentException If specify invalid date
          */
-        public void birthdate(String birthdate) {
+        public void birthdate(Date birthdate) {
             if (birthdate == null) {
                 return;
-            }
-            if (birthdate.length() != Builder.DATE_FORMAT.length()) {
-                throw new IllegalArgumentException("acceptable format: "
-                        + DATE_FORMAT);
-            }
-            if (!isValidDate(birthdate)) {
-                throw new IllegalArgumentException("wring date: " + birthdate);
             }
             this.birthdate = birthdate;
         }
@@ -512,18 +502,6 @@ public final class User implements Serializable {
                 emailAddr.validate();
                 return true;
             } catch (AddressException ex) {
-                return false;
-            }
-        }
-
-        private boolean isValidDate(String date) {
-            if (date == null) {
-                throw new NullPointerException("date is null.");
-            }
-            try {
-                new SimpleDateFormat(Builder.DATE_FORMAT).parse(date);
-                return true;
-            } catch (ParseException e) {
                 return false;
             }
         }
