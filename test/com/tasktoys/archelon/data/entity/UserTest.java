@@ -1,9 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright(C) 2014 tAsktoys Project. All rights reserved.
  */
-
 package com.tasktoys.archelon.data.entity;
 
 import com.tasktoys.archelon.data.entity.User.Builder;
@@ -51,17 +48,17 @@ public class UserTest {
         builder.name(name);
         builder.email(email);
         builder.password(password);
-        builder.profile(profile);
+        builder.description(profile);
         builder.birthdate(birthdate);
-        builder.place(place);
+        builder.location(place);
         User user = builder.build();
         assertEquals(id, user.getId());
         assertEquals(name, user.getName());
         assertEquals(email, user.getEmail());
         assertEquals(password, user.getPassword());
-        assertEquals(profile, user.getProfile());
+        assertEquals(profile, user.getDescription());
         assertEquals(birthdate, user.getBirthdate());
-        assertEquals(place, user.getPlace());
+        assertEquals(place, user.getLocation());
     }
     
     public void testBuilder_mustOnlyCase() {
@@ -80,9 +77,9 @@ public class UserTest {
         assertEquals(name, user.getName());
         assertEquals(email, user.getEmail());
         assertEquals(password, user.getPassword());
-        assertNull(user.getProfile());
+        assertNull(user.getDescription());
         assertNull(user.getBirthdate());
-        assertNull(user.getPlace());
+        assertNull(user.getLocation());
     }
     
     /**
@@ -152,7 +149,7 @@ public class UserTest {
     
     @Test // want value, not thrown NPE
     public void testBuilderProfile_nullCase() {
-        new Builder().profile(null);
+        new Builder().description(null);
     }
     
     @Test // want value, not thrown NPE
@@ -177,6 +174,6 @@ public class UserTest {
     
     @Test // want value, not thrown NPE
     public void testBuilderPlace_nullCase() {
-        new Builder().place(null);
+        new Builder().location(null);
     }
 }

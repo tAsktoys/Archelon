@@ -59,12 +59,12 @@ public class UserController {
     }
 
     private void updateUserInformation(Model model, User user) {
-        model.addAttribute(PROFILE, user.getProfile());
+        model.addAttribute(PROFILE, user.getDescription());
 
         long id = user.getId();
         String name = user.getName();
         Date birthdate = user.getBirthdate();
-        String place = user.getPlace();
+        String place = user.getLocation();
 
         List<String> list = new ArrayList<>();
         list.add(id < 0 ? "(N/A)" : "ID: " + Long.toString(id));

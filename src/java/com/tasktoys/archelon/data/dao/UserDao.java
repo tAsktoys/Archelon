@@ -29,7 +29,9 @@ public class UserDao {
      */
     private enum Column {
 
-        ID, NAME, EMAIL, PASSWORD, PROFILE, BIRTHDATE, PLACE;
+        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION, 
+        AFFILIATE, URL, TWITTER_ID, TWITTER_TOKEN, TWITTER_SECRET, FACEBOOK_ID,
+        FACEBOOK_TOKEN, FACEBOOK_SECRET;
 
         @Override
         public String toString() {
@@ -39,7 +41,7 @@ public class UserDao {
 
     /**
      * Set data source. It invoke from Spring Framework.
-     * 
+     *
      * @param dataSource data source
      */
     public void setDataSource(DataSource dataSource) {
@@ -48,7 +50,7 @@ public class UserDao {
 
     /**
      * Find user record by name.
-     * 
+     *
      * @param name name of user
      * @return user, or <code>null</code> if not found.
      */
@@ -70,12 +72,21 @@ public class UserDao {
         public User mapRow(ResultSet result, int row) throws SQLException {
             User.Builder builder = new User.Builder();
             builder.id(result.getLong(Column.ID.toString()));
+            builder.state(result.getInt(Column.STATE.toString()));
             builder.name(result.getString(Column.NAME.toString()));
             builder.email(result.getString(Column.EMAIL.toString()));
             builder.password(result.getString(Column.PASSWORD.toString()));
-            builder.profile(result.getString(Column.PROFILE.toString()));
+            builder.description(result.getString(Column.DESCRIPTION.toString()));
             builder.birthdate(result.getString(Column.BIRTHDATE.toString()));
-            builder.place(result.getString(Column.PLACE.toString()));
+            builder.location(result.getString(Column.LOCATION.toString()));
+            builder.affiliate(result.getString(Column.AFFILIATE.toString()));
+            builder.url(result.getString(Column.URL.toString()));
+            builder.twitterId(result.getString(Column.TWITTER_ID.toString()));
+            builder.twitterToken(result.getString(Column.TWITTER_TOKEN.toString()));
+            builder.twitterSecret(result.getString(Column.TWITTER_SECRET.toString()));
+            builder.facebookId(result.getString(Column.FACEBOOK_ID.toString()));
+            builder.facebookToken(result.getString(Column.FACEBOOK_TOKEN.toString()));
+            builder.facebookSecret(result.getString(Column.FACEBOOK_SECRET.toString()));
             return builder.build();
         }
     }
