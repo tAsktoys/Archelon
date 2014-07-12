@@ -6,7 +6,6 @@ package com.tasktoys.archelon.data.dao;
 import com.tasktoys.archelon.data.entity.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

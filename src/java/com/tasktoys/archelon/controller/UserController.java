@@ -62,15 +62,23 @@ public class UserController {
         model.addAttribute(DESCRIPTION, user.getDescription());
 
         long id = user.getId();
+        User.State state = user.getState();
         String name = user.getName();
         Date birthdate = user.getBirthdate();
-        String place = user.getLocation();
+        String location = user.getLocation();
+        String affiliate = user.getAffiliate();
+        String url = user.getUrl();
+        String twitterId = user.getTwitter().getId();
 
         List<String> list = new ArrayList<>();
         list.add(id < 0 ? "(N/A)" : "ID: " + Long.toString(id));
+        list.add("State: " + state.toString());
         list.add(name == null ? "(N/A)" : "Name: " + name);
         list.add(birthdate == null ? "(N/A)" : "Age: " + calcAge(birthdate));
-        list.add(place == null ? "(N/A)" : place);
+        list.add(location == null ? "(N/A)" : location);
+        list.add(affiliate == null ? "(N/A)" : affiliate);
+        list.add(url == null ? "(N/A)" : url);
+        list.add(twitterId == null ? "(N/A)" : "@" + twitterId);
         model.addAttribute(OVERVIEW, list);
     }
 

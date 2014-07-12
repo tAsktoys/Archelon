@@ -102,6 +102,10 @@ public final class User implements Serializable {
     public long getId() {
         return id;
     }
+    
+    public State getState() {
+        return state;
+    }
 
     public String getName() {
         return name;
