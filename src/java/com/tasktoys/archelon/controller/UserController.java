@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.controller;
 
+import com.tasktoys.archelon.data.entity.OAuthAccount;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
@@ -68,7 +69,8 @@ public class UserController {
         String location = user.getLocation();
         String affiliate = user.getAffiliate();
         String url = user.getUrl();
-        String twitterId = user.getTwitter().getId();
+        OAuthAccount twitter = user.getTwitter();
+        String twitterId = twitter != null ? twitter.getId() : null;
 
         List<String> list = new ArrayList<>();
         list.add(id < 0 ? "(N/A)" : "ID: " + Long.toString(id));
