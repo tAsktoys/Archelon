@@ -30,6 +30,7 @@
                         <li class="user_information_item"><c:out value="${info}"/></li>
                     </c:forEach>
                 </ul>
+                <a href="/archelon/userupdate/${id}"><spring:message code="user.update" /></a>
             </div>
             
             <div id="user_activities">
