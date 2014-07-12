@@ -90,7 +90,7 @@ public final class User implements Serializable {
     public Date getBirthdate() {
         try {
             if (birthdate != null)
-                return new SimpleDateFormat(Builder.dateFormat).parse(birthdate);
+                return new SimpleDateFormat(Builder.DATE_FORMAT).parse(birthdate);
         } catch (ParseException e) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -139,7 +139,7 @@ public final class User implements Serializable {
     public static class Builder {
 
         private static final long ILLEGAL_ID = -1;
-        private static final String dateFormat = "yyyyMMdd";
+        private static final String DATE_FORMAT = "yyyyMMdd";
 
         private long id = ILLEGAL_ID;
         private String name = null;
@@ -154,6 +154,8 @@ public final class User implements Serializable {
         }
 
         public Builder(User user) {
+            if (user == null)
+                return;
             this.id = user.id;
             this.name = user.name;
             this.email = user.email;
@@ -187,6 +189,7 @@ public final class User implements Serializable {
             if (name == null) {
                 throw new NullPointerException("name is null.");
             }
+            // TODO: length check
             this.name = name;
         }
 
@@ -205,6 +208,7 @@ public final class User implements Serializable {
             if (!isValidEmailAddress(email)) {
                 throw new IllegalArgumentException("wrong email.");
             }
+            // TODO: length check
             this.email = email;
         }
 
@@ -222,12 +226,14 @@ public final class User implements Serializable {
             if (password.isEmpty()) {
                 throw new IllegalArgumentException();
             }
+            // TODO: length check
             this.password = password;
         }
         
         public void profile(String profile) {
             if (profile == null)
                 return;
+            // TODO: length check
             this.profile = profile;
         }
         
@@ -240,6 +246,9 @@ public final class User implements Serializable {
         public void birthdate(String birthdate) {
             if (birthdate == null)
                 return;
+            if (birthdate.length() != Builder.DATE_FORMAT.length())
+                throw new IllegalArgumentException("acceptable format: " + 
+                        DATE_FORMAT);
             if (!isValidDate(birthdate))
                 throw new IllegalArgumentException("wring date: " + birthdate);
             this.birthdate = birthdate;
@@ -248,6 +257,7 @@ public final class User implements Serializable {
         public void place(String place) {
             if (place == null)
                 return;
+            // TODO: length check
             this.place = place;
         }
 
@@ -295,7 +305,7 @@ public final class User implements Serializable {
             if (date == null)
                 throw new NullPointerException("date is null.");
             try {
-                new SimpleDateFormat(Builder.dateFormat).parse(date);
+                new SimpleDateFormat(Builder.DATE_FORMAT).parse(date);
                 return true;
             } catch (ParseException e) {
                 return false;

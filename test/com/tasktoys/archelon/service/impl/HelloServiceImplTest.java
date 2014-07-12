@@ -1,9 +1,8 @@
 /*
  * Copyright(C) 2014 tAsktoys Project. All rights reserved.
  */
-package com.tasktoys.archelon.service;
+package com.tasktoys.archelon.service.impl;
 
-import com.tasktoys.archelon.service.impl.HelloServiceImpl;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +15,9 @@ import static org.junit.Assert.*;
  *
  * @author mikan
  */
-public class HelloServiceTest {
+public class HelloServiceImplTest {
     
-    public HelloServiceTest() {
+    public HelloServiceImplTest() {
     }
     
     @BeforeClass
@@ -41,7 +40,7 @@ public class HelloServiceTest {
      * Test of sayHello method, Normal case.
      */
     @Test
-    public void testSayHello_NormalInput() {
+    public void testSayHello_normalInput() {
         HelloServiceImpl instance = new HelloServiceImpl();
         String name = "test";
         String expResult = "Hello test!";
@@ -53,7 +52,7 @@ public class HelloServiceTest {
      * Test of sayHello method, NPE case.
      */
     @Test(expected=NullPointerException.class)
-    public void testSayHello_NullInput() {
+    public void testSayHello_nullInput() {
         HelloServiceImpl instance = new HelloServiceImpl();
         instance.sayHello(null);
         fail();
