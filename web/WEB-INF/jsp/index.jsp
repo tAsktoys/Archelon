@@ -7,21 +7,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- Style fragment -->
-        <%@include file="/WEB-INF/jspf/style.jspf" %>
+        <%@include file="../jspf/style.jspf" %>
         <title><spring:message code="app.name" /></title>
     </head>
     <body>
-        <!-- Header fragment -->
-        <%@include file="/WEB-INF/jspf/header.jspf" %>
+        <%@include file="../jspf/header.jspf" %>
         <div id="main">
-            <div id="menu">
-                <!-- Ranking -->
-                <h2><spring:message code="ranking.title" /></h2>
-                <p><a href="ranking">Show ranking</a></p>
-                <!-- Ads fragment -->
-                <%@include file="/WEB-INF/jspf/ads.jspf" %>
-            </div>
+            <%@include file="../jspf/menu.jspf" %>
             <div id="content">
                 <!-- Discussions -->
                 <div id="discussions">
@@ -128,7 +120,6 @@
                 </div>
             </div>
         </div>
-        <!-- Footer fragment -->
-        <%@include file="/WEB-INF/jspf/footer.jspf" %>
+        <%@include file="../jspf/footer.jspf" %>
     </body>
 </html>

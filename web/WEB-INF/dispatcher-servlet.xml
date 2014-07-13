@@ -42,4 +42,6 @@
 
     <import resource="data.xml"/>
     <import resource="theme.xml" />
+    
+    <bean id="userSession" class="com.tasktoys.archelon.controller.UserSession" scope="session" />
 </beans>

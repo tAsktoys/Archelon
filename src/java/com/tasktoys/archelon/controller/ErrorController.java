@@ -4,24 +4,25 @@
 package com.tasktoys.archelon.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller of index.jsp
  *
  * @author mikan
- * @since 0.1
  */
 @Controller
-@RequestMapping(value = "/")
-public class IndexController {
+@RequestMapping(value = "/error")
+public class ErrorController {
     
-    static final String VIEW = "index";
-
+    static final String VIEW = "error";
+    
     @RequestMapping(method = RequestMethod.GET)
-    public String getIndex(Model model) {
+    public String handleRequest(ModelMap modelMap) {
+        if (modelMap.get("message") == null) {
+            return "redirect:/"; // return to index
+        }
         return VIEW;
     }
 }
