@@ -6,8 +6,6 @@ package com.tasktoys.archelon.data.entity;
 import com.tasktoys.archelon.data.entity.User.Builder;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -59,7 +57,7 @@ public class UserTest {
         assertEquals(id, user.getId());
         assertEquals(name, user.getName());
         assertEquals(email, user.getEmail());
-        assertEquals(password, user.getPassword());
+        // TODO: password check
         assertEquals(profile, user.getDescription());
         assertEquals(birthdate, user.getBirthdate());
         assertEquals(place, user.getLocation());
@@ -80,7 +78,7 @@ public class UserTest {
         assertEquals(id, user.getId());
         assertEquals(name, user.getName());
         assertEquals(email, user.getEmail());
-        assertEquals(password, user.getPassword());
+        // password check
         assertNull(user.getDescription());
         assertNull(user.getBirthdate());
         assertNull(user.getLocation());

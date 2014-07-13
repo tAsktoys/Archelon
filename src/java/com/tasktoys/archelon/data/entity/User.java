@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * An entity of archelon's user.
@@ -18,6 +19,8 @@ import javax.mail.internet.InternetAddress;
  * @author mikan
  */
 public final class User implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     /**
      * Archelon-unique user id.
@@ -114,9 +117,18 @@ public final class User implements Serializable {
     public String getEmail() {
         return email;
     }
-
-    public String getPassword() {
-        return password;
+    
+    public boolean isValidPasswordWithPlaneString(String planeString) {
+        String sha256 = DigestUtils.sha256Hex(planeString);
+        if (sha256 == null)
+            return false;
+        return sha256.equalsIgnoreCase(password);
+    }
+    
+    public boolean isValidPasswordWithHash(String sha256) {
+        if (sha256 == null)
+            return false;
+        return sha256.equalsIgnoreCase(password);
     }
 
     public String getDescription() {
