@@ -24,4 +24,9 @@ public class IndexController {
     public String getIndex(Model model) {
         return VIEW;
     }
+    
+    @RequestMapping(method = RequestMethod.POST)
+    public String chooseCategory(Model model) {
+        return VIEW;
+    }
 }
