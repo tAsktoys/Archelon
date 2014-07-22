@@ -21,22 +21,22 @@
                     <!-- Category selection -->
                     <form action="" method="post" class="category" onchange="submit(this.form)">
                         <spring:message code="category.category1" />
-                        <select name="category1">
+                        <select name="main_category">
                             <option value="category1-all">
                                 <spring:message code="category.category1.all" />
                             </option>
-                            <option value="category1-a">Category 1-A</option>
-                            <option value="category1-b">Category 1-B</option>
-                            <option value="category1-c">Category 1-C</option>
+                            <c:forEach var="category" items="${main_category}">
+                                <option value="">${category}</option>
+                            </c:forEach>
                         </select>
                         <spring:message code="category.category2" />
-                        <select name="category2">
+                        <select name="sub_category">
                             <option value="category2-all">
                                 <spring:message code="category.category2.all" />
                             </option>
-                            <option value="category2-a">Category 2-A</option>
-                            <option value="category2-b">Category 2-B</option>
-                            <option value="category2-c">Category 2-C</option>
+                            <c:forEach var="category" items="${sub_category}">
+                                <option value="">${category}</option>
+                            </c:forEach>
                         </select>
                     </form>
                     <!-- Table of discussions -->
