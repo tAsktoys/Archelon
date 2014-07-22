@@ -1,6 +1,6 @@
 <%-- 
     Document   : index
-    Author     : mikan
+    Author     : mikan,ysato
 --%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
