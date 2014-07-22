@@ -19,7 +19,7 @@
                 <div id="discussions">
                     <h2><spring:message code="discussion.names" /></h2>
                     <!-- Category selection -->
-                    <form action="" method="post" class="category">
+                    <form action="" method="post" class="category" onchange="submit(this.form)">
                         <spring:message code="category.category1" />
                         <select name="category1">
                             <option value="category1-all">
