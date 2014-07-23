@@ -19,14 +19,14 @@
                 <div id="discussions">
                     <h2><spring:message code="discussion.names" /></h2>
                     <!-- Category selection -->
-                    <form action="" method="post" class="category" onchange="submit(this.form)">
+                    <form action="/archelon/" method="post" class="category" onchange="submit(this.form)">
                         <spring:message code="category.category1" />
                         <select name="main_category">
                             <option value="category1-all">
                                 <spring:message code="category.category1.all" />
                             </option>
                             <c:forEach var="category" items="${main_category}">
-                                <option value="">${category}</option>
+                                <option value="${category}">${category}</option>
                             </c:forEach>
                         </select>
                         <spring:message code="category.category2" />
