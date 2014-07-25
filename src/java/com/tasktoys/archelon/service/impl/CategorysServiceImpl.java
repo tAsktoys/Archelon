@@ -10,7 +10,7 @@ import com.tasktoys.archelon.data.dao.CategorysDao;
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Categorys;
 import com.tasktoys.archelon.service.CategorysService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 /**
  *
  * @author Yuichiro
@@ -28,5 +28,13 @@ public class CategorysServiceImpl implements CategorysService {
     @Override
     public Categorys getSubCategorys(String category) {
         return categorysDao.findSubCategorys(category);
+    }
+    
+    public List<String> getMainCategoryList() {
+        return categorysDao.findMainCategoryList();
+    }
+    
+    public List<String> getSubCategoryList(String category) {
+        return categorysDao.findSubCategoryList(category);
     }
 }

@@ -28,22 +28,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class IndexController {
     
     
-    private final CategorysService categorysService = new CategorysServiceImpl();
+    private final CategorysServiceImpl categorysService = new CategorysServiceImpl();
     
     static final String VIEW = "index";
-    private static final String MAIN_CATEGORY = "main_category";
-    private static final String SUB_CATEGORY = "sub_category";
+    private static final String MAIN_CATEGORY_LIST = "main_category_list";
+    private static final String SUB_CATEGORY_LIST = "sub_category_list";
 
     @RequestMapping(method = RequestMethod.GET)
     public String getIndex(Model model) {
-        model.addAttribute(MAIN_CATEGORY, categorysService.getMainCategorys());
+        model.addAttribute(MAIN_CATEGORY_LIST, categorysService.getMainCategoryList());
         return VIEW;
     }
     
-    @RequestMapping(method = RequestMethod.POST)
-    public String chooseCategory(@ModelAttribute("chosed") Categorys categorys, Model model) {
-        model.addAttribute(MAIN_CATEGORY, categorysService.getMainCategorys());
-        model.addAttribute(SUB_CATEGORY, categorysService.getSubCategorys(categorys.getMainCategory()));
+    @RequestMapping(method = RequestMethod.POST, params = "main_category")
+    public String chooseCategory(@RequestParam Map<String, String> params, Model model) {
+        model.addAttribute(MAIN_CATEGORY_LIST, categorysService.getMainCategoryList());
+        model.addAttribute(SUB_CATEGORY_LIST, categorysService.getSubCategoryList(params.get("main_category")));
         return VIEW;
     }
 }
