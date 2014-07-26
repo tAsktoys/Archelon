@@ -1,19 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright(C) 2014 tAsktoys Project. All rights reserved.
  */
-
 package com.tasktoys.archelon.service;
 
-import com.tasktoys.archelon.data.entity.Category;
-import com.tasktoys.archelon.data.entity.Categorys;
+import java.util.List;
 /**
  *
  * @author Yuichiro
  */
 public interface CategorysService {
     
-    public Categorys getMainCategorys();
-    public Categorys getSubCategorys(String category);
+    public List<String> getMainCategoryList();
+    public List<String> getSubCategoryList(String category);
 }
