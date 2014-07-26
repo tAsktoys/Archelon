@@ -6,15 +6,28 @@
 
 package com.tasktoys.archelon.data.dao;
 
-import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Categorys;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 /**
  *
  * @author Yuichiro
  */
-public class CategorysDao {
+public class CategoriesDao {
+    
+    private JdbcTemplate jdbcTemplate;
+    
+    /**
+     * Set data source. It invoke from Spring Framework.
+     *
+     * @param dataSource data source
+     */
+    public void setDataSource(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     
     public Categorys findMainCategorys() {
         return new Categorys();

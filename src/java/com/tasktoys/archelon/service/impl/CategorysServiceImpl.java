@@ -1,34 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright(C) 2014 tAsktoys Project. All rights reserved.
  */
-
 package com.tasktoys.archelon.service.impl;
 
-import com.tasktoys.archelon.data.dao.CategorysDao;
-import com.tasktoys.archelon.data.entity.Category;
-import com.tasktoys.archelon.data.entity.Categorys;
+import com.tasktoys.archelon.data.dao.CategoriesDao;
 import com.tasktoys.archelon.service.CategorysService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author Yuichiro
  */
+@Service
 public class CategorysServiceImpl implements CategorysService {
  
-    
-    private final CategorysDao categorysDao = new CategorysDao();
-    
-    @Override
-    public Categorys getMainCategorys() {
-        return categorysDao.findMainCategorys();
-    }
-    
-    @Override
-    public Categorys getSubCategorys(String category) {
-        return categorysDao.findSubCategorys(category);
-    }
+    @Autowired
+    private CategoriesDao categorysDao;
     
     public List<String> getMainCategoryList() {
         return categorysDao.findMainCategoryList();

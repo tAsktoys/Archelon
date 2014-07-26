@@ -9,6 +9,10 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
     
+    <bean id="categoriesDao" class="com.tasktoys.archelon.data.dao.CategoriesDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
     <!-- Define properties of database -->
     <context:property-placeholder location="WEB-INF/classes/database.properties"/>
     
