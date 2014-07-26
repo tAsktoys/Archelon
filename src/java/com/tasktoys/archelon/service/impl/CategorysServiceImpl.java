@@ -19,10 +19,12 @@ public class CategorysServiceImpl implements CategorysService {
     @Autowired
     private CategoriesDao categorysDao;
     
+    @Override
     public List<String> getMainCategoryList() {
         return categorysDao.findMainCategoryList();
     }
     
+    @Override
     public List<String> getSubCategoryList(String category) {
         return categorysDao.findSubCategoryList(category);
     }
