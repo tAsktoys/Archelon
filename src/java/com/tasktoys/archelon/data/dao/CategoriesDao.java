@@ -1,20 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright(C) 2014 tAsktoys Project. All rights reserved.
  */
-
 package com.tasktoys.archelon.data.dao;
 
 import com.tasktoys.archelon.data.entity.Categorys;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 /**
  *
  * @author Yuichiro
  */
+@Repository
 public class CategoriesDao {
     
     private JdbcTemplate jdbcTemplate;
@@ -24,6 +24,7 @@ public class CategoriesDao {
      *
      * @param dataSource data source
      */
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
