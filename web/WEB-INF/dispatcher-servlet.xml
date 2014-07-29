@@ -39,6 +39,9 @@
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    
+    <!-- Global exception resolver -->
+    <bean class="com.tasktoys.archelon.controller.ExceptionResolver"/>
 
     <import resource="data.xml"/>
     <import resource="theme.xml" />

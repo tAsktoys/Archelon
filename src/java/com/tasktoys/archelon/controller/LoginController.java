@@ -35,6 +35,7 @@ public class LoginController {
 
     private static Logger log = Logger.getLogger(LoginController.class.getName());
 
+    private static final String VIEW_SUCCESS = "success";
     private static final String SUBMIT_NORMAL = "normalLogin";
     private static final String SUBMIT_TWITTER = "twitterLogin";
     private static final String SUBMIT_REGISTER = "register";
@@ -74,7 +75,7 @@ public class LoginController {
         }
         model.addAttribute(ATTR_ID, userName);
         userSession.setUser(user);
-        return IndexController.VIEW;
+        return VIEW_SUCCESS;
     }
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_TWITTER)
