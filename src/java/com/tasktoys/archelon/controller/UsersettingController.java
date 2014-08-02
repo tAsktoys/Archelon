@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @version 0.1
  */
 @Controller
-@RequestMapping(value="/userupdate")
-public class UserupdateController {
+@RequestMapping(value="/usersetting")
+public class UsersettingController {
     
     final static private String USER = "user";
     final static private String USER_INFORMATION = "user_information";
     final static private String USER_PROFILE = "user_profile";
-    final static private String USERUPDATE = "userupdate";
+    final static private String USERSETTING = "usersetting";
     final static private String ID = "id";
     final static private String INPUTFORM_LIST = "inputform_list";
     
@@ -46,7 +46,7 @@ public class UserupdateController {
         
         updateForm("Guest", model);
         
-        return USERUPDATE;
+        return USERSETTING;
     }
     
     @RequestMapping(value="{id}", method = RequestMethod.GET)
@@ -55,7 +55,7 @@ public class UserupdateController {
         
         updateForm(id, model);
         
-        return USERUPDATE;
+        return USERSETTING;
     }
     
     private void updateForm(String id, Model model) {

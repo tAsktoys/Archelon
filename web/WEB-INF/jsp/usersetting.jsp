@@ -19,7 +19,7 @@
         
         <div id="main">
             <h2><spring:message code="userupdate.title" /></h2>
-            <form action="/archelon/userupdate" method="post">
+            <form action="/archelon/usersetting" method="post">
                 <p><spring:message code="user.profile" /></p>
                 <textarea wrap="off" type="text" name="user_profile" id="discussion_field"></textarea>
                 <table>
