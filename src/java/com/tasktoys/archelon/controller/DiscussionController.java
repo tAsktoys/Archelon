@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 
@@ -19,14 +19,15 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author mikan
  * @author YuichiroSato
- * @since 0.2
+ * @since 0.1
  */
 @Controller
 @RequestMapping(value = "/discussion")
 public class DiscussionController {
+    
+    protected static final String VIEW = "discussion";
 
     private static final String ID = "id";
-
     private static final String THEME = "theme";
     private static final String DISCUSSION_LOG = "discussion_log";
     private static final String TYPE = "type";
@@ -34,19 +35,18 @@ public class DiscussionController {
     private static final String USERPAGE = "userpage";
     private static final String USERNAME = "username";
     private static final String MESSAGE = "message";
-    private static final String DISCUSSION = "discussion";
     private static final String POSTEDMESSAGE = "postedMessage";
 
     @RequestMapping(value = "{" + ID + "}", method = RequestMethod.GET)
-    public String getDiscussion(@PathVariable String id, Model model) {
+    public String handleGet(@PathVariable String id, Model model) {
         updateDiscussionTheme(model);
         updateDiscussionLog(model);
         model.addAttribute(ID, id);
-        return DISCUSSION;
+        return VIEW;
     }
 
     @RequestMapping(method = RequestMethod.POST, params = POSTEDMESSAGE)
-    public String getPostedMessage(@RequestParam Map<String, String> params, Model model) {
+    public String handlePost(@RequestParam Map<String, String> params, Model model) {
         updateDiscussionTheme(model);
 
         List<HashMap<String, String>> list = new ArrayList<>();
@@ -65,7 +65,7 @@ public class DiscussionController {
 
         model.addAttribute(DISCUSSION_LOG, list);
 
-        return DISCUSSION;
+        return VIEW;
     }
 
     private void updateDiscussionTheme(Model model) {

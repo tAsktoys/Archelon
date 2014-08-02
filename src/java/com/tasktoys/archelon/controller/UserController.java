@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 
@@ -27,6 +27,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
+    
+    /**
+     * User view.
+     */
+    protected static final String VIEW = "user";
 
     @Autowired
     private UserService userService;
@@ -38,15 +43,15 @@ public class UserController {
     private final String user_activity = "user_activity";
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getUserGuest(Model model) {
+    public String handleEmptyRequest(Model model) {
         model.addAttribute(NAME, "Guest");
         updateUserInformation(model, null);
         updateUserActivity(model);
-        return "user";
+        return VIEW;
     }
 
     @RequestMapping(value = "{name}", method = RequestMethod.GET)
-    public String getUser(@PathVariable String name, Model model) {
+    public String handleNameRequest(@PathVariable String name, Model model) {
 
         User user = userService.findUserByName(name);
         if (user == null) {
@@ -56,7 +61,7 @@ public class UserController {
         model.addAttribute(NAME, name);
         updateUserInformation(model, user);
         updateUserActivity(model);
-        return "user";
+        return VIEW;
     }
 
     private void updateUserInformation(Model model, User user) {

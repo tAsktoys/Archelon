@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 

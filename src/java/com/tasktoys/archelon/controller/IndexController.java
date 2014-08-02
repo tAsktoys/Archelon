@@ -30,7 +30,9 @@ public class IndexController {
     @Autowired
     private CategoryService categorysService;
     
-    static final String VIEW = "index";
+    protected static final String VIEW = "index";
+    protected static final String REDIRECT = "redirect:/";
+    
     private static final String CATEGORY_SELECTION = "category_selection";
     private static final String CREATE_DISCUSSION = "create_discussion";
     
@@ -45,7 +47,7 @@ public class IndexController {
     private static final String DISCUSSION_TABLE = "discussion_table";
     
     @RequestMapping(method = RequestMethod.GET)
-    public String getIndex(Model model) {
+    public String handleRequest(Model model) {
         makeMainCategory(model);
         makeNewestDiscussionTable(model);
         return VIEW;
