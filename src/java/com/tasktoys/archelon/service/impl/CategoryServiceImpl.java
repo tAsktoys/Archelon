@@ -22,11 +22,11 @@ public class CategoryServiceImpl implements CategoryService {
     
     @Override
     public List<Category> getMainCategoryList() {
-        return categoryDao.findMainCategoryList();
+        return categoryDao.findMainCategories();
     }
     
     @Override
     public List<Category> getSubCategoryList(int selected_id) {
-        return categoryDao.findSubCategoryList(selected_id);
+        return categoryDao.findSubCategories(selected_id);
     }
 }
