@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller of  search 
- * @author bearing
+ * @author MrBearing
  * @version 0.1
  */
 @Controller
