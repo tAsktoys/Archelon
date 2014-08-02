@@ -19,23 +19,23 @@
                 <div id="discussions">
                     <h2><spring:message code="discussion.names" /></h2>
                     <!-- Category selection -->
-                    <form action="/archelon/" method="post" class="category" onchange="submit(this.form)">
+                    <form action="/archelon/category_selection" method="post" class="category" onchange="submit(this.form)">
                         <spring:message code="category.category1" />
-                        <select name="main_category">
-                            <option value="category1-all">
+                        <select name="main_category_id">
+                            <option value="">
                                 <spring:message code="category.category1.all" />
                             </option>
                             <c:forEach var="item" items="${main_category_list}">
-                                <option value="${item}">${item}</option>
+                                <option value="${item.id}" ${item.selected}>${item.name}</option>
                             </c:forEach>
                         </select>
                         <spring:message code="category.category2" />
-                        <select name="sub_category">
-                            <option value="category2-all">
+                        <select name="sub_category_id">
+                            <option value="">
                                 <spring:message code="category.category2.all" />
                             </option>
                             <c:forEach var="item" items="${sub_category_list}">
-                                <option value="category">${item}</option>
+                                <option value="${item.id}" ${item.selected}>${item.name}</option>
                             </c:forEach>
                         </select>
                     </form>
@@ -48,16 +48,16 @@
                             <th><spring:message code="discussion.participants" /></th>
                             <th><spring:message code="discussion.createdate" /></th>
                         </tr>
-                        <tr><td>3</td><td><a href="discussion/3">私はだれでしょう？</a></td><td><a href="user/mikan">mikan</a></td><td>12</td><td>2014/05/16 23:59</td></tr>
-                        <tr><td>2</td><td><a href="discussion/2">Who am I?</a></td><td><a href="user/mikan">mikan</a></td><td>7</td><td>2014/05/16 0:00</td></tr>
-                        <tr><td>1</td><td><a href="discussion/1">foo baa</a></td><td><a href="user/bearing">bearing</a></td><td>9</td><td>2014/05/16 0:00</td></tr>
+                        <c:forEach var="row" items="${discussion_table}">
+                            <tr><td>${row.no}</td><td><a href="discussion/${row.no}">${row.title}</a></td><td><a href="user/${row.author}">${row.author}</a></td><td>${row.participant}</td><td>${row.date}</td></tr>
+                        </c:forEach>
                     </table>
                     Page: [1]<br />
                 </div>
                 <!-- Create a discussion -->
                 <div id="create">
                     <h2><spring:message code="discussion.new" /></h2>
-                    <form action="" method="post">
+                    <form action="/archelon/create_discussion" method="post">
                         <table>
                             <tr>
                                 <th><spring:message code="discussion.title" /></th>

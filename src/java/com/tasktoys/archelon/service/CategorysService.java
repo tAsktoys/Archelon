@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.service;
 
+import com.tasktoys.archelon.data.entity.Category;
 import java.util.List;
 /**
  *
@@ -10,6 +11,6 @@ import java.util.List;
  */
 public interface CategorysService {
     
-    public List<String> getMainCategoryList();
-    public List<String> getSubCategoryList(String category);
+    public List<Category> getMainCategoryList();
+    public List<Category> getSubCategoryList(int selected_id);
 }
