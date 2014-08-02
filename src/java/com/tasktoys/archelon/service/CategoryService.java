@@ -7,9 +7,9 @@ import com.tasktoys.archelon.data.entity.Category;
 import java.util.List;
 /**
  *
- * @author Yuichiro
+ * @author YuichiroSato
  */
-public interface CategorysService {
+public interface CategoryService {
     
     public List<Category> getMainCategoryList();
     public List<Category> getSubCategoryList(int selected_id);

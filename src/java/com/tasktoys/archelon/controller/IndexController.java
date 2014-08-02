@@ -4,7 +4,7 @@
 package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.Category;
-import com.tasktoys.archelon.service.CategorysService;
+import com.tasktoys.archelon.service.CategoryService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Controller of index.jsp
  *
  * @author mikan
+ * @author YuichiroSato
  * @since 0.1
  */
 @Controller
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class IndexController {
     
     @Autowired
-    private CategorysService categorysService;
+    private CategoryService categorysService;
     
     static final String VIEW = "index";
     private static final String CATEGORY_SELECTION = "category_selection";

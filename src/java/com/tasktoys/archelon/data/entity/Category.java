@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  *
- * @author Yuichiro
+ * @author YuichiroSato
  */
 public final class Category implements Serializable{
     

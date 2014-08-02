@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Controller of discussion.jsp
  *
  * @author mikan
- * @author Yuichiro
+ * @author YuichiroSato
  * @since 0.2
  */
 @Controller

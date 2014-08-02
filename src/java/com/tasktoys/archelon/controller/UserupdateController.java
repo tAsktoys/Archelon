@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
- * @author Yuichiro
+ * @author YuichiroSato
  * @version 0.1
  */
 @Controller

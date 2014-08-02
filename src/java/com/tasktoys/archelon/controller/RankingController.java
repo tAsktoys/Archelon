@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Controller of <code>ranking.jsp</code>.
  * 
- * @author mikan
+ * @author YuichiroSato
  * @since 0.1
  */
 @Controller

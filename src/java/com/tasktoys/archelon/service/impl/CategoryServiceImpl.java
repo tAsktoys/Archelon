@@ -5,17 +5,17 @@ package com.tasktoys.archelon.service.impl;
 
 import com.tasktoys.archelon.data.dao.CategoryDao;
 import com.tasktoys.archelon.data.entity.Category;
-import com.tasktoys.archelon.service.CategorysService;
+import com.tasktoys.archelon.service.CategoryService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  *
- * @author Yuichiro
+ * @author YuichiroSato
  */
 @Service
-public class CategorysServiceImpl implements CategorysService {
+public class CategoryServiceImpl implements CategoryService {
  
     @Autowired
     private CategoryDao categoryDao;
