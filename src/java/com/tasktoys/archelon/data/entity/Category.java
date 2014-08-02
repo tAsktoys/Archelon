@@ -49,6 +49,18 @@ public final class Category implements Serializable{
         return this.name;
     }
     
+    public static class builder {
+        
+        public static Category build(Integer id, String name) {
+            if (id == null)
+                throw new IllegalStateException("Category id is null.");
+            else if (name == null)
+                throw new IllegalStateException("Category name is null.");
+            else
+                return new Category(id, name);
+        }
+    }
+    
     public static class list {
         
         public static List<Map<String, String>> toMapList(List<Category> categories) {
