@@ -39,7 +39,7 @@ public class JdbcCategoryDao implements CategoryDao {
         category_main, category_sub, discussion
     }
     
-    private enum Colom {
+    private enum Column {
         id, name
     }
     
@@ -68,8 +68,8 @@ public class JdbcCategoryDao implements CategoryDao {
     private List<Category> responseToCategoryList(List<Map<String, Object>> response) {
         List<Category> list = new ArrayList<>();
         for (Map<String, Object> map : response) {
-            Integer id = (Integer)map.get(Colom.id.name());
-            String name = (String)map.get(Colom.name.name());
+            Integer id = (Integer)map.get(Column.id.name());
+            String name = (String)map.get(Column.name.name());
             list.add(Category.builder.build(id, name));
         }
         return list;
@@ -79,8 +79,8 @@ public class JdbcCategoryDao implements CategoryDao {
         
         @Override
         public Category mapRow(ResultSet result, int row) throws SQLException {
-            int id = result.getInt(Colom.id.name());
-            String name = result.getString(Colom.name.name());
+            int id = result.getInt(Column.id.name());
+            String name = result.getString(Column.name.name());
             return Category.builder.build(id, name);
         }
     }
