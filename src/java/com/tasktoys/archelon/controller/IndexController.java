@@ -5,6 +5,7 @@ package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.service.CategoryService;
+import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +30,14 @@ public class IndexController {
     
     @Autowired
     private CategoryService categorysService;
+    @Autowired
+    private DiscussionService discussionService;
     
     static final String VIEW = "index";
     private static final String CATEGORY_SELECTION = "category_selection";
     private static final String CREATE_DISCUSSION = "create_discussion";
+    
+    private static final int discussion_list_size = 10;
     
     private enum CategorySelectionParam {
         main_category_id, sub_category_id
@@ -96,70 +101,22 @@ public class IndexController {
                 Category.list.toMapList(categorysService.getSubCategoryList(selected_main_id), selected_sub_id));
     }
     
-    private List<Map<String, String>> discussionDaoStub1() {
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> map1 = new HashMap<>();
-        map1.put("no", "1");
-        map1.put("title", "newest");
-        map1.put("author", "mikan");
-        map1.put("date", "20YY/MM/DD");
-        list.add(map1);
-        
-        Map<String, String> map2 = new HashMap<>();
-        map2.put("no", "2");
-        map2.put("title", "newest");
-        map2.put("author", "mikan");
-        map2.put("date", "20YY/MM/DD");
-        list.add(map2);
-        return list;
-    }
-    
     private void makeNewestDiscussionTable(Model model) {
-        model.addAttribute(DISCUSSION_TABLE, discussionDaoStub1());
-    }
-    
-    private List<Map<String, String>> discussionDaoStub2(int main_id) {
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> map1 = new HashMap<>();
-        map1.put("no", "1");
-        map1.put("title", "main category is " + main_id + ". sub category is ?");
-        map1.put("author", "mikan");
-        map1.put("date", "20YY/MM/DD");
-        list.add(map1);
-        
-        Map<String, String> map2 = new HashMap<>();
-        map2.put("no", "2");
-        map2.put("title", "main category is " + main_id + ". sub category is ?");
-        map2.put("author", "mikan");
-        map2.put("date", "20YY/MM/DD");
-        list.add(map2);
-        return list;
+        model.addAttribute(DISCUSSION_TABLE,
+                discussionService.replaceAuthorIDToAurthorName(
+                        discussionService.getNewestDiscussionList(discussion_list_size)));
     }
     
     private void makeDiscussionTable(Model model, int main_id) {
-        model.addAttribute(DISCUSSION_TABLE, discussionDaoStub2(main_id));
-    }
-    
-    private List<Map<String, String>> discussionDaoStub3(int main_id, int sub_id) {
-        List<Map<String, String>> list = new ArrayList<>();
-        Map<String, String> map1 = new HashMap<>();
-        map1.put("no", "1");
-        map1.put("title", "main category is " + main_id + ". sub category is " + sub_id);
-        map1.put("author", "mikan");
-        map1.put("date", "20YY/MM/DD");
-        list.add(map1);
-        
-        Map<String, String> map2 = new HashMap<>();
-        map2.put("no", "2");
-        map2.put("title", "main category is " + main_id + ". sub category is " + sub_id);
-        map2.put("author", "mikan");
-        map2.put("date", "20YY/MM/DD");
-        list.add(map2);
-        return list;
+        model.addAttribute(DISCUSSION_TABLE,
+                discussionService.replaceAuthorIDToAurthorName(
+                        discussionService.getNewestDiscussionListByMainCategory(discussion_list_size, main_id)));
     }
     
     private void makeDiscussionTable(Model model, int main_id, int sub_id) {
-        model.addAttribute(DISCUSSION_TABLE, discussionDaoStub3(main_id, sub_id));
+        model.addAttribute(DISCUSSION_TABLE,
+                discussionService.replaceAuthorIDToAurthorName(
+                        discussionService.getNewestDiscussionListBySubCategory(discussion_list_size, main_id, sub_id)));
     }
     
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
  * A data access object for user information.
  *
  * @author mikan
+ * @author YuichiroSato
  * @since 0.1
  * @see User
  */
@@ -57,6 +58,16 @@ public class JdbcUserDao implements UserDao {
         String sql = "select * from " + USER_TABLE + " where name=?";
         try {
             return jdbcTemplate.queryForObject(sql, new UserRowMapper(), name);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+    
+    @Override
+    public User findUserByID(Long id) {
+        String sql = "select * from " + USER_TABLE + " where id=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
