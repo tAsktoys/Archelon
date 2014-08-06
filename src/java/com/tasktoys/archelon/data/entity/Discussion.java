@@ -4,7 +4,6 @@
 
 package com.tasktoys.archelon.data.entity;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,9 +96,13 @@ public class Discussion {
         Map<String, String> map = new HashMap<>();
         map.put(Column.id.name(), id.toString());
         map.put(Column.author_id.name(), author_id.toString());
+        map.put(Column.category_id.name(), String.valueOf(category_id));
+        map.put(Column.state.name(), String.valueOf(state));
+        map.put(Column.create_time.name(), create_time.toString());
+        map.put(Column.update_time.name(), update_time.toString());
         map.put(Column.subject.name(), subject);
         map.put(Column.participants.name(), String.valueOf(participants));
-        map.put(Column.create_time.name(), create_time.toString());
+        map.put(Column.posts.name(), String.valueOf(posts));
         return map;
     }
     
@@ -127,38 +130,67 @@ public class Discussion {
         }
         
         public void id(Long id) {
+            if (id == null) {
+                throw new NullPointerException("id is null.");
+            }
             this.id = id;
         }
         
         public void author_id(Long author_id) {
+            if (author_id == null) {
+                throw new NullPointerException("author id is null.");
+            }
             this.author_id = author_id;
         }
         
         public void category_id(int category_id) {
+            // here should be min_category_id <= category_id && category_id <= max_category_id
+            if (category_id < 0) {
+                throw new NullPointerException("wrong category id : " + category_id);
+            }
             this.category_id = category_id;
         }
         
         public void state(int state) {
+            // here should be min_state <= state && state <= max_state
+            if (state < 0) {
+                throw new NullPointerException("ilegal state : " + state);
+            }
             this.state = state;
         }
         
         public void create_time(Timestamp create_time) {
+            if (create_time == null) {
+                throw new NullPointerException("create time is null.");
+            }
             this.create_time = create_time;
         }
         
         public void update_time(Timestamp update_time) {
+            if (update_time == null) {
+                throw new NullPointerException("update time is null.");
+            }
             this.update_time = update_time;
         }
         
         public void subject(String subject) {
+            if (subject == null) {
+                throw new NullPointerException("subject is null.");
+            }
             this.subject = subject;
         }
         
         public void participants(int participants) {
+            if (participants < 1) {
+                throw new NullPointerException("wrong participants : " + participants);
+            }
             this.participants = participants;
         }
         
         public void posts(int posts) {
+            if (posts < 0) {
+                throw new NullPointerException("wrong posts : " + posts);
+            }
             this.posts = posts;
         }
         

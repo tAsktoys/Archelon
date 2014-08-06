@@ -4,7 +4,6 @@
 package com.tasktoys.archelon.data.dao;
 
 import com.tasktoys.archelon.data.entity.Discussion;
-import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public interface DiscussionDao {
      * @param n number of discussions to return
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findDiscussionListBefor(BigInteger id, int n);
+    public List<Discussion> findDiscussionListBefor(Long id, int n);
     
     /**
      * Find Newest Discussions for each main category.
@@ -50,7 +49,7 @@ public interface DiscussionDao {
      * @param main_id id of queried main category
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findDiscussionListWithMainCategoryBefor(BigInteger id, int n, int main_id);
+    public List<Discussion> findDiscussionListWithMainCategoryBefor(Long id, int n, int main_id);
     
     /**
      * Find Newest Discussions for each main and sub category.
@@ -71,5 +70,5 @@ public interface DiscussionDao {
      * @param sub_id if of queried sub category
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findDiscussionListWithSubCategoryBefor(BigInteger id, int n, int main_id, int sub_id);
+    public List<Discussion> findDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id);
 }

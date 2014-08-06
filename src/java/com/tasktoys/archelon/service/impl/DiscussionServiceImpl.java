@@ -7,7 +7,6 @@ import com.tasktoys.archelon.data.dao.DiscussionDao;
 import com.tasktoys.archelon.data.dao.UserDao;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.service.DiscussionService;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getDiscussionListBefor(BigInteger id, int n) {
+    public List<Discussion> getDiscussionListBefor(Long id, int n) {
         return discussionDao.findDiscussionListBefor(id, n);
     }
 
@@ -42,7 +41,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getDiscussionListWithMainCategoryBefor(BigInteger id, int n, int main_id) {
+    public List<Discussion> getDiscussionListWithMainCategoryBefor(Long id, int n, int main_id) {
         return discussionDao.findDiscussionListWithMainCategoryBefor(id, n, main_id);
     }
 
@@ -52,7 +51,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getDiscussionListWithSubCategoryBefor(BigInteger id, int n, int main_id, int sub_id) {
+    public List<Discussion> getDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id) {
         return discussionDao.findDiscussionListWithSubCategoryBefor(id, n, main_id, sub_id);
     }
 
