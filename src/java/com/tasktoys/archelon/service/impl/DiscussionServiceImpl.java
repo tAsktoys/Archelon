@@ -29,6 +29,11 @@ public class DiscussionServiceImpl implements DiscussionService {
     public List<Discussion> getNewestDiscussionList(int n) {
         return discussionDao.findNewestDiscussionList(n);
     }
+    
+    @Override
+    public List<Discussion> getDiscussionListAfter(Long id, int n) {
+        return discussionDao.findDiscussionListAfter(id, n);
+    }
 
     @Override
     public List<Discussion> getDiscussionListBefor(Long id, int n) {

@@ -45,25 +45,21 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-//        List<Discussion> list = new ArrayList<>();
-//        Discussion.Builder builder = new Discussion.Builder();
-//        builder.id((long)1);
-//        builder.author_id((long)2);
-//        builder.state(1);
-//        builder.create_time(new Timestamp(1));
-//        builder.update_time(new Timestamp(2));
-//        builder.subject("newest");
-//        builder.participants(1);
-//        builder.participants(1);
-//        list.add(builder.build());
-//        list.add(builder.build());
-//        return list;
     }
 
     @Override
+    public List<Discussion> findDiscussionListAfter(Long id, int n) {
+        String sql = "select * from " + TABLE_NAME
+                + " where " + Column.id + " > " + id.toString()
+                + " order by " + Column.create_time.name() + " desc"
+                + " limit " + n + ";";
+        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+    }
+    
+    @Override
     public List<Discussion> findDiscussionListBefor(Long id, int n) {
         String sql = "select * from " + TABLE_NAME
-                + "where " + Column.id + " > " + id.toString()
+                + " where " + Column.id + " < " + id.toString()
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
@@ -76,26 +72,13 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-//        List<Discussion> list = new ArrayList<>();
-//        Discussion.Builder builder = new Discussion.Builder();
-//        builder.id((long)1);
-//        builder.author_id((long)2);
-//        builder.state(1);
-//        builder.create_time(new Timestamp(1));
-//        builder.update_time(new Timestamp(2));
-//        builder.subject("main_id is " + main_id);
-//        builder.participants(1);
-//        builder.participants(1);
-//        list.add(builder.build());
-//        list.add(builder.build());
-//        return list;
     }
 
     @Override
     public List<Discussion> findDiscussionListWithMainCategoryBefor(Long id, int n, int main_id) {
         String sql = "select * from " + TABLE_NAME
                 + " where " + Column.category_id.name() + " = " + main_id
-                + " and " + Column.id + " > " + id.toString()
+                + " and " + Column.id + " < " + id.toString()
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
@@ -108,26 +91,13 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-//        List<Discussion> list = new ArrayList<>();
-//        Discussion.Builder builder = new Discussion.Builder();
-//        builder.id((long)1);
-//        builder.author_id((long)2);
-//        builder.state(1);
-//        builder.create_time(new Timestamp(1));
-//        builder.update_time(new Timestamp(2));
-//        builder.subject("main_id is " + main_id + " sub_id is " + sub_id);
-//        builder.participants(1);
-//        builder.participants(1);
-//        list.add(builder.build());
-//        list.add(builder.build());
-//        return list;
     }
 
     @Override
     public List<Discussion> findDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id) {
         String sql = "select * from " + TABLE_NAME
                 + " where " + Column.category_id.name() + " = " + main_id
-                + " and " + Column.id + " > " + id.toString()
+                + " and " + Column.id + " < " + id.toString()
                 + " order by " + Column.create_time.name() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));

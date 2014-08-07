@@ -13,7 +13,13 @@ import java.util.Map;
  */
 public interface DiscussionService {
     
+    /** Discussion Dao wrapper
+     * 
+     * @param n
+     * @return 
+     */
     public List<Discussion> getNewestDiscussionList(int n);
+    public List<Discussion> getDiscussionListAfter(Long id, int n);
     public List<Discussion> getDiscussionListBefor(Long id, int n);
     public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id);
     public List<Discussion> getDiscussionListWithMainCategoryBefor(Long id, int n, int main_id);

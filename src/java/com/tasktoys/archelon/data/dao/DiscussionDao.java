@@ -24,6 +24,15 @@ public interface DiscussionDao {
     public List<Discussion> findNewestDiscussionList(int n);
     
     /**
+     * Find Discussions which created after a discussion made.
+     * 
+     * @param id id of discussion as an origin
+     * @param n number of discussions to return
+     * @return list of discussion, or empty if not found.
+     */
+    public List<Discussion> findDiscussionListAfter(Long id, int n);
+    
+    /**
      * Find Discussions which created before a discussion made.
      * 
      * @param id id of discussion as an origin
