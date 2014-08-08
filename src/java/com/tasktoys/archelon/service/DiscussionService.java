@@ -19,17 +19,17 @@ public interface DiscussionService {
      * @return 
      */
     public List<Discussion> getNewestDiscussionList(int n);
-    public List<Discussion> getDiscussionListAfter(Long id, int n);
-    public List<Discussion> getDiscussionListBefor(Long id, int n);
+    public List<Discussion> getDiscussionListAfter(long id, int n);
+    public List<Discussion> getDiscussionListBefore(long id, int n);
     public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id);
-    public List<Discussion> getDiscussionListWithMainCategoryBefor(Long id, int n, int main_id);
+    public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
     public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    public List<Discussion> getDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id);
+    public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
     
-    /**
+    /** Replace author id (long) to author name (String) in discussions
      * 
-     * @param dls
-     * @return 
+     * @param dls list of discussions
+     * @return list of discussions converted to maps with replacing author id to author name 
      */
-    public List<Map<String, String>> replaceAuthorIDToAurthorName(List<Discussion> dls);
+    public List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls);
 }

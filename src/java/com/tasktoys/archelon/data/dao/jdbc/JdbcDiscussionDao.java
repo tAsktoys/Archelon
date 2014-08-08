@@ -35,32 +35,37 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
     
     public enum Column {
-        id, author_id, category_id, state, create_time, update_time, subject,
-        participants, posts
+        ID, AUTHOR_ID, CATEGORY_ID, STATE, CREATE_TIME, UPDATE_TIME, SUBJECT,
+        PARTICIPANTS, POSTS;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
     
     @Override
     public List<Discussion> findNewestDiscussionList(int n) {
         String sql = "select * from " + TABLE_NAME
-                + " order by " + Column.create_time.name() + " desc"
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
     @Override
-    public List<Discussion> findDiscussionListAfter(Long id, int n) {
+    public List<Discussion> findDiscussionListAfter(long id, int n) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.id + " > " + id.toString()
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.ID + " > " + Long.toString(id)
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
     
     @Override
-    public List<Discussion> findDiscussionListBefor(Long id, int n) {
+    public List<Discussion> findDiscussionListBefore(long id, int n) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.id + " < " + id.toString()
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.ID + " < " + Long.toString(id)
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
@@ -68,18 +73,18 @@ public class JdbcDiscussionDao implements DiscussionDao {
     @Override
     public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.category_id.name() + " = " + main_id
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
     @Override
-    public List<Discussion> findDiscussionListWithMainCategoryBefor(Long id, int n, int main_id) {
+    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.category_id.name() + " = " + main_id
-                + " and " + Column.id + " < " + id.toString()
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+                + " and " + Column.ID + " < " + Long.toString(id)
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
@@ -87,18 +92,18 @@ public class JdbcDiscussionDao implements DiscussionDao {
     @Override
     public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.category_id.name() + " = " + main_id
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
     @Override
-    public List<Discussion> findDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id) {
+    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.category_id.name() + " = " + main_id
-                + " and " + Column.id + " < " + id.toString()
-                + " order by " + Column.create_time.name() + " desc"
+                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+                + " and " + Column.ID + " < " + Long.toString(id)
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
@@ -107,15 +112,15 @@ public class JdbcDiscussionDao implements DiscussionDao {
         List<Discussion> dls = new ArrayList<>();
         for (Map<String, Object> row : response) {
             Discussion.Builder builder = new Discussion.Builder();
-            builder.id((Long)row.get(Column.id.name()));
-            builder.author_id((Long)row.get(Column.author_id.name()));
-            builder.category_id((Integer)row.get(Column.category_id.name()));
-            builder.state((Integer)row.get(Column.state.name()));
-            builder.create_time((Timestamp)row.get(Column.create_time.name()));
-            builder.update_time((Timestamp)row.get(Column.update_time.name()));
-            builder.subject((String)row.get(Column.subject.name()));
-            builder.participants((Integer)row.get(Column.participants.name()));
-            builder.posts((Integer)row.get(Column.posts.name()));
+            builder.id((long)row.get(Column.ID.toString()));
+            builder.author_id((long)row.get(Column.AUTHOR_ID.toString()));
+            builder.category_id((int)row.get(Column.CATEGORY_ID.toString()));
+            builder.state((int)row.get(Column.STATE.toString()));
+            builder.create_time((Timestamp)row.get(Column.CREATE_TIME.toString()));
+            builder.update_time((Timestamp)row.get(Column.UPDATE_TIME.toString()));
+            builder.subject((String)row.get(Column.SUBJECT.toString()));
+            builder.participants((int)row.get(Column.PARTICIPANTS.toString()));
+            builder.posts((int)row.get(Column.POSTS.toString()));
             dls.add(builder.build());
         }
         return dls;

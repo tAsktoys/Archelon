@@ -37,69 +37,82 @@ public class IndexController {
     private static final String CATEGORY_SELECTION = "category_selection";
     private static final String CREATE_DISCUSSION = "create_discussion";
     
-    private static final int discussion_list_size = 10;
+    private static final int DISCUSSION_LIST_SIZE = 10;
     
     private enum CategorySelectionParam {
-        main_category_id, sub_category_id
+        MAIN_CATEGORY_ID, SUB_CATEGORY_ID;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
     
     private enum CategorySelectBox {
-        main_category_list, sub_category_list
+        MAIN_CATEGORY_LIST, SUB_CATEGORY_LIST;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
     
-    private static final String DISCUSSION_TABLE = "discussion_table";
+    private static final String DISCUSSION_LIST = "discussion_table";
+    private static final String LAST_DISCUSSION_ID = "last_discussion_id";
     
     @RequestMapping(method = RequestMethod.GET)
     public String getIndex(Model model) {
         makeMainCategory(model);
-        makeNewestDiscussionTable(model);
+        makeNewestDiscussionList(model);
         return VIEW;
     }
     
-    @RequestMapping(value = "next/{id}", method = RequestMethod.GET)
-    public String getNextDiscussionTable(@PathVariable Long id, Model model) {
+    @RequestMapping(value = "next/{discussion_id}", method = RequestMethod.GET)
+    public String getNextDiscussionList(@PathVariable long discussion_id, Model model) {
         makeMainCategory(model);
-        makeNewestDiscussionTableBefore(model, id);
+        makeNewestDiscussionListBefore(model, discussion_id);
         return VIEW;
     }
     
-    @RequestMapping(value = "prev/{id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionTable(@PathVariable Long id, Model model) {
+    @RequestMapping(value = "prev/{discussion_id}", method = RequestMethod.GET)
+    public String getPreviousDiscussionList(@PathVariable long discussion_id, Model model) {
         makeMainCategory(model);
-        makeNewestDiscussionTableAfter(model, id);
+        makeNewestDiscussionListAfter(model, discussion_id);
         return VIEW;
     }
     
-    @RequestMapping(value = "next/{id}/main_id/{main_id}", method = RequestMethod.GET)
-    public String getNextDiscussionTableWithMainID(@PathVariable Long id, @PathVariable int main_id, Model model) {
-        makeMainCategory(model, main_id);
-        makeDiscussionTableBefore(model, id, main_id);
+    @RequestMapping(value = "next/{discussion_id}/main_category_id/{main_category_id}", method = RequestMethod.GET)
+    public String getNextDiscussionListWithMainID(@PathVariable long discussion_id,
+            @PathVariable int main_category_id, Model model) {
+        makeMainCategory(model, main_category_id);
+        makeDiscussionListBefore(model, discussion_id, main_category_id);
         return VIEW;
     }
     
-        @RequestMapping(value = "prev/{id}/main_id/{main_id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionTableWithMainID(@PathVariable Long id, @PathVariable int main_id, Model model) {
-        makeMainCategory(model, main_id);
-        makeDiscussionTableBefore(model, id, main_id);
+        @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
+    public String getPreviousDiscussionListWithMainID(@PathVariable long discussion_id,
+            @PathVariable int main_category_id, Model model) {
+        makeMainCategory(model, main_category_id);
+        makeDiscussionListBefore(model, discussion_id, main_category_id);
         return VIEW;
     }
     
     @RequestMapping(value = CATEGORY_SELECTION, method = RequestMethod.POST)
     public String chooseCategory(@RequestParam Map<String, String> params, Model model) {
         try {
-            Integer main_id = Integer.valueOf(params.get(CategorySelectionParam.main_category_id.name()));
+            Integer main_id = Integer.valueOf(params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()));
             makeMainCategory(model, main_id);
             try {
-                Integer sub_id = Integer.valueOf(params.get(CategorySelectionParam.sub_category_id.name()));
+                Integer sub_id = Integer.valueOf(params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
                 makeSubCategory(model, main_id, sub_id);
-                makeDiscussionTable(model, main_id, sub_id);
+                makeDiscussionList(model, main_id, sub_id);
             } catch (NumberFormatException e) {
                 makeSubCategory(model, main_id);
-                makeDiscussionTable(model, main_id);
+                makeDiscussionList(model, main_id);
             }
         } catch (NumberFormatException e) {
             makeMainCategory(model);
-            makeNewestDiscussionTable(model);
+            makeNewestDiscussionList(model);
         }
         return VIEW;
     }
@@ -110,60 +123,60 @@ public class IndexController {
     }
     
     private void makeMainCategory(Model model) {
-        model.addAttribute(CategorySelectBox.main_category_list.name(),
+        model.addAttribute(CategorySelectBox.MAIN_CATEGORY_LIST.toString(),
                 Category.list.toMapList(categorysService.getMainCategoryList()));
     }
     
     private void makeMainCategory(Model model, int selected_id) {
-        model.addAttribute(CategorySelectBox.main_category_list.name(),
+        model.addAttribute(CategorySelectBox.MAIN_CATEGORY_LIST.toString(),
                 Category.list.toMapList(categorysService.getMainCategoryList(), selected_id));
     }
     
     private void makeSubCategory(Model model, int selected_main_id) {
-        model.addAttribute(CategorySelectBox.sub_category_list.name(),
+        model.addAttribute(CategorySelectBox.SUB_CATEGORY_LIST.toString(),
                 Category.list.toMapList(categorysService.getSubCategoryList(selected_main_id)));
     }
     
     private void makeSubCategory(Model model, int selected_main_id, int selected_sub_id) {
-        model.addAttribute(CategorySelectBox.sub_category_list.name(),
+        model.addAttribute(CategorySelectBox.SUB_CATEGORY_LIST.toString(),
                 Category.list.toMapList(categorysService.getSubCategoryList(selected_main_id), selected_sub_id));
     }
     
-    private void makeNewestDiscussionTable(Model model) {
-        List<Discussion> dls = discussionService.getNewestDiscussionList(discussion_list_size);
-        List<Map<String, String>> mls = discussionService.replaceAuthorIDToAurthorName(dls);
-        model.addAttribute(DISCUSSION_TABLE, mls);
-        model.addAttribute("last_discussion_id", dls.get(dls.size() - 1).getID().toString());
+    private void makeNewestDiscussionList(Model model) {
+        List<Discussion> dls = discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE);
+        List<Map<String, String>> mls = discussionService.replaceAuthorIDToAuthorName(dls);
+        model.addAttribute(DISCUSSION_LIST, mls);
+        model.addAttribute(LAST_DISCUSSION_ID, dls.get(dls.size() - 1).getID().toString());
     }
     
-    private void makeNewestDiscussionTableAfter(Model model, Long id) {
-        model.addAttribute(DISCUSSION_TABLE,
-                discussionService.replaceAuthorIDToAurthorName(
-                        discussionService.getDiscussionListAfter(id, discussion_list_size)));
+    private void makeNewestDiscussionListAfter(Model model, Long id) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
     }
     
-    private void makeNewestDiscussionTableBefore(Model model, Long id) {
-        model.addAttribute(DISCUSSION_TABLE,
-                discussionService.replaceAuthorIDToAurthorName(
-                        discussionService.getDiscussionListBefor(id, discussion_list_size)));
+    private void makeNewestDiscussionListBefore(Model model, Long id) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));
     }
     
-    private void makeDiscussionTable(Model model, int main_id) {
-        model.addAttribute(DISCUSSION_TABLE,
-                discussionService.replaceAuthorIDToAurthorName(
-                        discussionService.getNewestDiscussionListByMainCategory(discussion_list_size, main_id)));
+    private void makeDiscussionList(Model model, int main_id) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
     }
     
-    private void makeDiscussionTableBefore(Model model, Long id, int main_id) {
-        model.addAttribute(DISCUSSION_TABLE,
-                discussionService.replaceAuthorIDToAurthorName(
-                        discussionService.getDiscussionListWithMainCategoryBefor(id, discussion_list_size, main_id)));
+    private void makeDiscussionListBefore(Model model, Long id, int main_id) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
     }
     
-    private void makeDiscussionTable(Model model, int main_id, int sub_id) {
-        model.addAttribute(DISCUSSION_TABLE,
-                discussionService.replaceAuthorIDToAurthorName(
-                        discussionService.getNewestDiscussionListBySubCategory(discussion_list_size, main_id, sub_id)));
+    private void makeDiscussionList(Model model, int main_id, int sub_id) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, main_id, sub_id)));
     }
     
 }

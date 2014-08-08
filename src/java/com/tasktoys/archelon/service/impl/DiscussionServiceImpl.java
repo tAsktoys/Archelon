@@ -31,13 +31,13 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
     
     @Override
-    public List<Discussion> getDiscussionListAfter(Long id, int n) {
+    public List<Discussion> getDiscussionListAfter(long id, int n) {
         return discussionDao.findDiscussionListAfter(id, n);
     }
 
     @Override
-    public List<Discussion> getDiscussionListBefor(Long id, int n) {
-        return discussionDao.findDiscussionListBefor(id, n);
+    public List<Discussion> getDiscussionListBefore(long id, int n) {
+        return discussionDao.findDiscussionListBefore(id, n);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getDiscussionListWithMainCategoryBefor(Long id, int n, int main_id) {
-        return discussionDao.findDiscussionListWithMainCategoryBefor(id, n, main_id);
+    public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
+        return discussionDao.findDiscussionListWithMainCategoryBefore(id, n, main_id);
     }
 
     @Override
@@ -56,12 +56,12 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getDiscussionListWithSubCategoryBefor(Long id, int n, int main_id, int sub_id) {
-        return discussionDao.findDiscussionListWithSubCategoryBefor(id, n, main_id, sub_id);
+    public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
+        return discussionDao.findDiscussionListWithSubCategoryBefore(id, n, main_id, sub_id);
     }
 
     @Override
-    public List<Map<String, String>> replaceAuthorIDToAurthorName(List<Discussion> dls) {
+    public List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls) {
         List<Map<String, String>> mls = new ArrayList<>();
         for (Discussion d : dls) {
             String author_name = userDao.findUserByID(d.getAuthorID()).getName();
