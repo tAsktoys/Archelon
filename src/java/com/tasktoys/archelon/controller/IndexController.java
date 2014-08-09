@@ -149,7 +149,7 @@ public class IndexController {
         model.addAttribute(LAST_DISCUSSION_ID, dls.get(dls.size() - 1).getID().toString());
     }
     
-    private void makeNewestDiscussionListAfter(Model model, Long id) {
+    private void makeNewestDiscussionListAfter(Model model, long id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
                         discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
@@ -167,7 +167,7 @@ public class IndexController {
                         discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
     }
     
-    private void makeDiscussionListBefore(Model model, Long id, int main_id) {
+    private void makeDiscussionListBefore(Model model, long id, int main_id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
                         discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
