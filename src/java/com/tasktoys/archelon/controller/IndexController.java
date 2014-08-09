@@ -59,7 +59,7 @@ public class IndexController {
         }
     }
     
-    private static final String DISCUSSION_LIST = "discussion_table";
+    private static final String DISCUSSION_LIST = "discussion_list";
     private static final int DISCUSSION_LIST_SIZE = 10;
     private static final String LAST_DISCUSSION_ID = "last_discussion_id";
     
