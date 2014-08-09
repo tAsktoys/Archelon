@@ -36,16 +36,26 @@ public class JdbcCategoryDao implements CategoryDao {
     }
     
     private enum Table {
-        category_main, category_sub, discussion
+        CATEGORY_MAIN, CATEGORY_SUB, DISCUSSION;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
     
     private enum Column {
-        id, name
+        ID, NAME;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
     
     @Override
     public Category findMainCategoryByID(int id) {
-        String sql = "select * from " + Table.category_main.name() + " where id=" + id;
+        String sql = "select * from " + Table.CATEGORY_MAIN.toString() + " where id=" + id;
         try {
             return jdbcTemplate.queryForObject(sql, new CategoryRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -55,21 +65,21 @@ public class JdbcCategoryDao implements CategoryDao {
     
     @Override
     public List<Category> findMainCategories() {
-        String sql = "select * from " + Table.category_main.name() + ";";
+        String sql = "select * from " + Table.CATEGORY_MAIN.toString() + ";";
         return responseToCategoryList(jdbcTemplate.queryForList(sql));
     }
     
     @Override
     public List<Category> findSubCategories(int selected_id) {
-        String sql = "select * from " + Table.category_sub.name() + " where main_id=" + selected_id;
+        String sql = "select * from " + Table.CATEGORY_SUB.toString() + " where main_id=" + selected_id;
         return responseToCategoryList(jdbcTemplate.queryForList(sql));
     }
     
     private List<Category> responseToCategoryList(List<Map<String, Object>> response) {
         List<Category> list = new ArrayList<>();
         for (Map<String, Object> map : response) {
-            Integer id = (Integer)map.get(Column.id.name());
-            String name = (String)map.get(Column.name.name());
+            Integer id = (Integer)map.get(Column.ID.toString());
+            String name = (String)map.get(Column.NAME.toString());
             list.add(Category.builder.build(id, name));
         }
         return list;
@@ -79,8 +89,8 @@ public class JdbcCategoryDao implements CategoryDao {
         
         @Override
         public Category mapRow(ResultSet result, int row) throws SQLException {
-            int id = result.getInt(Column.id.name());
-            String name = result.getString(Column.name.name());
+            int id = result.getInt(Column.ID.toString());
+            String name = result.getString(Column.NAME.toString());
             return Category.builder.build(id, name);
         }
     }

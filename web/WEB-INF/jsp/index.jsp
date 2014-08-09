@@ -49,10 +49,11 @@
                             <th><spring:message code="discussion.createdate" /></th>
                         </tr>
                         <c:forEach var="row" items="${discussion_table}">
-                            <tr><td>${row.no}</td><td><a href="discussion/${row.no}">${row.title}</a></td><td><a href="user/${row.author}">${row.author}</a></td><td>${row.participant}</td><td>${row.date}</td></tr>
+                            <tr><td>${row.id}</td><td><a href="discussion/${row.id}">${row.subject}</a></td><td><a href="user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
                         </c:forEach>
                     </table>
-                    Page: [1]<br />
+                        <a href="prev/${last_discussion_id}">Prev</a>|[1][2][3]...[10]<a href="next/${last_discussion_id}">Next</a>
+                    <br />
                 </div>
                 <!-- Create a discussion -->
                 <div id="create">
