@@ -112,11 +112,9 @@
                 <div id="activities">
                     <h2><spring:message code="activity.names" /></h2>
                     <table border="1">
-                        <tr><td>たった今</td><td><a href="user/mikan">mikan</a> が <a href="discussion/3">私はだれでしょう？</a> という話題を作りました！</td></tr>
-                        <tr><td>1分前</td><td><a href="user/marishi">まりし</a>が <a href="discussion/2">who I am?</a> で発言しました！</td></tr>
-                        <tr><td>10分前</td><td>ほげほげという話題がランキングにのりました！</td></tr>
-                        <tr><td>3時間前</td><td>ほげほげ！</td></tr>
-                        <tr><td>3時間前</td><td>ほげほげ！</td></tr>
+                        <c:forEach var="activity" items="${activity_list}">
+                            <tr><td>${activity.time}</td><td>${activity.act}</td></tr>
+                        </c:forEach>
                     </table>
                 </div>
             </div>

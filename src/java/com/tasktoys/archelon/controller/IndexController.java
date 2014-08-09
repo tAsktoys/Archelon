@@ -7,6 +7,8 @@ import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,6 @@ public class IndexController {
     private static final String CATEGORY_SELECTION = "category_selection";
     private static final String CREATE_DISCUSSION = "create_discussion";
     
-    private static final int DISCUSSION_LIST_SIZE = 10;
-    
     private enum CategorySelectionParam {
         MAIN_CATEGORY_ID, SUB_CATEGORY_ID;
         
@@ -60,12 +60,17 @@ public class IndexController {
     }
     
     private static final String DISCUSSION_LIST = "discussion_table";
+    private static final int DISCUSSION_LIST_SIZE = 10;
     private static final String LAST_DISCUSSION_ID = "last_discussion_id";
+    
+    private static final String ACTIVITY_LIST = "activity_list";
+    private static final int ACTIVITY_LIST_SIZE = 5;
     
     @RequestMapping(method = RequestMethod.GET)
     public String handleRequest(Model model) {
         makeMainCategory(model);
         makeNewestDiscussionList(model);
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -73,6 +78,7 @@ public class IndexController {
     public String getNextDiscussionList(@PathVariable long discussion_id, Model model) {
         makeMainCategory(model);
         makeNewestDiscussionListBefore(model, discussion_id);
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -80,6 +86,7 @@ public class IndexController {
     public String getPreviousDiscussionList(@PathVariable long discussion_id, Model model) {
         makeMainCategory(model);
         makeNewestDiscussionListAfter(model, discussion_id);
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -88,14 +95,16 @@ public class IndexController {
             @PathVariable int main_category_id, Model model) {
         makeMainCategory(model, main_category_id);
         makeDiscussionListBefore(model, discussion_id, main_category_id);
+        makeActivityList(model);
         return VIEW;
     }
     
-        @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
     public String getPreviousDiscussionListWithMainID(@PathVariable long discussion_id,
             @PathVariable int main_category_id, Model model) {
         makeMainCategory(model, main_category_id);
         makeDiscussionListBefore(model, discussion_id, main_category_id);
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -116,6 +125,7 @@ public class IndexController {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
         }
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -181,4 +191,43 @@ public class IndexController {
                         discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, main_id, sub_id)));
     }
     
+    private void makeActivityList(Model model) {
+        model.addAttribute(ACTIVITY_LIST, ActivityDaoStub.findNewestActivity(ACTIVITY_LIST_SIZE));
+    }
+    
+    private static class ActivityDaoStub {
+        
+        private static int min = 0;
+        
+        public static List<Map<String, String>> findNewestActivity(int n) {
+            List<Map<String, String>> als = new ArrayList<>();
+            while(als.size() < n) {
+                als.add(makeActivity());
+            }
+            return als;
+        }
+        
+        private static Map<String, String> makeActivity() {
+            Map<String, String> map = new HashMap<>();
+            map.put("time", makeTime());
+            map.put("act", makeAct());
+            return map;
+        }
+        
+        private static String makeTime() {
+            min += (int)(Math.random() * 3);
+            if (min == 0)
+                return "Just now";
+            return min + " minutes ago";
+        }
+        
+        private static String makeAct() {
+            int n = (int)(Math.random() * 3);
+            if (n == 0)
+                return "Someone made new discussion \"What's up?\"in sub_category1";
+            else if (n == 1)
+                return "Someone's discussion is ranked as the hottest discussion in main_category1";
+            return "Discussion \"How to make a simple web service\" is closed";
+        }
+    }
 }
