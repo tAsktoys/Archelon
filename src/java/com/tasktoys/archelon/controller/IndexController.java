@@ -155,7 +155,7 @@ public class IndexController {
                         discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
     }
     
-    private void makeNewestDiscussionListBefore(Model model, Long id) {
+    private void makeNewestDiscussionListBefore(Model model, long id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
                         discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));

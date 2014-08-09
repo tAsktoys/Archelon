@@ -26,7 +26,7 @@ public interface DiscussionService {
     public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
     public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
     
-    /** Replace author id (long) to author name (String) in discussions
+    /** Replace <code>long</code> author id to <code>String</code> author name in discussions
      * 
      * @param dls list of discussions
      * @return list of discussions converted to maps with replacing author id to author name 
