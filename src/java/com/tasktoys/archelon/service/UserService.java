@@ -11,5 +11,7 @@ import com.tasktoys.archelon.data.entity.User;
  */
 public interface UserService {
 
+    public long getMaxUserID();
     public User findUserByName(String name);
+    public void insertUser(User user);
 }

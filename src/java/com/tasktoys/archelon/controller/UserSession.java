@@ -14,6 +14,7 @@ import com.tasktoys.archelon.data.entity.User;
 public class UserSession {
     
     private User user;
+    public static final String SESSION_NAME = "hoge";
     
     public void setUser(User user) {
         this.user = user;

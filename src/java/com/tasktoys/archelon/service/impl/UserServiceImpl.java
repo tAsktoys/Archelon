@@ -21,8 +21,18 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
 
     @Override
+    public long getMaxUserID() {
+        return 10;
+    }
+    
+    @Override
     public User findUserByName(String name) {
         return userDao.findUserByName(name);
+    }
+    
+    @Override
+    public void insertUser(User user) {
+        
     }
     
 }
