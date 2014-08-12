@@ -99,7 +99,7 @@ public class RegisterController {
         builder.state(User.State.ACTIVE.ordinal());
         if (description != null)
             builder.description(description);
-        if (birthdate != null) {
+        if (birthdate != null && userName.isEmpty()) {
             int year, month, day;
             try {
                 String[] yyyy_mm_dd = birthdate.split("-");

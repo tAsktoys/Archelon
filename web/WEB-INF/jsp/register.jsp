@@ -73,7 +73,7 @@
                     <table class="option">
                         <tr>
                             <th><spring:message code="auth.description" /></th>
-                            <td><textarea wrap="off" type="text" name="description" value="${input_description}"></textarea></td>
+                            <td><textarea wrap="off" type="text" name="description">${input_description}</textarea></td>
                             <td class="note"><spring:message code="auth.register.public" /></td>
                         </tr>
                         <tr>
@@ -84,7 +84,7 @@
                                     <spring:message code="auth.register.birthdate.future" />
                                 </c:if>
                                 <c:if test="${birthdate_invalid}">
-                                    <spring:message code="auth.register.date.invalid" />
+                                    <spring:message code="auth.register.birthdate.invalid" />
                                 </c:if>
                                 <spring:message code="auth.register.public" />
                             </td>
