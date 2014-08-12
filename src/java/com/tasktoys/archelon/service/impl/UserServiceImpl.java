@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long getMaxUserID() {
-        return 10;
+        return userDao.getMaxUserID();
     }
     
     @Override
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public void insertUser(User user) {
-        
+        userDao.insertUser(user);
     }
     
 }

@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +95,7 @@ public class RegisterController {
         
         User.Builder builder = new User.Builder();
         builder.name(userName);
-        builder.password(userPassword);
+        builder.password(DigestUtils.sha256Hex(userPassword));
         builder.email(email);
         builder.state(User.State.ACTIVE.ordinal());
         if (description != null)

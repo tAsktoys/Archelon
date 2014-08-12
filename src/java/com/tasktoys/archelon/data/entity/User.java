@@ -118,6 +118,10 @@ public final class User implements Serializable {
         return email;
     }
     
+    public String getPasswrod() {
+        return password;
+    }
+    
     public boolean isValidPasswordWithPlaneString(String planeString) {
         String sha256 = DigestUtils.sha256Hex(planeString);
         if (sha256 == null)
@@ -474,6 +478,56 @@ public final class User implements Serializable {
             } catch (AddressException ex) {
                 return false;
             }
+        }
+    }
+    
+    public static class sql {
+        
+        private static final long ILLEGAL_ID = -1;
+        
+        public static String encode(User user) {
+            String values = "values(";
+            
+            if (user.getId() == ILLEGAL_ID)
+                throw new IllegalStateException("id not specified.");
+            else
+                values += String.valueOf(user.getId());
+            
+            values += ", " + String.valueOf(user.getState().ordinal());
+            values += ", " + nullCheck(user.getName());
+            values += ", " + nullCheck(user.getEmail());
+            values += ", " + nullCheck(user.getPasswrod());
+            
+            values += ", " + nullCheck(user.getDescription());
+            
+            if (user.getBirthdate() == null)
+                values += ", null";
+            else
+                values += ", " + user.getBirthdate().toString();
+            
+            values += ", " + nullCheck(user.getLocation());
+            values += ", " + nullCheck(user.getAffiliate());
+            values += ", " + nullCheck(user.getUrl());
+            values += ", " + encodeOAuthAccount(user.getTwitter());
+            values += ", " + encodeOAuthAccount(user.getFacebook());
+            values += ")";
+            return values;
+        }
+        
+        private static String nullCheck(String str) {
+            if (str == null || str.isEmpty())
+                return "null";
+            else
+                return "'" + str + "'";
+        }
+        
+        private static String encodeOAuthAccount(OAuthAccount account) {
+            if (account == null)
+                return "null, null, null";
+            else
+                return nullCheck(account.getId()) + ", "
+                        + nullCheck(account.getAccessToken()) + ", "
+                        + nullCheck(account.getAccessSecret());
         }
     }
 }

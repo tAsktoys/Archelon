@@ -52,6 +52,16 @@ public class JdbcUserDao implements UserDao {
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
+    
+    @Override
+    public long getMaxUserID() {
+        String sql = "select max(id) from " + USER_TABLE;
+        long id = jdbcTemplate.queryForObject(sql, Long.class);
+        if (-1 < id)
+            return id;
+        else
+            return -1;
+    }
 
     @Override
     public User findUserByName(String name) {
@@ -71,6 +81,12 @@ public class JdbcUserDao implements UserDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+    
+    @Override
+    public void insertUser(User user) {
+        String sql = "insert into " + USER_TABLE + " " + User.sql.encode(user) + ";";
+        jdbcTemplate.execute(sql);
     }
 
     /**
