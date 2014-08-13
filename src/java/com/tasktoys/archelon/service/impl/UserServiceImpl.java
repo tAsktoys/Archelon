@@ -25,4 +25,9 @@ public class UserServiceImpl implements UserService {
         return userDao.findUserByName(name);
     }
     
+    @Override
+    public void insertUser(User user) {
+        userDao.insertUser(user);
+    }
+    
 }

@@ -118,6 +118,10 @@ public final class User implements Serializable {
         return email;
     }
     
+    public String getPasswrod() {
+        return password;
+    }
+    
     public boolean isValidPasswordWithPlaneString(String planeString) {
         String sha256 = DigestUtils.sha256Hex(planeString);
         if (sha256 == null)
@@ -266,6 +270,15 @@ public final class User implements Serializable {
             }
             throw new IllegalArgumentException("illegal state: " + stateValue);
         }
+        
+        /**
+         * Set user state.
+         *
+         * @param state state
+         */
+        public void state(State state) {
+            this.state = state;
+        }
 
         /**
          * Set user name.
@@ -362,7 +375,7 @@ public final class User implements Serializable {
         }
 
         public void twitterId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (twitter == null) {
@@ -392,7 +405,7 @@ public final class User implements Serializable {
         }
 
         public void facebookId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (facebook == null) {
@@ -457,6 +470,31 @@ public final class User implements Serializable {
             }
             return new User(this);
         }
+        
+        /**
+         * Build user object without User id.
+         *
+         * @return {@link User} object.
+         * @throws IllegalStateException If not specify required information(s).
+         */
+        public User buildForInsert() {
+            if (id != ILLEGAL_ID) {
+                throw new IllegalStateException("id not specified.");
+            }
+            if (state == null) {
+                throw new IllegalStateException("state not specified.");
+            }
+            if (name == null) {
+                throw new IllegalStateException("name not specified.");
+            }
+            if (email == null) {
+                throw new IllegalStateException("email not specified.");
+            }
+            if (password == null) {
+                throw new IllegalStateException("password not specified.");
+            }
+            return new User(this);
+        }
 
         /**
          * Validate format of e-mail address.
@@ -466,7 +504,7 @@ public final class User implements Serializable {
          * otherwise
          * @see InternetAddress#validate()
          */
-        private boolean isValidEmailAddress(String email) {
+        public boolean isValidEmailAddress(String email) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);
                 emailAddr.validate();
