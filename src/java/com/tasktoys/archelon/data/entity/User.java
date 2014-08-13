@@ -479,7 +479,7 @@ public final class User implements Serializable {
          */
         public User buildForInsert() {
             if (id != ILLEGAL_ID) {
-                throw new IllegalStateException("id not specified.");
+                throw new IllegalStateException("id is specified.");
             }
             if (state == null) {
                 throw new IllegalStateException("state not specified.");
