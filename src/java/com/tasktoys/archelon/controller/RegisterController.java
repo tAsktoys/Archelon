@@ -10,8 +10,6 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(value = "/register")
-@SessionAttributes(types = {UserSession.class})
+@SessionAttributes(UserSession.SESSION_NAME)
 public class RegisterController {
 
     @Autowired
@@ -37,6 +35,7 @@ public class RegisterController {
 
     static String VIEW = "register";
     private static final String VIEW_COMPLETE = "complete";
+    private static final String DEFAULT_VALUE_SURFFIX = "input_";
     private static Logger log = Logger.getLogger(RegisterController.class.getName());
 
     private enum Param {
@@ -44,6 +43,17 @@ public class RegisterController {
         USER_NAME, USER_PASSWORD, USER_PASSWORD_R, EMAIL, DESCRIPTION, BIRTHDATE, LOCATION, 
         AFFILIATE, URL, TWITTER_ID, FACEBOOK_ID;
 
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
+    
+    private enum Error {
+
+        NAME_MISS, USER_NAME_DUPLICATE, PASSWORD_MISS, PASSWORD_MISSMATCH,
+        EMAIL_MISS, EMAIL_INVALID, BIRTHDATE_FUTURE, BIRTHDATE_INVALID;
+        
         @Override
         public String toString() {
             return name().toLowerCase();
@@ -62,28 +72,29 @@ public class RegisterController {
     @RequestMapping(method = RequestMethod.POST)
     public String handlePost(@RequestParam Map<String, String> params, Model model,
             UserSession userSession, RedirectAttributes redirect) {
-
-        // Get required fields.
+        User.Builder builder = new User.Builder();
         setInputValueToForm(model, params);
+        
+        // Get required fields.
         String userName = params.get(Param.USER_NAME.toString());
         String userPassword = params.get(Param.USER_PASSWORD.toString());
         String userPasswordRepeat = params.get(Param.USER_PASSWORD_R.toString());
         String email = params.get(Param.EMAIL.toString());
 
         if (userName == null || userName.isEmpty())
-            return errorHandle(model, "name_miss");
+            return errorHandle(model, Error.NAME_MISS.toString());
         if (userService.findUserByName(userName) != null)
-            return errorHandle(model, "user_name_duplicate");
+            return errorHandle(model, Error.USER_NAME_DUPLICATE.toString());
         if (userPassword == null || userPassword.isEmpty())
-            return errorHandle(model, "password_miss");
+            return errorHandle(model, Error.PASSWORD_MISS.toString());
         if (userPasswordRepeat == null || userPasswordRepeat.isEmpty())
-            return errorHandle(model, "password_miss");
+            return errorHandle(model, Error.PASSWORD_MISS.toString());
         if (!userPassword.equals(userPasswordRepeat))
-            return errorHandle(model, "password_missmatch");
+            return errorHandle(model, Error.PASSWORD_MISSMATCH.toString());
         if (email == null || email.isEmpty())
-            return errorHandle(model, "email_miss");
-        if (!isValidEmailAddress(email))
-            return errorHandle(model, "email_invalid");
+            return errorHandle(model, Error.EMAIL_MISS.toString());
+        if (!builder.isValidEmailAddress(email))
+            return errorHandle(model, Error.EMAIL_INVALID.toString());
 
         // Get option fields.
         String description = params.get(Param.DESCRIPTION.toString());
@@ -93,11 +104,10 @@ public class RegisterController {
         String twitterId = params.get(Param.TWITTER_ID.toString());
         String facebookId = params.get(Param.FACEBOOK_ID.toString());
         
-        User.Builder builder = new User.Builder();
         builder.name(userName);
         builder.password(DigestUtils.sha256Hex(userPassword));
         builder.email(email);
-        builder.state(User.State.ACTIVE.ordinal());
+        builder.state(User.State.ACTIVE);
         if (description != null)
             builder.description(description);
         if (birthdate != null && userName.isEmpty()) {
@@ -110,24 +120,29 @@ public class RegisterController {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
                 if (isFuture(calendar)) 
-                    return errorHandle(model, "birthdate_future");
+                    return errorHandle(model, Error.BIRTHDATE_FUTURE.toString());
                 builder.birthdate(calendar.getTime());
             } catch (NumberFormatException e) {
-                return errorHandle(model, "birthdate_invalid");
+                return errorHandle(model, Error.BIRTHDATE_INVALID.toString());
             }
         }
         if (affiliate != null)
             builder.affiliate(affiliate);
         if (url != null)
             builder.url(url);
-        if (twitterId != null)
+        if (twitterId != null) {
             builder.twitterId(twitterId);
-        if (facebookId != null)
+            builder.twitterToken("");
+            builder.twitterSecret("");
+        }
+        if (facebookId != null) {
             builder.facebookId(facebookId);
+            builder.facebookToken("");
+            builder.facebookSecret("");
+        }
         
-        builder.id(userService.getMaxUserID() + 1);
         try{
-            userService.insertUser(builder.build());
+            userService.insertUser(builder.buildForInsert());
             userSession.setUser(userService.findUserByName(userName));
             return VIEW_COMPLETE;
         } catch (IllegalStateException e) {
@@ -143,7 +158,7 @@ public class RegisterController {
     
     private void setInputValueToForm(Model model, Map<String, String> params) {
         for(String key : params.keySet()) {
-            model.addAttribute("input_"+key, params.get(key));
+            model.addAttribute(DEFAULT_VALUE_SURFFIX + key, params.get(key));
         }
     }
     
@@ -152,23 +167,6 @@ public class RegisterController {
         return VIEW;
     }
 
-    /**
-     * Validate format of e-mail address.
-     *
-     * @param email e-mail address
-     * @return <code>true</code> if email is valid, <code>false</code> otherwise
-     * @see InternetAddress#validate()
-     */
-    private boolean isValidEmailAddress(String email) {
-        try {
-            InternetAddress emailAddr = new InternetAddress(email);
-            emailAddr.validate();
-            return true;
-        } catch (AddressException ex) {
-            return false;
-        }
-    }
-    
     private boolean isFuture(Calendar calendar) {
         return calendar.compareTo(Calendar.getInstance()) > 0;
     }

@@ -15,13 +15,6 @@ import com.tasktoys.archelon.data.entity.User;
 public interface UserDao {
     
     /**
-     * Get max user id.
-     * 
-     * @return user id or -1 if not found. 
-     */
-    public long getMaxUserID();
-    
-    /**
      * Find user entity by user name.
      * 
      * @param name name of user
@@ -39,7 +32,7 @@ public interface UserDao {
     
     /**
      * Insert new user.
-     * @param user User to insert
+     * @param user <code>User</code> to insert
      */
     public void insertUser(User user);
 

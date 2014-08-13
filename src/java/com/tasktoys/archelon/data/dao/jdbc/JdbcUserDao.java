@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.data.dao.jdbc;
 
 import com.tasktoys.archelon.data.dao.UserDao;
+import com.tasktoys.archelon.data.entity.OAuthAccount;
 import com.tasktoys.archelon.data.entity.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,16 +55,6 @@ public class JdbcUserDao implements UserDao {
     }
     
     @Override
-    public long getMaxUserID() {
-        String sql = "select max(id) from " + USER_TABLE;
-        long id = jdbcTemplate.queryForObject(sql, Long.class);
-        if (-1 < id)
-            return id;
-        else
-            return -1;
-    }
-
-    @Override
     public User findUserByName(String name) {
         String sql = "select * from " + USER_TABLE + " where name=?";
         try {
@@ -85,7 +76,7 @@ public class JdbcUserDao implements UserDao {
     
     @Override
     public void insertUser(User user) {
-        String sql = "insert into " + USER_TABLE + " " + User.sql.encode(user) + ";";
+        String sql = "insert into " + USER_TABLE + " " + SQLEncoder.toValues(user) + ";";
         jdbcTemplate.execute(sql);
     }
 
@@ -114,6 +105,59 @@ public class JdbcUserDao implements UserDao {
             builder.facebookToken(result.getString(Column.FACEBOOK_TOKEN.toString()));
             builder.facebookSecret(result.getString(Column.FACEBOOK_SECRET.toString()));
             return builder.build();
+        }
+    }
+    
+    /**
+     * Encode <code>User</code> to SQL for insert
+     */
+    private static class SQLEncoder {
+        
+        private static final long ILLEGAL_ID = -1;
+        
+        public static String toValues(User user) {
+            String values = "values(";
+            
+            if (user.getId() == ILLEGAL_ID)
+                values += "null";
+            else
+                values += String.valueOf(user.getId());
+            
+            values += ", " + String.valueOf(user.getState().ordinal());
+            values += ", " + nullCheck(user.getName());
+            values += ", " + nullCheck(user.getEmail());
+            values += ", " + nullCheck(user.getPasswrod());
+            
+            values += ", " + nullCheck(user.getDescription());
+            
+            if (user.getBirthdate() == null)
+                values += ", null";
+            else
+                values += ", " + user.getBirthdate().toString();
+            
+            values += ", " + nullCheck(user.getLocation());
+            values += ", " + nullCheck(user.getAffiliate());
+            values += ", " + nullCheck(user.getUrl());
+            values += ", " + encodeOAuthAccount(user.getTwitter());
+            values += ", " + encodeOAuthAccount(user.getFacebook());
+            values += ")";
+            return values;
+        }
+        
+        private static String nullCheck(String str) {
+            if (str == null || str.isEmpty())
+                return "null";
+            else
+                return "'" + str + "'";
+        }
+        
+        private static String encodeOAuthAccount(OAuthAccount account) {
+            if (account == null)
+                return "null, null, null";
+            else
+                return nullCheck(account.getId()) + ", "
+                        + nullCheck(account.getAccessToken()) + ", "
+                        + nullCheck(account.getAccessSecret());
         }
     }
 }

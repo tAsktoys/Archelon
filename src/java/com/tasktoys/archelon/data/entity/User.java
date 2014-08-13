@@ -270,6 +270,15 @@ public final class User implements Serializable {
             }
             throw new IllegalArgumentException("illegal state: " + stateValue);
         }
+        
+        /**
+         * Set user state.
+         *
+         * @param state state
+         */
+        public void state(State state) {
+            this.state = state;
+        }
 
         /**
          * Set user name.
@@ -366,7 +375,7 @@ public final class User implements Serializable {
         }
 
         public void twitterId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (twitter == null) {
@@ -396,7 +405,7 @@ public final class User implements Serializable {
         }
 
         public void facebookId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (facebook == null) {
@@ -461,6 +470,31 @@ public final class User implements Serializable {
             }
             return new User(this);
         }
+        
+        /**
+         * Build user object without User id.
+         *
+         * @return {@link User} object.
+         * @throws IllegalStateException If not specify required information(s).
+         */
+        public User buildForInsert() {
+            if (id != ILLEGAL_ID) {
+                throw new IllegalStateException("id not specified.");
+            }
+            if (state == null) {
+                throw new IllegalStateException("state not specified.");
+            }
+            if (name == null) {
+                throw new IllegalStateException("name not specified.");
+            }
+            if (email == null) {
+                throw new IllegalStateException("email not specified.");
+            }
+            if (password == null) {
+                throw new IllegalStateException("password not specified.");
+            }
+            return new User(this);
+        }
 
         /**
          * Validate format of e-mail address.
@@ -470,7 +504,7 @@ public final class User implements Serializable {
          * otherwise
          * @see InternetAddress#validate()
          */
-        private boolean isValidEmailAddress(String email) {
+        public boolean isValidEmailAddress(String email) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);
                 emailAddr.validate();
@@ -478,56 +512,6 @@ public final class User implements Serializable {
             } catch (AddressException ex) {
                 return false;
             }
-        }
-    }
-    
-    public static class sql {
-        
-        private static final long ILLEGAL_ID = -1;
-        
-        public static String encode(User user) {
-            String values = "values(";
-            
-            if (user.getId() == ILLEGAL_ID)
-                throw new IllegalStateException("id not specified.");
-            else
-                values += String.valueOf(user.getId());
-            
-            values += ", " + String.valueOf(user.getState().ordinal());
-            values += ", " + nullCheck(user.getName());
-            values += ", " + nullCheck(user.getEmail());
-            values += ", " + nullCheck(user.getPasswrod());
-            
-            values += ", " + nullCheck(user.getDescription());
-            
-            if (user.getBirthdate() == null)
-                values += ", null";
-            else
-                values += ", " + user.getBirthdate().toString();
-            
-            values += ", " + nullCheck(user.getLocation());
-            values += ", " + nullCheck(user.getAffiliate());
-            values += ", " + nullCheck(user.getUrl());
-            values += ", " + encodeOAuthAccount(user.getTwitter());
-            values += ", " + encodeOAuthAccount(user.getFacebook());
-            values += ")";
-            return values;
-        }
-        
-        private static String nullCheck(String str) {
-            if (str == null || str.isEmpty())
-                return "null";
-            else
-                return "'" + str + "'";
-        }
-        
-        private static String encodeOAuthAccount(OAuthAccount account) {
-            if (account == null)
-                return "null, null, null";
-            else
-                return nullCheck(account.getId()) + ", "
-                        + nullCheck(account.getAccessToken()) + ", "
-                        + nullCheck(account.getAccessSecret());
         }
     }
 }
