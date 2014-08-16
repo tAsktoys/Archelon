@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * Controller of index.jsp
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping(value = "/")
+@SessionAttributes(UserSession.SESSION_NAME)
 public class IndexController {
     
     @Autowired
@@ -52,6 +54,15 @@ public class IndexController {
     
     private enum CategorySelectBox {
         MAIN_CATEGORY_LIST, SUB_CATEGORY_LIST;
+        
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
+    
+    private enum CreateDiscussionParam {
+        SUBJECT, MAIN_CATEGORY_ID, SUB_CATEGORY_ID, DESCRIPTION;
         
         @Override
         public String toString() {
@@ -109,12 +120,62 @@ public class IndexController {
     }
     
     @RequestMapping(value = CATEGORY_SELECTION, method = RequestMethod.POST)
-    public String chooseCategory(@RequestParam Map<String, String> params, Model model) {
+    public String handleCategorySelect(@RequestParam Map<String, String> params, Model model) {
+        makeCategorySelect(model,
+                params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
+                params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
+        makeActivityList(model);
+        return VIEW;
+    }
+    
+    @RequestMapping(value = CREATE_DISCUSSION, method = RequestMethod.POST)
+    public String handleCreateDiscussion(@RequestParam Map<String, String> params,
+            Model model, UserSession userSession) {
+        if (allParametersFilled(params)) {
+            discussionService.insertDiscussion(makeNewDiscussion(params, userSession));
+        }
+        else {
+            makeCategorySelect(model,
+                    params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
+                    params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
+        }
+        makeActivityList(model);
+        return VIEW;
+    }
+    
+    private boolean allParametersFilled(Map<String, String> params) {
+        for(String key : params.keySet()) {
+            if (key.equals(CreateDiscussionParam.SUB_CATEGORY_ID.toString())) {
+                try {
+                    Integer.parseInt(params.get(CreateDiscussionParam.SUB_CATEGORY_ID.toString()));
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+            if (params.get(key).isEmpty())
+                return false;
+        }
+        return true;
+    }
+    
+    public Discussion makeNewDiscussion(Map<String, String> params, UserSession userSession) {
+        String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
+        String category = params.get(CreateDiscussionParam.SUB_CATEGORY_ID.toString());
+        String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
+        
+        Discussion.Builder builder = new Discussion.Builder();
+        builder.subject(subject);
+        builder.category_id(Integer.parseInt(category));
+        builder.author_id(userSession.getUser().getId());
+        return builder.buildForInsert();
+    }
+    
+    private void makeCategorySelect(Model model, String main, String sub) {
         try {
-            Integer main_id = Integer.valueOf(params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()));
+            Integer main_id = Integer.valueOf(main);
             makeMainCategory(model, main_id);
             try {
-                Integer sub_id = Integer.valueOf(params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
+                Integer sub_id = Integer.valueOf(sub);
                 makeSubCategory(model, main_id, sub_id);
                 makeDiscussionList(model, main_id, sub_id);
             } catch (NumberFormatException e) {
@@ -125,13 +186,6 @@ public class IndexController {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
         }
-        makeActivityList(model);
-        return VIEW;
-    }
-    
-    @RequestMapping(value = CREATE_DISCUSSION, method = RequestMethod.POST)
-    public String createDiscussion(Model model) {
-        return VIEW;
     }
     
     private void makeMainCategory(Model model) {

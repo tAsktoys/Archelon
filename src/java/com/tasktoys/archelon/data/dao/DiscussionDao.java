@@ -80,4 +80,10 @@ public interface DiscussionDao {
      * @return list of discussion, or empty if not found.
      */
     public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
+    
+    /**
+     * Insert new discussion to database.
+     * @param discussion <code>Discussion</code> to insert
+     */
+    public void insertDiscussion(Discussion discussion);
 }

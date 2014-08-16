@@ -41,7 +41,7 @@
                     </form>
                     <!-- Table of discussions -->
                     <table>
-                        <tr>
+       <tr>
                             <th><spring:message code="discussion.no" /></th>
                             <th><spring:message code="discussion.title" /></th>
                             <th><spring:message code="discussion.owner" /></th>
@@ -58,35 +58,35 @@
                 <!-- Create a discussion -->
                 <div id="create">
                     <h2><spring:message code="discussion.new" /></h2>
-                    <form action="/archelon/create_discussion" method="post">
+                    <c:if test="${userSession.getName() != null}">
+                        <form action="/archelon/create_discussion" method="post">
                         <table>
                             <tr>
                                 <th><spring:message code="discussion.title" /></th>
-                                <td><input type="text" name="title" /></td></tr>
+                                <td><input type="text" name="subject" /></td></tr>
                             <tr>
                                 <th><spring:message code="category.name" /></th>
                                 <td>
                                     <div>
-                                        <spring:message code="category.category1" />:
-                                        <select name="category1">
-                                            <option value="category1-all">
+                                        <spring:message code="category.category1" />
+                                        <select name="main_category_id" onchange="submit(this.form)">
+                                            <option value="">
                                                 <spring:message code="category.category1.all" />
                                             </option>
-                                            <option value="category1-a">Category 1-A</option>
-                                            <option value="category1-b">Category 1-B</option>
-                                            <option value="category1-c">Category 1-C</option>
-                                        </select>
+                                            <c:forEach var="item" items="${main_category_list}">
+                                                <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                            </c:forEach>
+                                    </select>
                                     </div>
                                     <div>
-                                        <spring:message code="category.category2" />:
-                                        <select name="category2">
-                                            <option value="category2-all">
-                                                <spring:message code="category.category2.all" />
-                                            </option>
-                                            <option value="category2-a">Category 2-A</option>
-                                            <option value="category2-b">Category 2-B</option>
-                                            <option value="category2-c">Category 2-C</option>
-                                        </select>
+                                        <spring:message code="category.category2" />
+                                  <select name="sub_category_id" onchange="submit(this.form)">
+                                        <option value="">
+                                            <spring:message code="category.category2.all" />
+                                        </option>
+                                        <c:forEach var="item" items="${sub_category_list}">
+                                            <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                        </c:forEach>
                                     </div>
                                 </td>
                             </tr>
@@ -100,7 +100,7 @@
                                         </tr>
                                         <tr><td>
                                                 <textarea name="description"></textarea>                       
-                                            </td>    
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -108,7 +108,10 @@
                         </table>
                         <input type="submit" value="Confirm" />
                     </form>
-                </div>
+                    </c:if>
+                    <c:if test="${userSession.getName() == null}">
+                        <c:out value="Please log in to make new discussion"/>
+                    </c:if>
                 <div id="activities">
                     <h2><spring:message code="activity.names" /></h2>
                     <table border="1">

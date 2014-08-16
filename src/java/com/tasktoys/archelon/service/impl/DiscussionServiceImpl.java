@@ -59,6 +59,11 @@ public class DiscussionServiceImpl implements DiscussionService {
     public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
         return discussionDao.findDiscussionListWithSubCategoryBefore(id, n, main_id, sub_id);
     }
+    
+    @Override
+    public void insertDiscussion(Discussion discussion) {
+        discussionDao.insertDiscussion(discussion);
+    }
 
     @Override
     public List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls) {

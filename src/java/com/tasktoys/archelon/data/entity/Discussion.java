@@ -16,10 +16,10 @@ import java.util.Map;
  */
 public class Discussion {
     
-    private final Long id;
-    private final Long author_id;
+    private final long id;
+    private final long author_id;
     private final int category_id;
-    private final int state;
+    private final State state;
     private final Timestamp create_time;
     private final Timestamp update_time;
     private final String subject;
@@ -31,7 +31,16 @@ public class Discussion {
         participants, posts
     }
     
-    public Discussion(Long id, Long author_id, int category_id, int state,
+    public enum State {
+        OPEN, CLOSED, DELETED;
+        
+         @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
+    
+    public Discussion(long id, long author_id, int category_id, State state,
             Timestamp create_time, Timestamp update_time, String subject, int participants, int posts) {
         this.id = id;
         this.author_id = author_id;
@@ -68,7 +77,7 @@ public class Discussion {
         return this.category_id;
     }
     
-    public int state() {
+    public State state() {
         return this.state;
     }
     
@@ -94,8 +103,8 @@ public class Discussion {
     
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
-        map.put(Column.id.name(), id.toString());
-        map.put(Column.author_id.name(), author_id.toString());
+        map.put(Column.id.name(), String.valueOf(id));
+        map.put(Column.author_id.name(), String.valueOf(author_id));
         map.put(Column.category_id.name(), String.valueOf(category_id));
         map.put(Column.state.name(), String.valueOf(state));
         map.put(Column.create_time.name(), create_time.toString());
@@ -115,15 +124,20 @@ public class Discussion {
     
     public static class Builder {
         
-        private Long id;
-        private Long author_id;
-        private int category_id;
-        private int state;
+        public static final long ILLEGAL_ID = -1;
+        public static final int ILLEGAL_CATEGORY = -1;
+        public static final int ILLEGAL_PARTICIPANTS = 0;
+        public static final int ILLEGAL_POSTS = -1;
+        
+        private long id = ILLEGAL_ID;
+        private long author_id = ILLEGAL_ID;
+        private int category_id = ILLEGAL_CATEGORY;
+        private State state;
         private Timestamp create_time;
         private Timestamp update_time;
         private String subject;
-        private int participants;
-        private int posts;
+        private int participants = ILLEGAL_PARTICIPANTS;
+        private int posts = ILLEGAL_POSTS;
     
         public Builder() {
             
@@ -152,10 +166,16 @@ public class Discussion {
         }
         
         public void state(int state) {
-            // here should be min_state <= state && state <= max_state
-            if (state < 0) {
-                throw new NullPointerException("ilegal state : " + state);
+            for (State s : State.values()) {
+                if (state == s.ordinal()) {
+                    this.state = s;
+                    return;
+                }
             }
+            throw new IllegalArgumentException("illegal state: " + state);
+        }
+        
+        public void state(State state) {
             this.state = state;
         }
         
@@ -195,6 +215,43 @@ public class Discussion {
         }
         
         public Discussion build() {
+            if (id == ILLEGAL_ID)
+                throw new IllegalStateException("id is not specified.");
+            if (author_id == ILLEGAL_ID)
+                throw new IllegalStateException("author is not specified.");
+            if (subject == null)
+                throw new IllegalStateException("Subject is null.");
+            if (category_id == ILLEGAL_CATEGORY)
+                throw new IllegalStateException("category id is not specified.");
+            if (state == null)
+                throw new IllegalStateException("state is null.");
+            if (create_time == null)
+                throw new IllegalStateException("create time is null.");
+            if (update_time == null)
+                throw new IllegalStateException("update time is null.");
+            if (participants == ILLEGAL_PARTICIPANTS)
+                throw new IllegalStateException("participants is not specified.");
+            if (posts == ILLEGAL_POSTS)
+                throw new IllegalStateException("posts is not specified.");
+            return new Discussion(this);
+        }
+        
+        public Discussion buildForInsert() {
+            if (id != ILLEGAL_ID)
+                throw new IllegalStateException("id is specified.");
+            if (author_id == ILLEGAL_ID)
+                throw new IllegalStateException("author is not specified.");
+            if (subject == null)
+                throw new IllegalStateException("Subject is null.");
+            if (category_id == ILLEGAL_CATEGORY)
+                throw new IllegalStateException("category id is not specified.");
+            
+            this.state(State.OPEN);
+            long unixtime = System.currentTimeMillis();
+            this.create_time(new Timestamp(unixtime));
+            this.update_time(new Timestamp(unixtime));
+            this.participants(1);
+            this.posts(0);
             return new Discussion(this);
         }
     }

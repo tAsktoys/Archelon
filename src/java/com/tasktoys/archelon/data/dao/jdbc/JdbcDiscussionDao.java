@@ -108,6 +108,12 @@ public class JdbcDiscussionDao implements DiscussionDao {
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
     
+    @Override
+    public void insertDiscussion(Discussion discussion) {
+        String sql = "insert into " + TABLE_NAME + " " +SQLEncoder.toValues(discussion) + ";";
+        jdbcTemplate.execute(sql);
+    }
+    
     private List<Discussion> responseToDiscussionList(List<Map<String, Object>> response) {
         List<Discussion> dls = new ArrayList<>();
         for (Map<String, Object> row : response) {
@@ -124,5 +130,60 @@ public class JdbcDiscussionDao implements DiscussionDao {
             dls.add(builder.build());
         }
         return dls;
+    }
+    
+    /**
+     * Encode <code>Discussion</code> to SQL for insert
+     */
+    private static class SQLEncoder {
+        
+        public static String toValues(Discussion discussion) {
+            String values = "values(";
+            values += encodeID(discussion.getID());
+            values += "," + encodeID(discussion.getAuthorID());
+            values += "," + encodeInt(discussion.category_id(), Discussion.Builder.ILLEGAL_CATEGORY);
+            values += "," + encodeState(discussion.state());
+            values += "," + encodeTimestamp(discussion.create_time());
+            values += "," + encodeTimestamp(discussion.update_time());
+            values += "," + encodeString(discussion.subject());
+            values += "," + encodeInt(discussion.participants(), Discussion.Builder.ILLEGAL_PARTICIPANTS);
+            values += "," + encodeInt(discussion.posts(), Discussion.Builder.ILLEGAL_POSTS) + ")";
+            return values;
+        }
+        
+        private static String encodeID(long id) {
+            if (id == Discussion.Builder.ILLEGAL_ID)
+                return "null";
+            else
+                return String.valueOf(id);
+        }
+        
+        private static String encodeInt(int i, int illegal_value) {
+            if (i == illegal_value)
+                return "null";
+            else
+                return String.valueOf(i);
+        }
+        
+        private static String encodeState(Discussion.State state) {
+            if (state == null)
+                return "null";
+            else
+                return String.valueOf(state.ordinal());
+        }
+        
+        private static String encodeString(String str) {
+            if (str == null)
+                return "null";
+            else
+                return "'" + str + "'";
+        }
+        
+        private static String encodeTimestamp(Timestamp timestamp) {
+            if (timestamp == null)
+                return "null";
+            else 
+                return "'" + timestamp.toString() + "'";                
+        }
     }
 }
