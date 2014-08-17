@@ -31,6 +31,7 @@ public class JdbcUserDao implements UserDao {
 
     /**
      * Definision columns of user table.
+     * Each value is ordered by the same oreder in the table.
      */
     private enum Column {
 
@@ -76,8 +77,8 @@ public class JdbcUserDao implements UserDao {
     
     @Override
     public void insertUser(User user) {
-        String sql = "insert into " + USER_TABLE + " " + SQLEncoder.toValues(user) + ";";
-        jdbcTemplate.execute(sql);
+        String sql = "insert into " + USER_TABLE + encodeColumnToSet();
+        jdbcTemplate.update(sql, user.toObject());
     }
 
     /**
@@ -108,56 +109,11 @@ public class JdbcUserDao implements UserDao {
         }
     }
     
-    /**
-     * Encode <code>User</code> to SQL for insert
-     */
-    private static class SQLEncoder {
-        
-        private static final long ILLEGAL_ID = -1;
-        
-        public static String toValues(User user) {
-            String values = "values(";
-            
-            if (user.getId() == ILLEGAL_ID)
-                values += "null";
-            else
-                values += String.valueOf(user.getId());
-            
-            values += ", " + String.valueOf(user.getState().ordinal());
-            values += ", " + nullCheck(user.getName());
-            values += ", " + nullCheck(user.getEmail());
-            values += ", " + nullCheck(user.getPasswrod());
-            
-            values += ", " + nullCheck(user.getDescription());
-            
-            if (user.getBirthdate() == null)
-                values += ", null";
-            else
-                values += ", " + user.getBirthdate().toString();
-            
-            values += ", " + nullCheck(user.getLocation());
-            values += ", " + nullCheck(user.getAffiliate());
-            values += ", " + nullCheck(user.getUrl());
-            values += ", " + encodeOAuthAccount(user.getTwitter());
-            values += ", " + encodeOAuthAccount(user.getFacebook());
-            values += ")";
-            return values;
+    private String encodeColumnToSet() {
+        String sql = " set ";
+        for(Column c : Column.values()) {
+            sql += c.toString() + "=?," ;
         }
-        
-        private static String nullCheck(String str) {
-            if (str == null || str.isEmpty())
-                return "null";
-            else
-                return "'" + str + "'";
-        }
-        
-        private static String encodeOAuthAccount(OAuthAccount account) {
-            if (account == null)
-                return "null, null, null";
-            else
-                return nullCheck(account.getId()) + ", "
-                        + nullCheck(account.getAccessToken()) + ", "
-                        + nullCheck(account.getAccessSecret());
-        }
+        return sql.substring(0, sql.length() - 1);
     }
 }

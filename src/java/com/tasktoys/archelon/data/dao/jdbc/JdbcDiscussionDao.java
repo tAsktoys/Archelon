@@ -34,6 +34,10 @@ public class JdbcDiscussionDao implements DiscussionDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * This is columns in database.
+     * Each value is ordred by the same order as in the database.
+     */
     public enum Column {
 
         ID, AUTHOR_ID, CATEGORY_ID, STATE, CREATE_TIME, UPDATE_TIME, SUBJECT,
@@ -111,11 +115,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
 
     @Override
     public void insertDiscussion(Discussion discussion) {
-        String sql = "insert into " + TABLE_NAME + " set "
-                + Column.ID + " = ?, " + Column.AUTHOR_ID + " = ?,"
-                + Column.CATEGORY_ID + " = ?, " + Column.STATE + " = ?, "
-                + Column.CREATE_TIME + " = ?, " + Column.UPDATE_TIME + " = ?, "
-                + Column.SUBJECT + " = ?, " + Column.PARTICIPANTS + " = ?, " + Column.POSTS + " = ?";
+        String sql = "insert into " + TABLE_NAME + encodeColumnToSet();
         jdbcTemplate.update(sql, discussion.toObject());
     }
 
@@ -139,5 +139,13 @@ public class JdbcDiscussionDao implements DiscussionDao {
             }
         }
         return dls;
+    }
+    
+    private String encodeColumnToSet() {
+        String sql = " set ";
+        for(Column c : Column.values()) {
+            sql += c.toString() + "=?," ;
+        }
+        return sql.substring(0, sql.length() - 1);
     }
 }
