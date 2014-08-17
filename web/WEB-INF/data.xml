@@ -5,14 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <bean id="userDao" class="com.tasktoys.archelon.data.dao.UserDao">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
-    <bean id="categoriesDao" class="com.tasktoys.archelon.data.dao.CategoriesDao">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
     <!-- Define properties of database -->
     <context:property-placeholder location="WEB-INF/classes/database.properties"/>
     

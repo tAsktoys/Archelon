@@ -89,6 +89,12 @@ table, th, td {
     width: 100%;
 }
 
+#stacktrace {
+    padding: 5px;
+    font-size: 8px;
+    color: gray;
+    background: whitesmoke;
+}
 
 .category {
     margin: 0px 0px;

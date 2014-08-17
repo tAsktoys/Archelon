@@ -5,7 +5,8 @@ package com.tasktoys.archelon.data.entity;
 
 /**
  *
- * @author mikan
+ * @author mikanj
+ * @author YuichiroSato
  */
 public class OAuthAccount {
     
@@ -51,5 +52,11 @@ public class OAuthAccount {
             if (accessToken == null || accessSecret == null)
                 return false;
             return true;
+        }
+        
+        public Object[] toObject() {
+            return new Object[] {
+                id, accessToken, accessSecret
+            };
         }
 }

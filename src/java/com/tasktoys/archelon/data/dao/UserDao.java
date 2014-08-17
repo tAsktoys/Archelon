@@ -1,93 +1,39 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.data.dao;
 
 import com.tasktoys.archelon.data.entity.User;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.sql.DataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 /**
- * A data access object for user information.
+ * Interface of user data operations.
  *
  * @author mikan
- * @see User
+ * @author YuichiroSato
+ * @since 0.1
  */
-@Repository
-public class UserDao {
-
-    private JdbcTemplate jdbcTemplate;
-    private static final String USER_TABLE = "user";
-
+public interface UserDao {
+    
     /**
-     * Definision columns of user table.
-     */
-    private enum Column {
-
-        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION, 
-        AFFILIATE, URL, TWITTER_ID, TWITTER_TOKEN, TWITTER_SECRET, FACEBOOK_ID,
-        FACEBOOK_TOKEN, FACEBOOK_SECRET;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
-    /**
-     * Set data source. It invoke from Spring Framework.
-     *
-     * @param dataSource data source
-     */
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    /**
-     * Find user record by name.
-     *
+     * Find user entity by user name.
+     * 
      * @param name name of user
-     * @return user, or <code>null</code> if not found.
+     * @return user entity, or <code>null</code> if not found.
      */
-    public User findUserByName(String name) {
-        String sql = "select * from " + USER_TABLE + " where name=?";
-        try {
-            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), name);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
+    public User findUserByName(String name);
+    
     /**
-     * Row mapper for user entity.
+     * Find user entity by user name.
+     * 
+     * @param id id of user
+     * @return user entity, or <code>null</code> if not found.
      */
-    private static class UserRowMapper implements RowMapper<User> {
+    public User findUserByID(Long id);
+    
+    /**
+     * Insert new user.
+     * @param user <code>User</code> to insert
+     */
+    public void insertUser(User user);
 
-        @Override
-        public User mapRow(ResultSet result, int row) throws SQLException {
-            User.Builder builder = new User.Builder();
-            builder.id(result.getLong(Column.ID.toString()));
-            builder.state(result.getInt(Column.STATE.toString()));
-            builder.name(result.getString(Column.NAME.toString()));
-            builder.email(result.getString(Column.EMAIL.toString()));
-            builder.password(result.getString(Column.PASSWORD.toString()));
-            builder.description(result.getString(Column.DESCRIPTION.toString()));
-            builder.birthdate(result.getDate(Column.BIRTHDATE.toString()));
-            builder.location(result.getString(Column.LOCATION.toString()));
-            builder.affiliate(result.getString(Column.AFFILIATE.toString()));
-            builder.url(result.getString(Column.URL.toString()));
-            builder.twitterId(result.getString(Column.TWITTER_ID.toString()));
-            builder.twitterToken(result.getString(Column.TWITTER_TOKEN.toString()));
-            builder.twitterSecret(result.getString(Column.TWITTER_SECRET.toString()));
-            builder.facebookId(result.getString(Column.FACEBOOK_ID.toString()));
-            builder.facebookToken(result.getString(Column.FACEBOOK_TOKEN.toString()));
-            builder.facebookSecret(result.getString(Column.FACEBOOK_SECRET.toString()));
-            return builder.build();
-        }
-    }
 }

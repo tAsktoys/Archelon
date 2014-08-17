@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 
@@ -35,6 +35,8 @@ public class LoginController {
 
     private static Logger log = Logger.getLogger(LoginController.class.getName());
 
+    private static final String VIEW_SUCCESS = "success";
+    private static final String VIEW_REGISTER = "register";
     private static final String SUBMIT_NORMAL = "normalLogin";
     private static final String SUBMIT_TWITTER = "twitterLogin";
     private static final String SUBMIT_REGISTER = "register";
@@ -43,12 +45,9 @@ public class LoginController {
     private static final String PARAM_USER_PASSWORD = "userpassword";
     private static final String ATTR_ID = "userId";
     private static final String ATTR_PASSWORD = "userPassword";
-    private static final String VIEW_REGISTER = "register";
-    private static final String VIEW_REDIRECT_HOME = "redirect:/";
-    private static final String VIEW_REDIRECT_ERROR = "redirect:/" + ErrorController.VIEW;
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_NORMAL)
-    public String getLogin(@RequestParam Map<String, String> params,
+    public String handleLoginRequest(@RequestParam Map<String, String> params,
             Model model, UserSession userSession, SessionStatus sessionStatus,
             RedirectAttributes attributes) {
         String userName = params.get(PARAM_USER_NAME);
@@ -58,34 +57,34 @@ public class LoginController {
             log.log(Level.WARNING, "login failed: {0}", userName);
             sessionStatus.setComplete();
             attributes.addFlashAttribute("message", "error.auth.failed");
-            return VIEW_REDIRECT_ERROR;
+            return ErrorController.REDIRECT;
         }
         if (!user.getName().equals(userName)) {
             log.log(Level.WARNING, "login failed: {0}", userName);
             sessionStatus.setComplete();
             attributes.addFlashAttribute("message", "error.auth.failed");
-            return VIEW_REDIRECT_ERROR;
+            return ErrorController.REDIRECT;
         }
         if (!user.isValidPasswordWithPlaneString(userPassword)) {
             log.log(Level.WARNING, "login failed: {0}", userName);
             sessionStatus.setComplete();
             attributes.addFlashAttribute("message", "error.auth.failed");
-            return VIEW_REDIRECT_ERROR;
+            return ErrorController.REDIRECT;
         }
         model.addAttribute(ATTR_ID, userName);
         userSession.setUser(user);
-        return IndexController.VIEW;
+        return VIEW_SUCCESS;
     }
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_TWITTER)
-    public String getTwitterLogin(@RequestParam Map<String, String> params, 
+    public String handleTwitterLoginRequest(@RequestParam Map<String, String> params, 
             Model model, UserSession userSession, SessionStatus sessionStatus) {
         model.addAttribute(ATTR_ID, params.get(PARAM_USER_NAME));
         return IndexController.VIEW;
     }
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_REGISTER)
-    public String getRegister(@RequestParam Map<String, String> params, 
+    public String handleRegisterRequest(@RequestParam Map<String, String> params, 
             Model model, SessionStatus sessionStatus) {
         model.addAttribute(ATTR_ID, params.get(PARAM_USER_NAME));
         model.addAttribute(ATTR_PASSWORD, params.get(PARAM_USER_PASSWORD));
@@ -94,7 +93,7 @@ public class LoginController {
     }
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_LOGOUT)
-    public String getLogout(UserSession userSession, 
+    public String handleLogoutRequest(UserSession userSession, 
             SessionStatus sessionStatus) {
         userSession.clear();
         sessionStatus.setComplete();
@@ -102,8 +101,8 @@ public class LoginController {
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public String getHome() {
-        return VIEW_REDIRECT_HOME;
+    public String handleEmptyRequest() {
+        return IndexController.REDIRECT;
     }
 
     @ModelAttribute(value = "userSession") // (1)

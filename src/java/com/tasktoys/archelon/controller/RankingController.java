@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 
@@ -11,15 +11,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Controller of <code>ranking.jsp</code>.
  * 
- * @author mikan
+ * @author YuichiroSato
  * @since 0.1
  */
 @Controller
 @RequestMapping(value = "/ranking")
 public class RankingController {
+    
+    /**
+     * Ranking view.
+     */
+    protected static final String VIEW = "ranking";
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getRanking(Model model) {
-        return "ranking";
+    public String handleRequest(Model model) {
+        return VIEW;
     }
 }

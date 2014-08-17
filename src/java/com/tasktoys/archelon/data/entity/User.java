@@ -17,9 +17,10 @@ import org.apache.commons.codec.digest.DigestUtils;
  * class, call "with" method and get new instance.
  *
  * @author mikan
+ * @author YuichiroSato
  */
 public final class User implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -105,7 +106,7 @@ public final class User implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public State getState() {
         return state;
     }
@@ -117,17 +118,23 @@ public final class User implements Serializable {
     public String getEmail() {
         return email;
     }
-    
+
+    public String getPasswrod() {
+        return password;
+    }
+
     public boolean isValidPasswordWithPlaneString(String planeString) {
         String sha256 = DigestUtils.sha256Hex(planeString);
-        if (sha256 == null)
+        if (sha256 == null) {
             return false;
+        }
         return sha256.equalsIgnoreCase(password);
     }
-    
+
     public boolean isValidPasswordWithHash(String sha256) {
-        if (sha256 == null)
+        if (sha256 == null) {
             return false;
+        }
         return sha256.equalsIgnoreCase(password);
     }
 
@@ -189,6 +196,16 @@ public final class User implements Serializable {
         return builder.build();
     }
 
+    public Object[] toObject() {
+        Object[] twitterobj = (twitter == null ? new Object[]{ null, null, null } : twitter.toObject());
+        Object[] facebookobj = (facebook == null ? new Object[]{ null, null, null } : facebook.toObject()); 
+        return new Object[]{
+            (id == Builder.ILLEGAL_ID ? null : id), state.ordinal(), name,
+            email, password, description, birthdate, location, affiliate, url,
+            twitterobj[0], twitterobj[1], twitterobj[2],
+            facebookobj[0], facebookobj[1], facebookobj[2]};
+    }
+
     /**
      * Build user object.
      *
@@ -197,10 +214,10 @@ public final class User implements Serializable {
     public static class Builder {
 
         private static final String DATE_FORMAT_STRING = "yyyyMMdd";
-        public static final SimpleDateFormat DATE_FORMAT = 
-                new SimpleDateFormat(DATE_FORMAT_STRING);
-        
-        private static final long ILLEGAL_ID = -1;
+        public static final SimpleDateFormat DATE_FORMAT
+                = new SimpleDateFormat(DATE_FORMAT_STRING);
+
+        public static final long ILLEGAL_ID = -1;
 
         private long id = ILLEGAL_ID;
         private State state = null;
@@ -265,6 +282,15 @@ public final class User implements Serializable {
                 }
             }
             throw new IllegalArgumentException("illegal state: " + stateValue);
+        }
+
+        /**
+         * Set user state.
+         *
+         * @param state state
+         */
+        public void state(State state) {
+            this.state = state;
         }
 
         /**
@@ -362,7 +388,7 @@ public final class User implements Serializable {
         }
 
         public void twitterId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (twitter == null) {
@@ -392,7 +418,7 @@ public final class User implements Serializable {
         }
 
         public void facebookId(String id) {
-            if (url == null) {
+            if (id == null) {
                 return;
             }
             if (facebook == null) {
@@ -459,6 +485,31 @@ public final class User implements Serializable {
         }
 
         /**
+         * Build user object without User id.
+         *
+         * @return {@link User} object.
+         * @throws IllegalStateException If not specify required information(s).
+         */
+        public User buildForInsert() {
+            if (id != ILLEGAL_ID) {
+                throw new IllegalStateException("id is specified.");
+            }
+            if (state == null) {
+                throw new IllegalStateException("state not specified.");
+            }
+            if (name == null) {
+                throw new IllegalStateException("name not specified.");
+            }
+            if (email == null) {
+                throw new IllegalStateException("email not specified.");
+            }
+            if (password == null) {
+                throw new IllegalStateException("password not specified.");
+            }
+            return new User(this);
+        }
+
+        /**
          * Validate format of e-mail address.
          *
          * @param email e-mail address
@@ -466,7 +517,7 @@ public final class User implements Serializable {
          * otherwise
          * @see InternetAddress#validate()
          */
-        private boolean isValidEmailAddress(String email) {
+        public boolean isValidEmailAddress(String email) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);
                 emailAddr.validate();
