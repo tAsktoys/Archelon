@@ -23,7 +23,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
 
     private JdbcTemplate jdbcTemplate;
     private static final String TABLE_NAME = "discussion";
-    
+
     /**
      * Set data source. It invoke from Spring Framework.
      *
@@ -33,17 +33,18 @@ public class JdbcDiscussionDao implements DiscussionDao {
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
-    
+
     public enum Column {
+
         ID, AUTHOR_ID, CATEGORY_ID, STATE, CREATE_TIME, UPDATE_TIME, SUBJECT,
         PARTICIPANTS, POSTS;
-        
+
         @Override
         public String toString() {
             return name().toLowerCase();
         }
     }
-    
+
     @Override
     public List<Discussion> findNewestDiscussionList(int n) {
         String sql = "select * from " + TABLE_NAME
@@ -60,7 +61,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
-    
+
     @Override
     public List<Discussion> findDiscussionListBefore(long id, int n) {
         String sql = "select * from " + TABLE_NAME
@@ -107,21 +108,35 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
-    
+
+    @Override
+    public void insertDiscussion(Discussion discussion) {
+        String sql = "insert into " + TABLE_NAME + " set "
+                + Column.ID + " = ?, " + Column.AUTHOR_ID + " = ?,"
+                + Column.CATEGORY_ID + " = ?, " + Column.STATE + " = ?, "
+                + Column.CREATE_TIME + " = ?, " + Column.UPDATE_TIME + " = ?, "
+                + Column.SUBJECT + " = ?, " + Column.PARTICIPANTS + " = ?, " + Column.POSTS + " = ?";
+        jdbcTemplate.update(sql, discussion.toObject());
+    }
+
     private List<Discussion> responseToDiscussionList(List<Map<String, Object>> response) {
         List<Discussion> dls = new ArrayList<>();
         for (Map<String, Object> row : response) {
             Discussion.Builder builder = new Discussion.Builder();
-            builder.id((long)row.get(Column.ID.toString()));
-            builder.author_id((long)row.get(Column.AUTHOR_ID.toString()));
-            builder.category_id((int)row.get(Column.CATEGORY_ID.toString()));
-            builder.state((int)row.get(Column.STATE.toString()));
-            builder.create_time((Timestamp)row.get(Column.CREATE_TIME.toString()));
-            builder.update_time((Timestamp)row.get(Column.UPDATE_TIME.toString()));
-            builder.subject((String)row.get(Column.SUBJECT.toString()));
-            builder.participants((int)row.get(Column.PARTICIPANTS.toString()));
-            builder.posts((int)row.get(Column.POSTS.toString()));
-            dls.add(builder.build());
+            try {
+                builder.id((long) row.get(Column.ID.toString()));
+                builder.authorID((long) row.get(Column.AUTHOR_ID.toString()));
+                builder.categoryID((int) row.get(Column.CATEGORY_ID.toString()));
+                builder.state((int) row.get(Column.STATE.toString()));
+                builder.createTime((Timestamp) row.get(Column.CREATE_TIME.toString()));
+                builder.updateTime((Timestamp) row.get(Column.UPDATE_TIME.toString()));
+                builder.subject((String) row.get(Column.SUBJECT.toString()));
+                builder.participants((int) row.get(Column.PARTICIPANTS.toString()));
+                builder.posts((int) row.get(Column.POSTS.toString()));
+                dls.add(builder.build());
+            } catch (IllegalStateException | NullPointerException e) {
+                ;
+            }
         }
         return dls;
     }
