@@ -30,12 +30,12 @@ public class JdbcUserDao implements UserDao {
     private static final String USER_TABLE = "user";
 
     /**
-     * Definision columns of user table.
-     * Each value is ordered by the same oreder in the table.
+     * Definision columns of user table. Each value is ordered by the same
+     * oreder in the table.
      */
     private enum Column {
 
-        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION, 
+        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION,
         AFFILIATE, URL, TWITTER_ID, TWITTER_TOKEN, TWITTER_SECRET, FACEBOOK_ID,
         FACEBOOK_TOKEN, FACEBOOK_SECRET;
 
@@ -54,7 +54,7 @@ public class JdbcUserDao implements UserDao {
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
-    
+
     @Override
     public User findUserByName(String name) {
         String sql = "select * from " + USER_TABLE + " where name=?";
@@ -64,7 +64,7 @@ public class JdbcUserDao implements UserDao {
             return null;
         }
     }
-    
+
     @Override
     public User findUserByID(Long id) {
         String sql = "select * from " + USER_TABLE + " where id=?";
@@ -74,7 +74,7 @@ public class JdbcUserDao implements UserDao {
             return null;
         }
     }
-    
+
     @Override
     public void insertUser(User user) {
         String sql = "insert into " + USER_TABLE + encodeColumnToSet();
@@ -108,11 +108,11 @@ public class JdbcUserDao implements UserDao {
             return builder.build();
         }
     }
-    
+
     private String encodeColumnToSet() {
         String sql = " set ";
-        for(Column c : Column.values()) {
-            sql += c.toString() + "=?," ;
+        for (Column c : Column.values()) {
+            sql += c.toString() + "=?,";
         }
         return sql.substring(0, sql.length() - 1);
     }

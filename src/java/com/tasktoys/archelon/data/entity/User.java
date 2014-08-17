@@ -476,7 +476,7 @@ public final class User implements Serializable {
                 }
             }
             if (facebook != null) {
-                if (facebook.validate()) {
+                if (!facebook.validate()) {
                     throw new IllegalStateException(
                             "facebook creation incomplete.");
                 }
