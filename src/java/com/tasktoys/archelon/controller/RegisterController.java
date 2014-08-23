@@ -109,7 +109,7 @@ public class RegisterController {
         builder.password(DigestUtils.sha256Hex(userPassword));
         builder.email(email);
         builder.state(User.State.ACTIVE);
-        if (description != null)
+        if (description != null && !description.isEmpty())
             builder.description(description);
         if (birthdate != null && !birthdate.isEmpty()) {
             int year, month, day;
@@ -127,21 +127,21 @@ public class RegisterController {
                 return errorHandle(model, Error.BIRTHDATE_INVALID.toString());
             }
         }
-        if (location != null)
+        if (location != null && !location.isEmpty())
             builder.location(location);
-        if (affiliate != null)
+        if (affiliate != null && !affiliate.isEmpty())
             builder.affiliate(affiliate);
-        if (url != null)
+        if (url != null && !url.isEmpty())
             builder.url(url);
         if (twitterId != null) {
-            builder.twitterId(twitterId);
-            builder.twitterToken("Twitter_token"); // stub
-            builder.twitterSecret("Twitter_secret"); // stub
+            builder.twitterId(null); // stub
+            builder.twitterToken(null);
+            builder.twitterSecret(null);
         }
         if (facebookId != null) {
-            builder.facebookId(facebookId);
-            builder.facebookToken("Facebook_token"); // stub
-            builder.facebookSecret("Facebook_secret"); // stub
+            builder.facebookId(null); // stub
+            builder.facebookToken(null);
+            builder.facebookSecret(null);
         }
         
         try{

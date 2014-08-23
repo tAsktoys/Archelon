@@ -80,6 +80,13 @@ public class JdbcUserDao implements UserDao {
         String sql = "insert into " + USER_TABLE + encodeColumnToSet();
         jdbcTemplate.update(sql, user.toObject());
     }
+    
+    @Override
+    public void updateUser(User user) {
+        String sql = "update " + USER_TABLE + encodeColumnToSet()
+                + " where id=" + user.getId();
+        jdbcTemplate.update(sql, user.toObject());
+    }
 
     /**
      * Row mapper for user entity.

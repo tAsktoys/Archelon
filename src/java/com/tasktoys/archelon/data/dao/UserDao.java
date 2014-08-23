@@ -35,5 +35,7 @@ public interface UserDao {
      * @param user <code>User</code> to insert
      */
     public void insertUser(User user);
+    
+    public void updateUser(User user);
 
 }

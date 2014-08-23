@@ -44,9 +44,7 @@ public class UserController {
     private final String user_activity = "user_activity";
 
     //Spring message values of each user infomation.
-//    private final String ID_LABEL = "";
     private final String STATE_LABEL = "user.label.state";
-    private final String NAME_LABEL = "name ";
     private final String EMAIL_LABEL = "user.label.email";
     private final String BIRTHDATE_LABEL = "user.label.age";
     private final String LOCATION_LABEL = "user.label.location";
@@ -54,6 +52,9 @@ public class UserController {
     private final String URL_LABEL = "user.label.url";
     private final String TWITTER_ID_LABEL = "user.label.twitter";
     private final String FACEBOOK_ID_LABEL = "user.label.facebook";
+    
+    private final String LABEL = "label";
+    private final String VALUE = "value";
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleEmptyRequest(Model model) {
@@ -92,33 +93,12 @@ public class UserController {
         String facebookId = user.getFacebook() == null ? null : user.getFacebook().getId();
         mls.add(makeLabelValueMap(FACEBOOK_ID_LABEL, facebookId));
         model.addAttribute(OVERVIEW, mls);
-//
-//        long id = user.getId();
-//        User.State state = user.getState();
-//        String name = user.getName();
-//        Date birthdate = user.getBirthdate();
-//        String location = user.getLocation();
-//        String affiliate = user.getAffiliate();
-//        String url = user.getUrl();
-//        OAuthAccount twitter = user.getTwitter();
-//        String twitterId = twitter != null ? twitter.getId() : null;
-//
-//        List<String> list = new ArrayList<>();
-//        list.add(id < 0 ? "(N/A)" : "ID: " + Long.toString(id));
-//        list.add("State: " + state.toString());
-//        list.add(name == null ? "(N/A)" : "Name: " + name);
-//        list.add(birthdate == null ? "(N/A)" : "Age: " + calcAge(birthdate));
-//        list.add(location == null ? "(N/A)" : location);
-//        list.add(affiliate == null ? "(N/A)" : affiliate);
-//        list.add(url == null ? "(N/A)" : url);
-//        list.add(twitterId == null ? "(N/A)" : "@" + twitterId);
-//        model.addAttribute(OVERVIEW, list);
     }
 
     private Map<String, String> makeLabelValueMap(String label, String value) {
         Map<String, String> map = new HashMap<>();
-        map.put("label", label);
-        map.put("value", value);
+        map.put(LABEL, label);
+        map.put(VALUE, value);
         return map;
     }
 
