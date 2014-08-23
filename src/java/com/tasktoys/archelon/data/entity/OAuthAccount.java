@@ -3,6 +3,9 @@
  */
 package com.tasktoys.archelon.data.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author mikan
@@ -51,7 +54,7 @@ public class OAuthAccount {
     public boolean validate() {
         return id != null && accessToken != null && accessSecret != null;
     }
-
+    
     public Object[] toObject() {
         return new Object[]{
             id, accessToken, accessSecret

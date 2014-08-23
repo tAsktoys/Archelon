@@ -6,6 +6,8 @@ package com.tasktoys.archelon.data.entity;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -100,7 +102,7 @@ public final class User implements Serializable {
 
     public enum State {
 
-        ACTIVE, INACTIVE, BANNED;
+        ACTIVE, INACTIVE, BANNED, DELETED;
     }
 
     public long getId() {
@@ -194,6 +196,37 @@ public final class User implements Serializable {
         Builder builder = new Builder(this);
         builder.location(place);
         return builder.build();
+    }
+    
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
+        map.put("state", state.toString());
+        map.put("name", name);
+        map.put("email", email);
+        map.put("password", password);
+        map.put("description", description);
+        map.put("birthdate", (birthdate == null ? null : birthdate.toString()));
+        map.put("location", location);
+        map.put("affiliate", affiliate);
+        map.put("url", url);
+        map.put("twitterID", (twitter == null ? null : twitter.getId()));
+        map.put("twitterToken", (twitter == null ? null : twitter.getAccessToken()));
+        map.put("twitterSecret", (twitter == null ? null : twitter.getAccessSecret()));
+        map.put("facebookID", (facebook == null ? null : facebook.getId()));
+        map.put("facebookToken", (facebook == null ? null : facebook.getAccessToken()));
+        map.put("facebookSecret", (facebook == null ? null : facebook.getAccessSecret()));
+        return map;
+    }
+    
+    public Map<String, String> toSecureMap() {
+        Map<String, String> map = toMap();
+        map.remove("password");
+        map.remove("twitterToken");
+        map.remove("twitterSecret");
+        map.remove("facebookToken");
+        map.remove("facebookSecret");
+        return map;
     }
 
     public Object[] toObject() {
