@@ -3,13 +3,14 @@
  */
 package com.tasktoys.archelon.controller;
 
-import com.tasktoys.archelon.data.entity.OAuthAccount;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
-    
+
     /**
      * User view.
      */
@@ -41,6 +42,19 @@ public class UserController {
     private final String DESCRIPTION = "description";
     private final String OVERVIEW = "overview";
     private final String user_activity = "user_activity";
+
+    //Spring message values of each user infomation.
+    private final String STATE_LABEL = "user.label.state";
+    private final String EMAIL_LABEL = "user.label.email";
+    private final String BIRTHDATE_LABEL = "user.label.age";
+    private final String LOCATION_LABEL = "user.label.location";
+    private final String AFFILIATE_LABEL = "user.label.affiliate";
+    private final String URL_LABEL = "user.label.url";
+    private final String TWITTER_ID_LABEL = "user.label.twitter";
+    private final String FACEBOOK_ID_LABEL = "user.label.facebook";
+    
+    private final String LABEL = "label";
+    private final String VALUE = "value";
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleEmptyRequest(Model model) {
@@ -66,33 +80,32 @@ public class UserController {
 
     private void updateUserInformation(Model model, User user) {
         model.addAttribute(DESCRIPTION, user.getDescription());
+        List<Map<String, String>> mls = new ArrayList<>();
+        mls.add(makeLabelValueMap(STATE_LABEL, user.getState().toString()));
+        mls.add(makeLabelValueMap(EMAIL_LABEL, user.getEmail()));
+        String birthdate = user.getBirthdate() == null ? null : String.valueOf(calcAge(user.getBirthdate())); 
+        mls.add(makeLabelValueMap(BIRTHDATE_LABEL, birthdate));
+        mls.add(makeLabelValueMap(LOCATION_LABEL, user.getLocation()));
+        mls.add(makeLabelValueMap(AFFILIATE_LABEL, user.getAffiliate()));
+        mls.add(makeLabelValueMap(URL_LABEL, user.getUrl()));
+        String twitterId = user.getTwitter() == null ? null : user.getTwitter().getId();
+        mls.add(makeLabelValueMap(TWITTER_ID_LABEL, twitterId));
+        String facebookId = user.getFacebook() == null ? null : user.getFacebook().getId();
+        mls.add(makeLabelValueMap(FACEBOOK_ID_LABEL, facebookId));
+        model.addAttribute(OVERVIEW, mls);
+    }
 
-        long id = user.getId();
-        User.State state = user.getState();
-        String name = user.getName();
-        Date birthdate = user.getBirthdate();
-        String location = user.getLocation();
-        String affiliate = user.getAffiliate();
-        String url = user.getUrl();
-        OAuthAccount twitter = user.getTwitter();
-        String twitterId = twitter != null ? twitter.getId() : null;
-
-        List<String> list = new ArrayList<>();
-        list.add(id < 0 ? "(N/A)" : "ID: " + Long.toString(id));
-        list.add("State: " + state.toString());
-        list.add(name == null ? "(N/A)" : "Name: " + name);
-        list.add(birthdate == null ? "(N/A)" : "Age: " + calcAge(birthdate));
-        list.add(location == null ? "(N/A)" : location);
-        list.add(affiliate == null ? "(N/A)" : affiliate);
-        list.add(url == null ? "(N/A)" : url);
-        list.add(twitterId == null ? "(N/A)" : "@" + twitterId);
-        model.addAttribute(OVERVIEW, list);
+    private Map<String, String> makeLabelValueMap(String label, String value) {
+        Map<String, String> map = new HashMap<>();
+        map.put(LABEL, label);
+        map.put(VALUE, value);
+        return map;
     }
 
     private void updateUserActivity(Model model) {
         List<String> list = new ArrayList<>();
         list.add("\"hoge!hoge!hoge!\"");
-        list.add("\"Hooaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\"");
+        list.add("\"Hooaaaaaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa  aaaa aaaaaaa aaaaaaaaa !!!!!!!!!! !!!!!!!!!!!! !!!!!!!! !!!!!!!!!!!! !!!! !!!!!!!!!!!!!1\"");
         list.add("Discussion title \"Foo\" is made");
         model.addAttribute(user_activity, list);
     }

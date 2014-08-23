@@ -29,5 +29,13 @@ public interface UserDao {
      * @return user entity, or <code>null</code> if not found.
      */
     public User findUserByID(Long id);
+    
+    /**
+     * Insert new user.
+     * @param user <code>User</code> to insert
+     */
+    public void insertUser(User user);
+    
+    public void updateUser(User user);
 
 }

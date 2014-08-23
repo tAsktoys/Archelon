@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.data.dao.jdbc;
 
 import com.tasktoys.archelon.data.dao.UserDao;
+import com.tasktoys.archelon.data.entity.OAuthAccount;
 import com.tasktoys.archelon.data.entity.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,11 +30,12 @@ public class JdbcUserDao implements UserDao {
     private static final String USER_TABLE = "user";
 
     /**
-     * Definision columns of user table.
+     * Definision columns of user table. Each value is ordered by the same
+     * oreder in the table.
      */
     private enum Column {
 
-        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION, 
+        ID, STATE, NAME, EMAIL, PASSWORD, DESCRIPTION, BIRTHDATE, LOCATION,
         AFFILIATE, URL, TWITTER_ID, TWITTER_TOKEN, TWITTER_SECRET, FACEBOOK_ID,
         FACEBOOK_TOKEN, FACEBOOK_SECRET;
 
@@ -62,7 +64,7 @@ public class JdbcUserDao implements UserDao {
             return null;
         }
     }
-    
+
     @Override
     public User findUserByID(Long id) {
         String sql = "select * from " + USER_TABLE + " where id=?";
@@ -71,6 +73,19 @@ public class JdbcUserDao implements UserDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public void insertUser(User user) {
+        String sql = "insert into " + USER_TABLE + encodeColumnToSet();
+        jdbcTemplate.update(sql, user.toObject());
+    }
+    
+    @Override
+    public void updateUser(User user) {
+        String sql = "update " + USER_TABLE + encodeColumnToSet()
+                + " where id=" + user.getId();
+        jdbcTemplate.update(sql, user.toObject());
     }
 
     /**
@@ -99,5 +114,13 @@ public class JdbcUserDao implements UserDao {
             builder.facebookSecret(result.getString(Column.FACEBOOK_SECRET.toString()));
             return builder.build();
         }
+    }
+
+    private String encodeColumnToSet() {
+        String sql = " set ";
+        for (Column c : Column.values()) {
+            sql += c.toString() + "=?,";
+        }
+        return sql.substring(0, sql.length() - 1);
     }
 }

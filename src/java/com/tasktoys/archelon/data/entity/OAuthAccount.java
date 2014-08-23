@@ -3,53 +3,61 @@
  */
 package com.tasktoys.archelon.data.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author mikan
+ * @author YuichiroSato
  */
 public class OAuthAccount {
-    
+
     private String id;
-        private String accessToken;
-        private String accessSecret;
+    private String accessToken;
+    private String accessSecret;
 
-        public OAuthAccount() {
-            //
-        }
+    public OAuthAccount() {
+        //
+    }
 
-        public OAuthAccount(String id, String accessToken, String accessSecret) {
-            this.id = id;
-            this.accessToken = accessToken;
-            this.accessSecret = accessSecret;
-        }
+    public OAuthAccount(String id, String accessToken, String accessSecret) {
+        this.id = id;
+        this.accessToken = accessToken;
+        this.accessSecret = accessSecret;
+    }
 
-        public String getId() {
-            return id;
-        }
+    public String getId() {
+        return id;
+    }
 
-        public String getAccessToken() {
-            return accessToken;
-        }
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-        public String getAccessSecret() {
-            return accessSecret;
-        }
+    public String getAccessSecret() {
+        return accessSecret;
+    }
 
-        public void setId(String id) {
-            this.id = id;
-        }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-        public void setAccessToken(String accessToken) {
-            this.accessToken = accessToken;
-        }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-        public void setAccessSecret(String accessSecret) {
-            this.accessSecret = accessSecret;
-        }
-        
-        public boolean validate() {
-            if (accessToken == null || accessSecret == null)
-                return false;
-            return true;
-        }
+    public void setAccessSecret(String accessSecret) {
+        this.accessSecret = accessSecret;
+    }
+
+    public boolean validate() {
+        return id != null && accessToken != null && accessSecret != null;
+    }
+    
+    public Object[] toObject() {
+        return new Object[]{
+            id, accessToken, accessSecret
+        };
+    }
 }
