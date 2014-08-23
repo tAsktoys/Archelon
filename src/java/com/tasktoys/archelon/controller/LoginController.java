@@ -78,9 +78,10 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_TWITTER)
     public String handleTwitterLoginRequest(@RequestParam Map<String, String> params, 
-            Model model, UserSession userSession, SessionStatus sessionStatus) {
-        model.addAttribute(ATTR_ID, params.get(PARAM_USER_NAME));
-        return IndexController.VIEW;
+            Model model, UserSession userSession, SessionStatus sessionStatus,
+            RedirectAttributes redirect) {
+        redirect.addFlashAttribute(ErrorController.ATTR_MESSAGE, "error.sorry");
+        return ErrorController.REDIRECT;
     }
 
     @RequestMapping(method = RequestMethod.POST, params = SUBMIT_REGISTER)

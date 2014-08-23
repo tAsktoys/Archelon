@@ -33,6 +33,7 @@ public class UserController {
      * User view.
      */
     protected static final String VIEW = "user";
+    protected static final String REDIRECT = "redirect:/" + VIEW;
 
     @Autowired
     private UserService userService;

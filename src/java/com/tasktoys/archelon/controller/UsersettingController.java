@@ -214,7 +214,7 @@ public class UsersettingController {
             User current = userService.findUserByName(userName);
             userSession.setUser(current);
             setUserValueToForm(model, current);
-            return REDIRECT + "/" + current.getName();
+            return UserController.REDIRECT + "/" + current.getName();
         } catch (IllegalStateException e) {
             return REDIRECT + "/" + userSession.getName();
         }
@@ -247,7 +247,7 @@ public class UsersettingController {
             User current = builder.build();
             userService.updateUser(current);
             userSession.setUser(current);
-            return REDIRECT + "/" + current.getName();
+            return UserController.REDIRECT + "/" + current.getName();
         } catch (IllegalStateException e) {
             return REDIRECT;
         }
