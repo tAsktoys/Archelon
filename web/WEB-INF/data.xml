@@ -19,7 +19,7 @@
     </bean>
     
     <!-- Configure MongoDB -->
-    <mongo:db-factory id="mongoDbFactory" dbname="discussion" host="aomikan.org" port="17017" />
+    <mongo:db-factory id="mongoDbFactory" dbname="discussion" host="${mongo.host}" port="${mongo.port}" />
 	
     <mongo:mapping-converter id="mongoConverter" base-package="com.tasktoys.archelon.data">
         <mongo:custom-converters base-package="com.tasktoys.archelon.data" />

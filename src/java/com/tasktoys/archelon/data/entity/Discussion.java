@@ -3,11 +3,13 @@
  */
 package com.tasktoys.archelon.data.entity;
 
+import com.tasktoys.archelon.data.dao.DiscussionContentDao;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -24,6 +26,9 @@ public class Discussion {
     private final String subject;
     private final int participants;
     private final int posts;
+    
+    @Autowired
+    private DiscussionContentDao discussionContentDao;
 
     public enum Column {
 
@@ -105,6 +110,10 @@ public class Discussion {
 
     public int getPosts() {
         return this.posts;
+    }
+    
+    public DiscussionContent getContent() {
+        return discussionContentDao.findByDiscussionId(id);
     }
 
     public Object[] toObject() {

@@ -135,7 +135,8 @@ public class IndexController {
     public String handleCreateDiscussion(@RequestParam Map<String, String> params,
             Model model, UserSession userSession) {
         if (hasAllParameters(params)) {
-            discussionService.insertDiscussion(makeNewDiscussion(params, userSession));
+            // TODO: Implement initial discussion content for insert.
+            discussionService.insertDiscussion(makeNewDiscussion(params, userSession), null);
         } else {
             makeCategorySelect(model,
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),

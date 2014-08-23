@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.service;
 
 import com.tasktoys.archelon.data.entity.Discussion;
+import com.tasktoys.archelon.data.entity.DiscussionContent;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface DiscussionService {
     public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
     public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
     public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
-    public void insertDiscussion(Discussion discussion);
+    public void insertDiscussion(Discussion discussion, DiscussionContent content);
     
     /** Replace <code>long</code> author id to <code>String</code> author name in discussions
      * 
