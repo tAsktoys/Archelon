@@ -55,7 +55,7 @@ class Post {
     
     private long authorId;
     private String description;
-    private String meth;
+    private String math;
     private String fig;
     private String svg;
 
@@ -75,12 +75,12 @@ class Post {
         this.description = description;
     }
 
-    public String getMeth() {
-        return meth;
+    public String getMath() {
+        return math;
     }
 
-    public void setMeth(String meth) {
-        this.meth = meth;
+    public void setMath(String math) {
+        this.math = math;
     }
 
     public String getFig() {
