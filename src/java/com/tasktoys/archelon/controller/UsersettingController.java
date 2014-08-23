@@ -39,7 +39,7 @@ public class UsersettingController {
     protected static final String REDIRECT = "redirect:/" + VIEW;
 
     private static final String ID = "id";
-    private static final String CULLENT_VALUE_SURFFIX = "current_";
+    private static final String CULLENT_VALUE_PREFIX = "current_";
 
     private static final String PASSWORD = "user_password";
 
@@ -124,7 +124,7 @@ public class UsersettingController {
     private void setUserValueToForm(Model model, User user) {
         Map<String, String> map = user.toSecureMap();
         for (String key : map.keySet()) {
-            model.addAttribute(CULLENT_VALUE_SURFFIX + key, map.get(key));
+            model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
         }
     }
 

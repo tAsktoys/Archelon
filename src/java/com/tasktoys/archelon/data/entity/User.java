@@ -198,6 +198,10 @@ public final class User implements Serializable {
         return builder.build();
     }
     
+    /**
+     * Convert <code>User</code> propaties to Map.
+     * @return 
+     */
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(id));
@@ -219,6 +223,11 @@ public final class User implements Serializable {
         return map;
     }
     
+    /**
+     * Convert <code>User</code> propaties to Map without information 
+     * with security risk.
+     * @return 
+     */
     public Map<String, String> toSecureMap() {
         Map<String, String> map = toMap();
         map.remove("password");
