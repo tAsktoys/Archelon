@@ -67,8 +67,14 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public void insertDiscussion(Discussion discussion, DiscussionContent content) {
         discussionDao.insertDiscussion(discussion);
-        discussionContentDao.insert(content);
-        
+        List<Discussion> discussionList = discussionDao.findNewestDiscussionList(10); // TODO: replace by findDiscussionByAuthor
+        long authorId = content.getFirstAuthorId();
+        for (Discussion d : discussionList) {
+            if (d.getAuthorID() == authorId) {
+                content.setDiscussionId(d.getID());
+                discussionContentDao.insert(content);
+            }
+        }
     }
 
     @Override
