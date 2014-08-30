@@ -188,20 +188,31 @@ public class IndexController {
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {
-        try {
-            Integer main_id = Integer.valueOf(main);
-            makeMainCategory(model, main_id);
-            try {
-                Integer sub_id = Integer.valueOf(sub);
-                makeSubCategory(model, main_id, sub_id);
-                makeDiscussionList(model, main_id, sub_id);
-            } catch (NumberFormatException e) {
-                makeSubCategory(model, main_id);
-                makeDiscussionList(model, main_id);
-            }
-        } catch (NumberFormatException e) {
+        boolean mainChoosen = isChoosenSelection(main);
+        boolean subChoosen = isChoosenSelection(sub);
+        
+        if (mainChoosen && subChoosen) {
+            int mainId = Integer.valueOf(main);
+            int subId = Integer.valueOf(sub);
+            makeMainCategory(model, mainId);
+            makeSubCategory(model, mainId, subId);
+            makeDiscussionList(model, mainId, subId);
+        } else if (mainChoosen) {
+            int mainId = Integer.valueOf(main);
+            makeSubCategory(model, mainId);
+            makeDiscussionList(model, mainId);
+        } else {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
+        }
+    }
+    
+    private boolean isChoosenSelection(String categoryId) {
+        try {
+            Integer.valueOf(categoryId);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
