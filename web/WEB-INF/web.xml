@@ -35,4 +35,9 @@
         <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <session-config>
+        <cookie-config>
+            <path>/</path>
+        </cookie-config>
+    </session-config>
 </web-app>
