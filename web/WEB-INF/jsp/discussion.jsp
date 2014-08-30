@@ -35,31 +35,10 @@
                             </div>
                         </li>
                     </c:forEach>
-                        <!--
-                    <il class="others">
-                        <img src="" alt="" width=50 height=50 class="others"/>
-                        <p><a href="">Sato</a>:</p>
-                        <p>やっぱ目玉焼きにはソースだよな！</p>
-                    </il>
-                    <il class="others">
-                        <img src="" alt="" width=50 height=50 class="others"/>
-                        <p><a href="">anonymous</a>:</p>
-                        <p>ないわー</p>
-                    </il>
-                    <il class="me">
-                        <img src="" alt="" width=50 height=50 class="me"/>
-                        <p><a href="">みかん</a>:</p>
-                        <p>俺はコショウ！</p>
-                    </il>
-                    <il class="others">
-                        <img src="" alt="" width=50 height=50 class="others"/>
-                        <p><a href="">nobuko</a>:</p>
-                        <p>ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！ほげほげほげ！</p>
-                    </il> -->
                 </ul>
             </div>
             
-            <form action="/archelon/discussion" method="post" id="discussion_form">
+            <form action="/archelon/discussion/${id}" method="post" id="discussion_form">
                 <div id="discussion_selectors">
                     <input type="checkbox" name="q1" value="text" checked>text
                     <input type="checkbox" name="q1" value="figure">fig

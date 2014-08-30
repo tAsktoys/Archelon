@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}  Copyright(C) 2014 tAsktoys. All rights reserved.
+<#if licenseLast??>
+${licenseLast}
+</#if>

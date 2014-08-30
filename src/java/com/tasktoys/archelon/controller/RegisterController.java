@@ -41,7 +41,7 @@ public class RegisterController {
     private enum Param {
 
         USER_NAME, USER_PASSWORD, USER_PASSWORD_R, EMAIL, DESCRIPTION, BIRTHDATE, LOCATION, 
-        AFFILIATE, URL, TWITTER_ID, FACEBOOK_ID;
+        AFFILIATE, URL, TWITTERID, FACEBOOKID;
 
         @Override
         public String toString() {
@@ -99,18 +99,19 @@ public class RegisterController {
         // Get option fields.
         String description = params.get(Param.DESCRIPTION.toString());
         String birthdate = params.get(Param.BIRTHDATE.toString());
+        String location = params.get(Param.LOCATION.toString());
         String affiliate = params.get(Param.AFFILIATE.toString());
         String url = params.get(Param.URL.toString());
-        String twitterId = params.get(Param.TWITTER_ID.toString());
-        String facebookId = params.get(Param.FACEBOOK_ID.toString());
+        String twitterId = params.get(Param.TWITTERID.toString());
+        String facebookId = params.get(Param.FACEBOOKID.toString());
         
         builder.name(userName);
         builder.password(DigestUtils.sha256Hex(userPassword));
         builder.email(email);
         builder.state(User.State.ACTIVE);
-        if (description != null)
+        if (description != null && !description.isEmpty())
             builder.description(description);
-        if (birthdate != null && userName.isEmpty()) {
+        if (birthdate != null && !birthdate.isEmpty()) {
             int year, month, day;
             try {
                 String[] yyyy_mm_dd = birthdate.split("-");
@@ -126,19 +127,21 @@ public class RegisterController {
                 return errorHandle(model, Error.BIRTHDATE_INVALID.toString());
             }
         }
-        if (affiliate != null)
+        if (location != null && !location.isEmpty())
+            builder.location(location);
+        if (affiliate != null && !affiliate.isEmpty())
             builder.affiliate(affiliate);
-        if (url != null)
+        if (url != null && !url.isEmpty())
             builder.url(url);
         if (twitterId != null) {
-            builder.twitterId(twitterId);
-            builder.twitterToken("");
-            builder.twitterSecret("");
+            builder.twitterId(null); // stub
+            builder.twitterToken(null);
+            builder.twitterSecret(null);
         }
         if (facebookId != null) {
-            builder.facebookId(facebookId);
-            builder.facebookToken("");
-            builder.facebookSecret("");
+            builder.facebookId(null); // stub
+            builder.facebookToken(null);
+            builder.facebookSecret(null);
         }
         
         try{
