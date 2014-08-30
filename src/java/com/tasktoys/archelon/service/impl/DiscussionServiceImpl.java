@@ -3,9 +3,11 @@
  */
 package com.tasktoys.archelon.service.impl;
 
+import com.tasktoys.archelon.data.dao.DiscussionContentDao;
 import com.tasktoys.archelon.data.dao.DiscussionDao;
 import com.tasktoys.archelon.data.dao.UserDao;
 import com.tasktoys.archelon.data.entity.Discussion;
+import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Autowired
     private DiscussionDao discussionDao;
+    @Autowired
+    private DiscussionContentDao discussionContentDao;
     @Autowired
     private UserDao userDao;
     
@@ -61,8 +65,16 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
     
     @Override
-    public void insertDiscussion(Discussion discussion) {
+    public void insertDiscussion(Discussion discussion, DiscussionContent content) {
         discussionDao.insertDiscussion(discussion);
+        List<Discussion> discussionList = discussionDao.findNewestDiscussionList(10); // TODO: replace by findDiscussionByAuthor
+        long authorId = content.getFirstAuthorId();
+        for (Discussion d : discussionList) {
+            if (d.getAuthorID() == authorId) {
+                content.setDiscussionId(d.getID());
+                discussionContentDao.insert(content);
+            }
+        }
     }
 
     @Override

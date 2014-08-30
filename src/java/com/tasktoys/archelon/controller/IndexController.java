@@ -5,6 +5,7 @@ package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
+import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
@@ -135,7 +136,8 @@ public class IndexController {
     public String handleCreateDiscussion(@RequestParam Map<String, String> params,
             Model model, UserSession userSession) {
         if (hasAllParameters(params)) {
-            discussionService.insertDiscussion(makeNewDiscussion(params, userSession));
+            discussionService.insertDiscussion(makeNewDiscussion(params, userSession),
+                    makeNewDiscussionContent(params, userSession));
         } else {
             makeCategorySelect(model,
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
@@ -164,16 +166,25 @@ public class IndexController {
         return true;
     }
 
-    public Discussion makeNewDiscussion(Map<String, String> params, UserSession userSession) {
+    private Discussion makeNewDiscussion(Map<String, String> params, UserSession userSession) {
         String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
         String category = params.get(CreateDiscussionParam.SUB_CATEGORY_ID.toString());
-        String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
 
         Discussion.Builder builder = new Discussion.Builder();
         builder.subject(subject);
         builder.categoryID(Integer.parseInt(category));
         builder.authorID(userSession.getUser().getId());
         return builder.buildForInsert();
+    }
+    
+    private DiscussionContent makeNewDiscussionContent(Map<String, String> params, UserSession userSession) {
+        String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
+        DiscussionContent content = new DiscussionContent();
+        
+        content.setSubject(CreateDiscussionParam.SUBJECT.toString());
+        content.setDescription(description);
+        content.addPost(userSession.getUser().getId());
+        return content;
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {
