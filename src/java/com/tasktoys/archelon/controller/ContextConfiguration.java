@@ -5,7 +5,6 @@ package com.tasktoys.archelon.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class ContextConfiguration {
     
-    private static final ContextConfiguration conf = new ContextConfiguration();
+    private static final ContextConfiguration INSTANCE = new ContextConfiguration();
     /**
      * context Path
      */
@@ -40,15 +39,16 @@ public class ContextConfiguration {
         contextPath = properties.getProperty("contexPath");
     }
     
-    public static ContextConfiguration getInstance(){
-        return ContextConfiguration.conf;
+    public static ContextConfiguration getInstance() {
+        return ContextConfiguration.INSTANCE;
     }
     
     /**
-     * 
+     * Return ccontext
+     * @return String ContextPath
      */
-    String readContextPath(){
-        return contextPath;  
+    public String readContextPath() {
+        return this.contextPath;  
     }
     
     

@@ -41,16 +41,10 @@ public class ContextConfigurationTest {
     }
     
     
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-    
     @Test
     public void readContextPathTest(){
         String sCurrentDir = new File(".").getAbsoluteFile().getParent();
-        System.out.println(sCurrentDir);
+        System.out.println("pwd"+sCurrentDir);
         
         ContextConfiguration conf = ContextConfiguration.getInstance();
         String path = conf.readContextPath();
