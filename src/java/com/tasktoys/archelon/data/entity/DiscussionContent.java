@@ -102,7 +102,7 @@ public class DiscussionContent {
         return posts.get(0).getAuthorId();
     }
 
-    public class Post {
+    public static class Post {
 
         private long authorId;
         private String description;
@@ -149,6 +149,5 @@ public class DiscussionContent {
         public void setSvg(String svg) {
             this.svg = svg;
         }
-
     }
 }

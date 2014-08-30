@@ -15,5 +15,5 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 public interface DiscussionContentService {
     
     public DiscussionContent getDiscussionContent(long discussionId);
-    public void updateDiscussionContent(DiscussionContent.Post post);
+    public void insertPost(long discussionId, DiscussionContent.Post post);
 }

@@ -27,7 +27,7 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     }
     
     @Override
-    public void updateDiscussionContent(DiscussionContent.Post post) {
-        mongoDbDiscussionContentDao.update(post);
+    public void insertPost(long discussionId, DiscussionContent.Post post) {
+        mongoDbDiscussionContentDao.insertPost(discussionId, post);
     }
 }

@@ -32,4 +32,7 @@ public interface DiscussionContentDao {
      * @param post a post of the discussion content
      */
     public void update(DiscussionContent.Post post);
+    
+    public void insertPost(long discussionId, DiscussionContent.Post post);
+
 }

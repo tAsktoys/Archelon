@@ -38,7 +38,7 @@
                 </ul>
             </div>
             
-            <form action="/archelon/discussion" method="post" id="discussion_form">
+            <form action="/archelon/discussion/${id}" method="post" id="discussion_form">
                 <div id="discussion_selectors">
                     <input type="checkbox" name="q1" value="text" checked>text
                     <input type="checkbox" name="q1" value="figure">fig
