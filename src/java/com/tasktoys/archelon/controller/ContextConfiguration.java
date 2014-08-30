@@ -36,7 +36,7 @@ public class ContextConfiguration {
             this.contextPath = "/";
         }
         
-        contextPath = properties.getProperty("contexPath");
+        contextPath = properties.getProperty("contextpath");
     }
     
     public static ContextConfiguration getInstance() {
