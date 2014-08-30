@@ -7,12 +7,12 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
-import com.tasktoys.archelon.service.DiscussionService;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes(UserSession.SESSION_NAME)
 public class DiscussionController {
     
+    @Autowired
+    private Properties properties;
     @Autowired
     private UserService userService;
     @Autowired
@@ -92,7 +94,7 @@ public class DiscussionController {
         map.put(TYPE, "others");
         map.put(ICON, "hoge");
         String userName = userService.findUserById(post.getAuthorId()).getName();
-        map.put(USERPAGE, "/archelon/user/" + userName);
+        map.put(USERPAGE, properties.getProperty("contextpath") + "user/" + userName);
         map.put(USERNAME, userName);
         map.put(MESSAGE, post.getDescription());
         return map;

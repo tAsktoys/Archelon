@@ -2,15 +2,11 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page pageEncoding="UTF-8" %>
-<%!
-    // TODO: もっと良い定数定義があれば、置き換えたい
-    String PATH_PREFIX = "/archelon/";
-%>
 <c:if test="${userSession.getName() != null}" var="loggedIn" />
 <div id="header">
 
     <!-- Seach form -->
-    <form action="<%=PATH_PREFIX%>search" method="get">
+    <form action="<spring:eval expression="@properties.getProperty('contextpath')" />search" method="get">
         <div id="search">
             <input type="text" name="searchWord" />
             <input type="submit" name="submitsearch" value="<spring:message code="search" />" />
@@ -18,11 +14,11 @@
     </form>
 
     <!-- Title -->
-    <h1 id="title" onclick="location.href = '<%=PATH_PREFIX%>'"><spring:message code="app.name" />
+    <h1 id="title" onclick="location.href = '<spring:eval expression="@properties.getProperty('contextpath')" />'"><spring:message code="app.name" />
         <small><spring:message code="app.title" /></small></h1>
 
     <!-- Login form -->
-    <form action="<%=PATH_PREFIX%>login" method="post">
+    <form action="<spring:eval expression="@properties.getProperty('contextpath')" />login" method="post">
         <div id="login">
             <p id="welcome"><spring:message code="auth.welcome.prefix" /> 
                 <span id="name">

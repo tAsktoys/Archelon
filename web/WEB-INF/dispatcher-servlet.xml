@@ -46,5 +46,14 @@
     <import resource="data.xml"/>
     <import resource="theme.xml" />
     
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="singleton" value="true" />
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/classes/context.properties</value>
+            </list>
+        </property>
+    </bean>
+    
     <bean id="userSession" class="com.tasktoys.archelon.controller.UserSession" scope="session" />
 </beans>
