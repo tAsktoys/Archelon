@@ -29,7 +29,10 @@ public interface DiscussionContentDao {
     /**
      * Insert last added post for the provided discussion thread.
      * 
-     * @param content discussion content
+     * @param post a post of the discussion content
      */
-    public void update(DiscussionContent content);
+    public void update(DiscussionContent.Post post);
+    
+    public void insertPost(long discussionId, DiscussionContent.Post post);
+
 }

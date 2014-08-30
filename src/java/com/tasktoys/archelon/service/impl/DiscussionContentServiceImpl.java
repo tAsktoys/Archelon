@@ -1,9 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
-
 package com.tasktoys.archelon.service.impl;
 
 import com.tasktoys.archelon.data.dao.mongodb.MongoDbDiscussionContentDao;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author YuichiroSato
+ * @author mikan
  * @version 0.1
  */
 @Service
@@ -29,7 +27,7 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     }
     
     @Override
-    public void updateDiscussionContent(DiscussionContent content) {
-        
+    public void insertPost(long discussionId, DiscussionContent.Post post) {
+        mongoDbDiscussionContentDao.insertPost(discussionId, post);
     }
 }

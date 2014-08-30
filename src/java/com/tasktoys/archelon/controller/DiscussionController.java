@@ -4,6 +4,8 @@
 package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
+import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
 import com.tasktoys.archelon.service.DiscussionService;
 import com.tasktoys.archelon.service.UserService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * Controller of discussion.jsp
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping(value = "/discussion")
+@SessionAttributes(UserSession.SESSION_NAME)
 public class DiscussionController {
     
     @Autowired
@@ -49,15 +53,15 @@ public class DiscussionController {
 
     @RequestMapping(value = "{" + ID + "}", method = RequestMethod.GET)
     public String handleGet(@PathVariable long id, Model model) {
-        DiscussionContent content = discussionContentService.getDiscussionContent(id);
-        updateDiscussionTheme(model, content.getSubject());
-        updateDiscussionLog(model, content);
-        model.addAttribute(ID, id);
+        updatePage(model, id);
         return VIEW;
     }
 
-    @RequestMapping(value = "{" + ID + "}", method = RequestMethod.POST, params = POSTEDMESSAGE)
-    public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, params = POSTEDMESSAGE)
+    public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model,
+            UserSession userSession) {
+        Post post = makePost(params, userSession.getUser());
+        discussionContentService.insertPost(id, post);
 
         updatePage(model, id);
         return VIEW;
@@ -88,9 +92,16 @@ public class DiscussionController {
         map.put(TYPE, "others");
         map.put(ICON, "hoge");
         String userName = userService.findUserById(post.getAuthorId()).getName();
-        map.put(USERPAGE, "/Archelon/user/" + userName);
+        map.put(USERPAGE, "/archelon/user/" + userName);
         map.put(USERNAME, userName);
         map.put(MESSAGE, post.getDescription());
         return map;
+    }
+    
+    private DiscussionContent.Post makePost(Map<String, String> params, User user) {
+        Post post = new Post();
+        post.setAuthorId(user.getId());
+        post.setDescription(params.get(POSTEDMESSAGE));
+        return post;
     }
 }
