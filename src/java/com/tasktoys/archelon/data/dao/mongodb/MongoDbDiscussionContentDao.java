@@ -33,7 +33,7 @@ public class MongoDbDiscussionContentDao implements DiscussionContentDao {
     }
 
     @Override
-    public void update(DiscussionContent content) {
+    public void update(DiscussionContent.Post post) {
         // TODO: implement thread-safe appending.
     }
     
