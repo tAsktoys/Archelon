@@ -19,7 +19,7 @@
         <div id="main">
             <div id="content">
                 <h2><spring:message code="auth.register" /></h2>
-                <form action="/archelon/register" method="post">
+                <form action="<spring:eval expression="@properties.getProperty('contextpath')" />register" method="post">
                     <h3><spring:message code="auth.register.mandatory.field" /></h3>
                     <table class="required">
                         <tr>

@@ -20,7 +20,7 @@
         <div id="main">
             <div id="content">
                 <h2><spring:message code="usersetting.title" /></h2>
-                <form action="/archelon/usersetting/usersetting" method="post">
+                <form action="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/usersetting" method="post">
                     <h3><spring:message code="auth.register.mandatory.field" /></h3>
                     <table class="required">
                         <tr>
@@ -107,7 +107,7 @@
                 </form>
 
                 <h3><spring:message code="usersetting.password.reset" /></h3>
-                <form action="/archelon/usersetting/passwordreset" method="post">
+                <form action="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/passwordreset" method="post">
                     <table>
                         <th><spring:message code="auth.register.userpassword" /></th>
                         <td><input type="password" name="new_user_password" maxlength="64" required /></td>
@@ -140,7 +140,7 @@
                 </form>
 
                 <h3><spring:message code="usersetting.withdraw" /></h3>
-                <form action="/archelon/usersetting/withdraw" method="post">
+                <form action="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/withdraw" method="post">
                     <spring:message code="auth.register.userpassword" />
                     <input type="password" name="user_password" maxlength="64" required />
                     <c:if test="${withdraw_password_missmatch}">

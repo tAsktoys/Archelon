@@ -19,7 +19,7 @@
                 <div id="discussions">
                     <h2><spring:message code="discussion.names" /></h2>
                     <!-- Category selection -->
-                    <form action="/archelon/category_selection" method="post" class="category" onchange="submit(this.form)">
+                    <form action="<spring:eval expression="@properties.getProperty('contextpath')" />category_selection" method="post" class="category" onchange="submit(this.form)">
                         <spring:message code="category.category1" />
                         <select name="main_category_id">
                             <option value="">
@@ -59,7 +59,7 @@
                 <div id="create">
                     <h2><spring:message code="discussion.new" /></h2>
                     <c:if test="${userSession.getName() != null}">
-                        <form action="/archelon/create_discussion" method="post">
+                        <form action="<spring:eval expression="@properties.getProperty('contextpath')" />create_discussion" method="post">
                             <table>
                                 <tr>
                                     <th><spring:message code="discussion.title" /></th>

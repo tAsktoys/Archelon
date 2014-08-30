@@ -33,7 +33,7 @@
                     </c:forEach>
                 </ul>
                 <c:if test="${userSession.getName() == name}">
-                    <a href="/archelon/usersetting/${name}"><spring:message code="user.update" /></a>
+                    <a href="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/${name}"><spring:message code="user.update" /></a>
                 </c:if>
             </div>
 
