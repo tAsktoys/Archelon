@@ -3,10 +3,15 @@
  */
 package com.tasktoys.archelon.controller;
 
+import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.service.DiscussionContentService;
+import com.tasktoys.archelon.service.DiscussionService;
+import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +30,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/discussion")
 public class DiscussionController {
     
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DiscussionContentService discussionContentService;
+    
     protected static final String VIEW = "discussion";
 
     private static final String ID = "id";
@@ -38,56 +48,49 @@ public class DiscussionController {
     private static final String POSTEDMESSAGE = "postedMessage";
 
     @RequestMapping(value = "{" + ID + "}", method = RequestMethod.GET)
-    public String handleGet(@PathVariable String id, Model model) {
-        updateDiscussionTheme(model);
-        updateDiscussionLog(model);
+    public String handleGet(@PathVariable long id, Model model) {
+        DiscussionContent content = discussionContentService.getDiscussionContent(id);
+        updateDiscussionTheme(model, content.getSubject());
+        updateDiscussionLog(model, content);
         model.addAttribute(ID, id);
         return VIEW;
     }
 
-    @RequestMapping(method = RequestMethod.POST, params = POSTEDMESSAGE)
-    public String handlePost(@RequestParam Map<String, String> params, Model model) {
-        updateDiscussionTheme(model);
+    @RequestMapping(value = "{" + ID + "}", method = RequestMethod.POST, params = POSTEDMESSAGE)
+    public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model) {
 
-        List<HashMap<String, String>> list = new ArrayList<>();
-
-        list.add(putRecode());
-        list.add(putRecode());
-
-        HashMap<String, String> map = new HashMap<>();
-        map.put(TYPE, "me");
-        map.put(ICON, "hoge");
-        map.put(USERPAGE, "/archelon/user/777");
-        map.put(USERNAME, "Kato");
-        map.put(MESSAGE, params.get(POSTEDMESSAGE));
-
-        list.add(map);
-
-        model.addAttribute(DISCUSSION_LOG, list);
-
+        updatePage(model, id);
         return VIEW;
     }
-
-    private void updateDiscussionTheme(Model model) {
-        model.addAttribute(THEME, "What is the best HOGE?");
+    
+    private void updatePage(Model model, long discussionId) {
+        DiscussionContent content = discussionContentService.getDiscussionContent(discussionId);
+        updateDiscussionTheme(model, content.getSubject());
+        updateDiscussionLog(model, content);
+        model.addAttribute(ID, discussionId);
     }
 
-    private void updateDiscussionLog(Model model) {
-        List<HashMap<String, String>> list = new ArrayList<>();
+    private void updateDiscussionTheme(Model model, String subject) {
+        model.addAttribute(THEME, subject);
+    }
 
-        list.add(putRecode());
-        list.add(putRecode());
+    private void updateDiscussionLog(Model model, DiscussionContent content) {
+        List<Map<String, String>> list = new ArrayList<>();
+        for (DiscussionContent.Post post : content.getPosts()) {
+            list.add(putPost(post));
+        }
 
         model.addAttribute(DISCUSSION_LOG, list);
     }
 
-    private HashMap<String, String> putRecode() {
+    private Map<String, String> putPost(DiscussionContent.Post post) {
         HashMap<String, String> map = new HashMap<>();
         map.put(TYPE, "others");
         map.put(ICON, "hoge");
-        map.put(USERPAGE, "/Archelon/user/7777");
-        map.put(USERNAME, "Sato");
-        map.put(MESSAGE, "Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! Hoge!Hoge! ");
+        String userName = userService.findUserById(post.getAuthorId()).getName();
+        map.put(USERPAGE, "/Archelon/user/" + userName);
+        map.put(USERNAME, userName);
+        map.put(MESSAGE, post.getDescription());
         return map;
     }
 }

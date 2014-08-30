@@ -10,22 +10,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * 
+ *
  *
  * @author mikan
  */
 @Document
 public class DiscussionContent {
-    
+
     @Id
     private String id;
-    
+
     @Field
     private long discussionId;
-    
+
     @Field
     private String subject;
-    
+
     @Field
     private List<Post> posts;
 
@@ -33,7 +33,7 @@ public class DiscussionContent {
     private String math = null;
     private String fig = null;
     private String svg = null;
-    
+
     public String getId() {
         return id;
     }
@@ -57,26 +57,27 @@ public class DiscussionContent {
     public void setSubject(String subject) {
         this.subject = subject;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public void setMath(String math) {
         this.math = math;
     }
-    
+
     public void setFig(String fig) {
         this.fig = fig;
     }
-    
+
     public void setSvg(String svg) {
         this.svg = svg;
     }
-    
+
     public void addPost(long AuthorId) {
-        if (posts == null)
+        if (posts == null) {
             posts = new ArrayList<>();
+        }
         Post post = new Post();
         post.setAuthorId(AuthorId);
         post.setDescription(description);
@@ -89,60 +90,65 @@ public class DiscussionContent {
         fig = null;
         svg = null;
     }
-    
+
+    public List<Post> getPosts() {
+        return this.posts;
+    }
+
     public long getFirstAuthorId() {
-        if (posts == null || posts.isEmpty())
+        if (posts == null || posts.isEmpty()) {
             return -1;
+        }
         return posts.get(0).getAuthorId();
     }
-}
 
-class Post {
-    
-    private long authorId;
-    private String description;
-    private String math;
-    private String fig;
-    private String svg;
+    public class Post {
 
-    public long getAuthorId() {
-        return authorId;
+        private long authorId;
+        private String description;
+        private String math;
+        private String fig;
+        private String svg;
+
+        public long getAuthorId() {
+            return authorId;
+        }
+
+        public void setAuthorId(long authorId) {
+            this.authorId = authorId;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getMath() {
+            return math;
+        }
+
+        public void setMath(String math) {
+            this.math = math;
+        }
+
+        public String getFig() {
+            return fig;
+        }
+
+        public void setFig(String fig) {
+            this.fig = fig;
+        }
+
+        public String getSvg() {
+            return svg;
+        }
+
+        public void setSvg(String svg) {
+            this.svg = svg;
+        }
+
     }
-
-    public void setAuthorId(long authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getMath() {
-        return math;
-    }
-
-    public void setMath(String math) {
-        this.math = math;
-    }
-
-    public String getFig() {
-        return fig;
-    }
-
-    public void setFig(String fig) {
-        this.fig = fig;
-    }
-
-    public String getSvg() {
-        return svg;
-    }
-
-    public void setSvg(String svg) {
-        this.svg = svg;
-    }
-    
 }
