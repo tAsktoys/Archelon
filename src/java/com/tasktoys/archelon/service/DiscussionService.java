@@ -22,9 +22,9 @@ public interface DiscussionService {
     public List<Discussion> getNewestDiscussionList(int n);
     public List<Discussion> getDiscussionListAfter(long id, int n);
     public List<Discussion> getDiscussionListBefore(long id, int n);
-    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id);
+    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId);
     public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
+    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int subId);
     public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
     public void insertDiscussion(Discussion discussion, DiscussionContent content);
     

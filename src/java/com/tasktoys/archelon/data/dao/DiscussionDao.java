@@ -86,4 +86,7 @@ public interface DiscussionDao {
      * @param discussion <code>Discussion</code> to insert
      */
     public void insertDiscussion(Discussion discussion);
+    
+    public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n);
+    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryId, int n);
 }

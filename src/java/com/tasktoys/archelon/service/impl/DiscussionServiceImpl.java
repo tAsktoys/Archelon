@@ -3,9 +3,11 @@
  */
 package com.tasktoys.archelon.service.impl;
 
+import com.tasktoys.archelon.data.dao.CategoryDao;
 import com.tasktoys.archelon.data.dao.DiscussionContentDao;
 import com.tasktoys.archelon.data.dao.DiscussionDao;
 import com.tasktoys.archelon.data.dao.UserDao;
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.DiscussionService;
@@ -28,6 +30,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     private DiscussionContentDao discussionContentDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private CategoryDao categoryDao;
     
     @Override
     public List<Discussion> getNewestDiscussionList(int n) {
@@ -45,8 +49,9 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id) {
-        return discussionDao.findNewestDiscussionListByMainCategory(n, main_id);
+    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
+        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
+        return discussionDao.findNewestDiscussionListByCategoryIdList(categoryList, n);
     }
 
     @Override
@@ -55,8 +60,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
-        return discussionDao.findNewestDiscussionListBySubCategory(n, main_id, sub_id);
+    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
+        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId);
     }
 
     @Override

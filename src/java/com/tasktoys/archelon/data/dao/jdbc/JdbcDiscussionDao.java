@@ -112,6 +112,28 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
+    
+    @Override
+    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId) {
+        String sql = "select * from " + TABLE_NAME
+                + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
+                + " limit " + n + ";";
+        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+    }
+    
+    @Override
+    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryIdList, int n) {
+        String sql = "select * from " + TABLE_NAME
+                + " where ";
+        for (int i : categoryIdList) {
+            sql += Column.CATEGORY_ID.toString() + " = " + i + " or ";
+        }
+        sql = sql.substring(0, sql.length() - 4);
+                sql += " order by " + Column.CREATE_TIME.toString() + " desc"
+                + " limit " + n + ";";
+        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+    }
 
     @Override
     public void insertDiscussion(Discussion discussion) {

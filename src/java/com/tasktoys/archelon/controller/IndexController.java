@@ -188,19 +188,20 @@ public class IndexController {
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {
-        boolean mainChoosen = isChoosenSelection(main);
-        boolean subChoosen = isChoosenSelection(sub);
+        boolean isMainIdChoosen = isChoosenSelection(main);
+        boolean isSubIdChoosen = isChoosenSelection(sub);
         
-        if (mainChoosen && subChoosen) {
+        if (isMainIdChoosen && isSubIdChoosen) {
             int mainId = Integer.valueOf(main);
             int subId = Integer.valueOf(sub);
             makeMainCategory(model, mainId);
             makeSubCategory(model, mainId, subId);
-            makeDiscussionList(model, mainId, subId);
-        } else if (mainChoosen) {
+            makeDiscussionListBySubCategory(model, subId);
+        } else if (isMainIdChoosen) {
             int mainId = Integer.valueOf(main);
+            makeMainCategory(model, mainId);
             makeSubCategory(model, mainId);
-            makeDiscussionList(model, mainId);
+            makeDiscussionListByMainCategory(model, mainId);
         } else {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
@@ -255,7 +256,7 @@ public class IndexController {
                         discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));
     }
 
-    private void makeDiscussionList(Model model, int main_id) {
+    private void makeDiscussionListByMainCategory(Model model, int main_id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
                         discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
@@ -267,10 +268,10 @@ public class IndexController {
                         discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
     }
 
-    private void makeDiscussionList(Model model, int main_id, int sub_id) {
+    private void makeDiscussionListBySubCategory(Model model, int subId) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, main_id, sub_id)));
+                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, subId)));
     }
 
     private void makeActivityList(Model model) {

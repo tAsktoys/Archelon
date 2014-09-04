@@ -84,5 +84,13 @@ public final class Category implements Serializable{
             }
             return list;
         }
+        
+        public static List<Integer> toIdList(List<Category> categories) {
+            List<Integer> ls = new ArrayList<>();
+            for (Category c : categories) {
+                ls.add(c.getID());
+            }
+            return ls;
+        }
     }
 }
