@@ -39,6 +39,17 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
     
     @Override
+    public int countDiscussionByMainCategory(int mainId) {
+        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
+        return discussionDao.countDiscussionByCategoryIdList(categoryList);
+    }
+    
+    @Override
+    public int countDiscussionBySubCategory(int subId) {
+        return discussionDao.countDiscussionByCategoryId(subId);
+    }
+    
+    @Override
     public List<Discussion> getNewestDiscussionList(int n) {
         return discussionDao.findNewestDiscussionList(n);
     }
@@ -93,14 +104,14 @@ public class DiscussionServiceImpl implements DiscussionService {
         return mls;
     }
     
-    @Override
-    public int countDiscussionByMainId(int mainId) {
-        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
-        return discussionDao.countDiscussionByCategoryIdList(categoryList);
-    }
-    
-    @Override
-    public int countDiscussionBySubId(int subId) {
-        return discussionDao.countDiscussionByCategoryId(subId);
-    }
+//    @Override
+//    public int countDiscussionByMainId(int mainId) {
+//        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
+//        return discussionDao.countDiscussionByCategoryIdList(categoryList);
+//    }
+//    
+//    @Override
+//    public int countDiscussionBySubId(int subId) {
+//        return discussionDao.countDiscussionByCategoryId(subId);
+//    }
 }

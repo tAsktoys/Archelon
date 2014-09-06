@@ -64,7 +64,13 @@ public class JdbcDiscussionDao implements DiscussionDao {
     
     @Override
     public int countDiscussionByCategoryIdList(List<Integer> categoryIdList) {
-        return 1;
+        String sql = "select count(*) from " + TABLE_NAME
+                + " where " ;
+        for (int i : categoryIdList) {
+            sql += Column.CATEGORY_ID.toString() + " = " + i + " or ";
+        }
+        sql = sql.substring(sql.length() - 4);
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
     
     @Override

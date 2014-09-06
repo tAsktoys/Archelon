@@ -52,11 +52,31 @@
                             <tr><td>${row.id}</td><td><a href="discussion/${row.id}">${row.subject}</a></td><td><a href="user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
                                 </c:forEach>
                     </table>
-                    <a href="/archelon/page/${previousPageNumber}">Prev</a>
-                    <c:forEach var="pageNumber" items="${pageNumberList}">
-                        <a href="/archelon/page/${pageNumber}">[${pageNumber}]</a>
-                    </c:forEach>
-                    <a href="/archelon/page/${nextPageNumber}">Next</a>
+
+                    <!-- LInk to next and prev pages -->
+                    <c:if test="${mainId != null and subId == null}">
+                        <a href="/archelon/page/${previousPageNumber}/mainid/${mainId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="/archelon/page/${pageNumber}/mainid/${mainId}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="/archelon/page/${nextPageNumber}/mainid/${mainId}">Next</a>
+                    </c:if>
+
+                    <c:if test="${mainId != null and subId != null}">
+                        <a href="/archelon/page/${previousPageNumber}/mainid/${mainId}/subid/${subId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="/archelon/page/${pageNumber}/mainid/${mainId}/subid/${subId}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="/archelon/page/${nextPageNumber}/mainid/${mainId}/subid/${subId}">Next</a>
+                    </c:if>
+
+                    <c:if test="${mainId == null}">
+                        <a href="/archelon/page/${previousPageNumber}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="/archelon/page/${pageNumber}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="/archelon/page/${nextPageNumber}">Next</a>
+                    </c:if>
                     <br />
                 </div>
                 <!-- Create a discussion -->

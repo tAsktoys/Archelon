@@ -102,6 +102,9 @@ public class IndexController {
     @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}", method = RequestMethod.GET)
     public String handleNewPageRequestWithMainId(@PathVariable int pageNumber,
             @PathVariable int mainId, Model model) {
+        makeNewestDiscussionListWithOffset(model, (pageNumber - 1) * DISCUSSION_LIST_SIZE);
+        makeDiscussionLink(model, pageNumber);
+        makeActivityList(model);
         return VIEW;
     }
     
@@ -185,14 +188,20 @@ public class IndexController {
             makeMainCategory(model, mainId);
             makeSubCategory(model, mainId, subId);
             makeDiscussionListBySubCategory(model, subId);
+            makeDiscussionLinkWithSubId(model, mainId, subId, 1);
+            model.addAttribute("mainId", mainId);
+            model.addAttribute("subId", subId);
         } else if (isMainIdChoosen) {
             int mainId = Integer.valueOf(main);
             makeMainCategory(model, mainId);
             makeSubCategory(model, mainId);
             makeDiscussionListByMainCategory(model, mainId);
+            makeDiscussionLinkWithMainId(model, mainId, 1);
+            model.addAttribute("mainId", mainId);
         } else {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
+            makeDiscussionLink(model, 1);
         }
     }
     
