@@ -15,6 +15,10 @@ import java.util.List;
  */
 public interface DiscussionDao {
     
+    public int countDiscussion();
+    public int countDiscussionByCategoryId(int categoryId);
+    public int countDiscussionByCategoryIdList(List<Integer> categoryIdList);
+    
     /**
      * Find Newest Discussions.
      * 
@@ -22,6 +26,8 @@ public interface DiscussionDao {
      * @return list of discussion, or empty if not found.
      */
     public List<Discussion> findNewestDiscussionList(int n);
+    
+    public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
     /**
      * Find Discussions which created after a discussion made.

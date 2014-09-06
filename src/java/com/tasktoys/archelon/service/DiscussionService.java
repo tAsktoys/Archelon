@@ -19,7 +19,9 @@ public interface DiscussionService {
      * @param n
      * @return 
      */
+    public int countDiscussion();
     public List<Discussion> getNewestDiscussionList(int n);
+    public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset);
     public List<Discussion> getDiscussionListAfter(long id, int n);
     public List<Discussion> getDiscussionListBefore(long id, int n);
     public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId);
@@ -34,4 +36,8 @@ public interface DiscussionService {
      * @return list of discussions converted to maps with replacing author id to author name 
      */
     public List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls);
+    
+    public int countDiscussionByMainId(int mainId);
+    public int countDiscussionBySubId(int subId);
+
 }

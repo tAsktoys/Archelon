@@ -48,12 +48,37 @@ public class JdbcDiscussionDao implements DiscussionDao {
             return name().toLowerCase();
         }
     }
-
+    
+    @Override
+    public int countDiscussion() {
+        String sql = "select count(*) from " + TABLE_NAME;
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+    
+    @Override
+    public int countDiscussionByCategoryId(int categoryId) {
+        return 1;
+    }
+    
+    @Override
+    public int countDiscussionByCategoryIdList(List<Integer> categoryIdList) {
+        return 1;
+    }
+    
     @Override
     public List<Discussion> findNewestDiscussionList(int n) {
         String sql = "select * from " + TABLE_NAME
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n + ";";
+        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+    }
+    
+    @Override
+    public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset) {
+        String sql = "select * from " + TABLE_NAME
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 

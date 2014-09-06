@@ -34,8 +34,18 @@ public class DiscussionServiceImpl implements DiscussionService {
     private CategoryDao categoryDao;
     
     @Override
+    public int countDiscussion() {
+        return discussionDao.countDiscussion();
+    }
+    
+    @Override
     public List<Discussion> getNewestDiscussionList(int n) {
         return discussionDao.findNewestDiscussionList(n);
+    }
+    
+    @Override
+    public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
+        return discussionDao.findNewestDiscussionListWithOffset(n, offset);
     }
     
     @Override
@@ -90,5 +100,16 @@ public class DiscussionServiceImpl implements DiscussionService {
             mls.add(d.replaceAuthorIDToAuthorName(author_name));
         }
         return mls;
+    }
+    
+    @Override
+    public int countDiscussionByMainId(int mainId) {
+        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
+        return discussionDao.countDiscussionByCategoryIdList(categoryList);
+    }
+    
+    @Override
+    public int countDiscussionBySubId(int subId) {
+        return discussionDao.countDiscussionByCategoryId(subId);
     }
 }

@@ -52,7 +52,11 @@
                             <tr><td>${row.id}</td><td><a href="discussion/${row.id}">${row.subject}</a></td><td><a href="user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
                                 </c:forEach>
                     </table>
-                    <a href="prev/${last_discussion_id}">Prev</a>|[1][2][3]...[10]<a href="next/${last_discussion_id}">Next</a>
+                    <a href="/archelon/page/${previousPageNumber}">Prev</a>
+                    <c:forEach var="pageNumber" items="${pageNumberList}">
+                        <a href="/archelon/page/${pageNumber}">[${pageNumber}]</a>
+                    </c:forEach>
+                    <a href="/archelon/page/${nextPageNumber}">Next</a>
                     <br />
                 </div>
                 <!-- Create a discussion -->
