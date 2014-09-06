@@ -16,8 +16,24 @@ import java.util.List;
  */
 public interface DiscussionDao {
     
+    /**
+     * Count up all descussions.
+     * @return number of discussion.
+     */
     public int countDiscussions();
+    
+    /**
+     * Count up discussions which are in a category.
+     * @param categoryId
+     * @return number of discussions which are specified by a category id
+     */
     public int countDiscussionsByCategoryId(int categoryId);
+    
+    /**
+     * Count up all of discussions which are in categories.
+     * @param categoryList
+     * @return number of discussions which are specified by category ids.
+     */
     public int countDiscussionsByCategoryList(List<Category> categoryList);
     
     /**
@@ -28,14 +44,35 @@ public interface DiscussionDao {
      */
     public List<Discussion> findNewestDiscussionList(int n);
     
+    /**
+     * Find Newest Discussions with offset.
+     * @param n number of discussions to return
+     * @param offset number of discussions to omit
+     * @return list of discussion, or empty if not found.
+     */
     public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
+    /**
+     * Find newest discussions in a category.
+     * @param n number of discussions to return
+     * @param categoryId category id to specify discussions
+     * @param offset number of discussions to omit
+     * @return list of discussion, or empty if not found.
+     */
+    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId, int offset);
+    
+    /**
+     * Find newest discussions in categories.
+     * @param categoryList list of categories to specify discussions
+     * @param n number of discussions to return
+     * @param offset number of discussions to omit
+     * @return list of discussion, or empty if not found.
+     */
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset);
+
     /**
      * Insert new discussion to database.
      * @param discussion <code>Discussion</code> to insert
      */
     public void insertDiscussion(Discussion discussion);
-    
-    public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n, int offset);
-    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> category, int n, int offset);
 }
