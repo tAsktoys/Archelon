@@ -19,13 +19,15 @@ public interface DiscussionService {
      * @param n
      * @return 
      */
+    public int countDiscussion();
+    public int countDiscussionByMainCategory(int mainId);
+    public int countDiscussionBySubCategory(int subId);
     public List<Discussion> getNewestDiscussionList(int n);
-    public List<Discussion> getDiscussionListAfter(long id, int n);
-    public List<Discussion> getDiscussionListBefore(long id, int n);
-    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id);
-    public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
+    public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset);
+    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId);
+    public List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset);
+    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int subId);
+    public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int subId, int offset);
     public void insertDiscussion(Discussion discussion, DiscussionContent content);
     
     /** Replace <code>long</code> author id to <code>String</code> author name in discussions

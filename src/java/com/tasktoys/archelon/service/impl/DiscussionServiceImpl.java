@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.service.impl;
 
+import com.tasktoys.archelon.data.dao.CategoryDao;
 import com.tasktoys.archelon.data.dao.DiscussionContentDao;
 import com.tasktoys.archelon.data.dao.DiscussionDao;
 import com.tasktoys.archelon.data.dao.UserDao;
@@ -12,8 +13,11 @@ import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 /**
  *
@@ -28,6 +32,25 @@ public class DiscussionServiceImpl implements DiscussionService {
     private DiscussionContentDao discussionContentDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private CategoryDao categoryDao;
+    
+    Logger log = Logger.getLogger(DiscussionServiceImpl.class.getName());
+    
+    @Override
+    public int countDiscussion() {
+        return discussionDao.countDiscussions();
+    }
+    
+    @Override
+    public int countDiscussionByMainCategory(int mainId) {
+        return discussionDao.countDiscussionsByCategoryList(categoryDao.findSubCategories(mainId));
+    }
+    
+    @Override
+    public int countDiscussionBySubCategory(int subId) {
+        return discussionDao.countDiscussionsByCategoryId(subId);
+    }
     
     @Override
     public List<Discussion> getNewestDiscussionList(int n) {
@@ -35,35 +58,30 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
     
     @Override
-    public List<Discussion> getDiscussionListAfter(long id, int n) {
-        return discussionDao.findDiscussionListAfter(id, n);
-    }
-
-    @Override
-    public List<Discussion> getDiscussionListBefore(long id, int n) {
-        return discussionDao.findDiscussionListBefore(id, n);
-    }
-
-    @Override
-    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int main_id) {
-        return discussionDao.findNewestDiscussionListByMainCategory(n, main_id);
-    }
-
-    @Override
-    public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
-        return discussionDao.findDiscussionListWithMainCategoryBefore(id, n, main_id);
-    }
-
-    @Override
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
-        return discussionDao.findNewestDiscussionListBySubCategory(n, main_id, sub_id);
-    }
-
-    @Override
-    public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
-        return discussionDao.findDiscussionListWithSubCategoryBefore(id, n, main_id, sub_id);
+    public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
+        return discussionDao.findNewestDiscussionListWithOffset(n, offset);
     }
     
+    @Override
+    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
+        return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, 0);
+    }
+
+    @Override
+    public List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset) {
+        return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, offset);
+    }
+    
+    @Override
+    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
+        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, 0);
+    }
+
+    @Override
+    public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
+        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, offset);
+    }
+
     @Override
     public void insertDiscussion(Discussion discussion, DiscussionContent content) {
         discussionDao.insertDiscussion(discussion);

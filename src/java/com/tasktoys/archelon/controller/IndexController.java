@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller of index.jsp
@@ -76,8 +77,14 @@ public class IndexController {
 
     private static final String DISCUSSION_LIST = "discussion_list";
     private static final int DISCUSSION_LIST_SIZE = 10;
-    private static final String LAST_DISCUSSION_ID = "last_discussion_id";
 
+    private static final String PAGE_NUMBER_LIST = "pageNumberList";
+    private static final String MAIN_ID = "mainId";
+    private static final String SUB_ID = "subId";
+    private static final String PREVIOUS_PAGE_NUMBER = "previousPageNumber";
+    private static final String CURRENT_PAGE_NUMBER = "currentPageNumber";
+    private static final String NEXT_PAGE_NUMBER = "nextPageNumber";
+    
     private static final String ACTIVITY_LIST = "activity_list";
     private static final int ACTIVITY_LIST_SIZE = 5;
 
@@ -85,40 +92,38 @@ public class IndexController {
     public String handleRequest(Model model) {
         makeMainCategory(model);
         makeNewestDiscussionList(model);
+        makeDiscussionLink(model, 1);
         makeActivityList(model);
         return VIEW;
     }
 
-    @RequestMapping(value = "next/{discussion_id}", method = RequestMethod.GET)
-    public String getNextDiscussionList(@PathVariable long discussion_id, Model model) {
+    @RequestMapping(value = "page/{pageNumber}", method = RequestMethod.GET)
+    public String handleNewPageRequest(@PathVariable int pageNumber, Model model) {
         makeMainCategory(model);
-        makeNewestDiscussionListBefore(model, discussion_id);
+        makeNewestDiscussionListWithOffset(model, (pageNumber - 1) * DISCUSSION_LIST_SIZE);
+        makeDiscussionLink(model, pageNumber);
         makeActivityList(model);
         return VIEW;
     }
-
-    @RequestMapping(value = "prev/{discussion_id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionList(@PathVariable long discussion_id, Model model) {
-        makeMainCategory(model);
-        makeNewestDiscussionListAfter(model, discussion_id);
+    
+    @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}", method = RequestMethod.GET)
+    public String handleNewPageRequestWithMainId(@PathVariable int pageNumber,
+            @PathVariable int mainId, Model model) {
+        makeMainCategory(model, mainId);
+        makeSubCategory(model, mainId);
+        makeDiscussionListByMainCategoryWithOffset(model, mainId, (pageNumber - 1) * DISCUSSION_LIST_SIZE);
+        makeDiscussionLinkWithMainCategory(model, mainId, pageNumber);
         makeActivityList(model);
         return VIEW;
     }
-
-    @RequestMapping(value = "next/{discussion_id}/main_category_id/{main_category_id}", method = RequestMethod.GET)
-    public String getNextDiscussionListWithMainID(@PathVariable long discussion_id,
-            @PathVariable int main_category_id, Model model) {
-        makeMainCategory(model, main_category_id);
-        makeDiscussionListBefore(model, discussion_id, main_category_id);
-        makeActivityList(model);
-        return VIEW;
-    }
-
-    @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionListWithMainID(@PathVariable long discussion_id,
-            @PathVariable int main_category_id, Model model) {
-        makeMainCategory(model, main_category_id);
-        makeDiscussionListBefore(model, discussion_id, main_category_id);
+    
+    @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}/subid/{subId}", method = RequestMethod.GET)
+    public String handleNewPageRequestWithSubId(@PathVariable int pageNumber,
+            @PathVariable int mainId, @PathVariable int subId,Model model) {
+        makeMainCategory(model, mainId);
+        makeSubCategory(model, mainId, subId);
+        makeDiscussionListBySubCategoryWithOffset(model, subId, (pageNumber - 1) * DISCUSSION_LIST_SIZE);
+        makeDiscussionLinkWithSubCategory(model, mainId, subId, pageNumber);
         makeActivityList(model);
         return VIEW;
     }
@@ -188,20 +193,38 @@ public class IndexController {
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {
-        try {
-            Integer main_id = Integer.valueOf(main);
-            makeMainCategory(model, main_id);
-            try {
-                Integer sub_id = Integer.valueOf(sub);
-                makeSubCategory(model, main_id, sub_id);
-                makeDiscussionList(model, main_id, sub_id);
-            } catch (NumberFormatException e) {
-                makeSubCategory(model, main_id);
-                makeDiscussionList(model, main_id);
-            }
-        } catch (NumberFormatException e) {
+        boolean isMainIdChoosen = isChoosenSelection(main);
+        boolean isSubIdChoosen = isChoosenSelection(sub);
+        
+        if (isMainIdChoosen && isSubIdChoosen) {
+            int mainId = Integer.valueOf(main);
+            int subId = Integer.valueOf(sub);
+            makeMainCategory(model, mainId);
+            makeSubCategory(model, mainId, subId);
+            makeDiscussionListBySubCategory(model, subId);
+            makeDiscussionLinkWithSubCategory(model, mainId, subId, 1);
+            model.addAttribute(MAIN_ID, mainId);
+            model.addAttribute(SUB_ID, subId);
+        } else if (isMainIdChoosen) {
+            int mainId = Integer.valueOf(main);
+            makeMainCategory(model, mainId);
+            makeSubCategory(model, mainId);
+            makeDiscussionListByMainCategory(model, mainId);
+            makeDiscussionLinkWithMainCategory(model, mainId, 1);
+            model.addAttribute(MAIN_ID, mainId);
+        } else {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
+            makeDiscussionLink(model, 1);
+        }
+    }
+    
+    private boolean isChoosenSelection(String categoryId) {
+        try {
+            Integer.valueOf(categoryId);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
@@ -226,42 +249,81 @@ public class IndexController {
     }
 
     private void makeNewestDiscussionList(Model model) {
-        List<Discussion> dls = discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE);
-        List<Map<String, String>> mls = discussionService.replaceAuthorIDToAuthorName(dls);
-        model.addAttribute(DISCUSSION_LIST, mls);
-        //model.addAttribute(LAST_DISCUSSION_ID, dls.get(dls.size() - 1).getID().toString());
-    }
-
-    private void makeNewestDiscussionListAfter(Model model, long id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
+                        discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE)));
     }
-
-    private void makeNewestDiscussionListBefore(Model model, long id) {
+    
+    private void makeNewestDiscussionListWithOffset(Model model, int offset) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));
+                        discussionService.getNewestDiscussionListWithOffset(DISCUSSION_LIST_SIZE, offset)));
     }
 
-    private void makeDiscussionList(Model model, int main_id) {
+    private void makeDiscussionListByMainCategory(Model model, int mainId) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
+                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, mainId)));
     }
-
-    private void makeDiscussionListBefore(Model model, long id, int main_id) {
+    
+    private void makeDiscussionListByMainCategoryWithOffset(Model model, int mainId, int offset) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
+                        discussionService.getNewestDiscussionListByMainCategoryWithOffset(
+                                DISCUSSION_LIST_SIZE, mainId, offset)));
     }
 
-    private void makeDiscussionList(Model model, int main_id, int sub_id) {
+    private void makeDiscussionListBySubCategory(Model model, int subId) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, main_id, sub_id)));
+                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, subId)));
+    }
+    
+    private void makeDiscussionListBySubCategoryWithOffset(Model model, int subId, int offset) {
+        model.addAttribute(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getNewestDiscussionListBySubCategoryWithOffset(
+                                DISCUSSION_LIST_SIZE, subId, offset)));
     }
 
+    private void makeDiscussionLink(Model model, int currentPageNumber) {
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussion() / DISCUSSION_LIST_SIZE);
+        setPageNumbers(model, currentPageNumber, endPageNumber);
+    }
+    
+    private void setPageNumbers(Model model, int currentPageNumber, int endPageNumber) {
+        List<Integer> pageNumberList = new ArrayList<>();
+        for (int i = 1; i <= endPageNumber; i++) {
+            pageNumberList.add(i);
+        }
+        model.addAttribute(PAGE_NUMBER_LIST, pageNumberList);
+        
+        int previousPageNumber = currentPageNumber - 1;
+        int nextPageNumber = currentPageNumber + 1;
+        
+        if (currentPageNumber >= 1)
+            previousPageNumber = 1;
+        if (endPageNumber <= nextPageNumber)
+            nextPageNumber = endPageNumber;
+        
+        model.addAttribute(PREVIOUS_PAGE_NUMBER, previousPageNumber);
+        model.addAttribute(CURRENT_PAGE_NUMBER, currentPageNumber);
+        model.addAttribute(NEXT_PAGE_NUMBER, nextPageNumber);
+    }
+    
+    private void makeDiscussionLinkWithMainCategory(Model model, int mainId, int currentPageNumber) {
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussionByMainCategory(mainId) / DISCUSSION_LIST_SIZE);
+        setPageNumbers(model, currentPageNumber, endPageNumber);
+        model.addAttribute(MAIN_ID, mainId);
+    }
+    
+    private void makeDiscussionLinkWithSubCategory(Model model, int mainId, int subId, int currentPageNumber) {
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussionBySubCategory(subId) / DISCUSSION_LIST_SIZE);
+        setPageNumbers(model, currentPageNumber, endPageNumber);
+        model.addAttribute(MAIN_ID, mainId);
+        model.addAttribute(SUB_ID, subId);
+    }
+    
     private void makeActivityList(Model model) {
         model.addAttribute(ACTIVITY_LIST, ActivityDaoStub.findNewestActivity(ACTIVITY_LIST_SIZE));
     }

@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.data.dao;
 
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import java.util.List;
 
@@ -15,6 +16,10 @@ import java.util.List;
  */
 public interface DiscussionDao {
     
+    public int countDiscussions();
+    public int countDiscussionsByCategoryId(int categoryId);
+    public int countDiscussionsByCategoryList(List<Category> categoryList);
+    
     /**
      * Find Newest Discussions.
      * 
@@ -23,67 +28,14 @@ public interface DiscussionDao {
      */
     public List<Discussion> findNewestDiscussionList(int n);
     
-    /**
-     * Find Discussions which created after a discussion made.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListAfter(long id, int n);
-    
-    /**
-     * Find Discussions which created before a discussion made.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListBefore(long id, int n);
-    
-    /**
-     * Find Newest Discussions for each main category.
-     * 
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
-    
-    /**
-     * Find Newest Discussions for each main and sub category.
-     * 
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main and sub category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
+    public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
     /**
      * Insert new discussion to database.
      * @param discussion <code>Discussion</code> to insert
      */
     public void insertDiscussion(Discussion discussion);
+    
+    public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n, int offset);
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> category, int n, int offset);
 }
