@@ -57,7 +57,9 @@ public class JdbcDiscussionDao implements DiscussionDao {
     
     @Override
     public int countDiscussionByCategoryId(int categoryId) {
-        return 1;
+        String sql = "select count(*) from " + TABLE_NAME
+                + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId;
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
     
     @Override
@@ -82,73 +84,37 @@ public class JdbcDiscussionDao implements DiscussionDao {
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
-    @Override
-    public List<Discussion> findDiscussionListAfter(long id, int n) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.ID + " > " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findDiscussionListBefore(long id, int n) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.ID + " < " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " and " + Column.ID + " < " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " and " + Column.ID + " < " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
+//    @Override
+//    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id) {
+//        String sql = "select * from " + TABLE_NAME
+//                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+//                + " order by " + Column.CREATE_TIME.toString() + " desc"
+//                + " limit " + n
+//                + " offset " + offset + ";";
+//        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+//    }
+//
+//    @Override
+//    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
+//        String sql = "select * from " + TABLE_NAME
+//                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+//                + " order by " + Column.CREATE_TIME.toString() + " desc"
+//                + " limit " + n + ";";
+//        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
+//    }
     
     @Override
-    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId) {
+    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId, int offset) {
         String sql = "select * from " + TABLE_NAME
                 + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
     
     @Override
-    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryIdList, int n) {
+    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryIdList, int n, int offset) {
         String sql = "select * from " + TABLE_NAME
                 + " where ";
         for (int i : categoryIdList) {
@@ -156,7 +122,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
         }
         sql = sql.substring(0, sql.length() - 4);
                 sql += " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 

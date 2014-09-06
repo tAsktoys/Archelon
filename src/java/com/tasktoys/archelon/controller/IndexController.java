@@ -108,41 +108,8 @@ public class IndexController {
     @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}/subid/[subId}", method = RequestMethod.GET)
     public String handleNewPageRequestWithSubId(@PathVariable int pageNumber,
             @PathVariable int mainId, @PathVariable int subId,Model model) {
-        return REDIRECT;
+        return VIEW;
     }
-//    @RequestMapping(value = "next/{discussion_id}", method = RequestMethod.GET)
-//    public String getNextDiscussionList(@PathVariable long discussion_id, Model model) {
-//        makeMainCategory(model);
-//        makeNewestDiscussionListBefore(model, discussion_id);
-//        makeActivityList(model);
-//        return VIEW;
-//    }
-//
-//    @RequestMapping(value = "prev/{discussion_id}", method = RequestMethod.GET)
-//    public String getPreviousDiscussionList(@PathVariable long discussion_id, Model model) {
-//        makeMainCategory(model);
-//        makeNewestDiscussionListAfter(model, discussion_id);
-//        makeActivityList(model);
-//        return VIEW;
-//    }
-//
-//    @RequestMapping(value = "next/{discussion_id}/main_category_id/{main_category_id}", method = RequestMethod.GET)
-//    public String getNextDiscussionListWithMainID(@PathVariable long discussion_id,
-//            @PathVariable int main_category_id, Model model) {
-//        makeMainCategory(model, main_category_id);
-//        makeDiscussionListBefore(model, discussion_id, main_category_id);
-//        makeActivityList(model);
-//        return VIEW;
-//    }
-//
-//    @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
-//    public String getPreviousDiscussionListWithMainID(@PathVariable long discussion_id,
-//            @PathVariable int main_category_id, Model model) {
-//        makeMainCategory(model, main_category_id);
-//        makeDiscussionListBefore(model, discussion_id, main_category_id);
-//        makeActivityList(model);
-//        return VIEW;
-//    }
 
     @RequestMapping(value = CATEGORY_SELECTION, method = RequestMethod.POST)
     public String handleCategorySelect(@RequestParam Map<String, String> params, Model model) {
@@ -270,29 +237,11 @@ public class IndexController {
                         discussionService.getNewestDiscussionListWithOffset(DISCUSSION_LIST_SIZE, offset)));
     }
 
-//    private void makeNewestDiscussionListAfter(Model model, long id) {
-//        model.addAttribute(DISCUSSION_LIST,
-//                discussionService.replaceAuthorIDToAuthorName(
-//                        discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
-//    }
-//
-//    private void makeNewestDiscussionListBefore(Model model, long id) {
-//        model.addAttribute(DISCUSSION_LIST,
-//                discussionService.replaceAuthorIDToAuthorName(
-//                        discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));
-//    }
-
     private void makeDiscussionListByMainCategory(Model model, int main_id) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
                         discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
     }
-
-//    private void makeDiscussionListBefore(Model model, long id, int main_id) {
-//        model.addAttribute(DISCUSSION_LIST,
-//                discussionService.replaceAuthorIDToAuthorName(
-//                        discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
-//    }
 
     private void makeDiscussionListBySubCategory(Model model, int subId) {
         model.addAttribute(DISCUSSION_LIST,
@@ -302,15 +251,16 @@ public class IndexController {
 
     private void makeDiscussionLink(Model model, int currentPageNumber) {
         int endPageNumber = (int)(discussionService.countDiscussion() / DISCUSSION_LIST_SIZE) + 1;
+        setPageNumbers(model, currentPageNumber, endPageNumber);
+    }
+    
+    private void setPageNumbers(Model model, int currentPageNumber, int endPageNumber) {
         List<Integer> nls = new ArrayList<>();
         for (int i = 1; i <= endPageNumber; i++) {
             nls.add(i);
         }
         model.addAttribute("pageNumberList", nls);
-        setPageNumbers(model, currentPageNumber, endPageNumber);
-    }
-    
-    private void setPageNumbers(Model model, int currentPageNumber, int endPageNumber) {
+        
         int previousPageNumber = currentPageNumber - 1;
         int nextPageNumber = currentPageNumber + 1;
         
@@ -324,12 +274,15 @@ public class IndexController {
         model.addAttribute("nextPageNumber", nextPageNumber);
     }
     
-    private void makeDiscussionLinkWithMainId(Model model, int mainId) {
-        
+    private void makeDiscussionLinkWithMainId(Model model, int mainId, int currentPageNumber) {
+        setPageNumbers(model, currentPageNumber, 1);
+        model.addAttribute("mainId", mainId);
     }
     
-    private void makeDiscussionLinkWithSubId(Model model, int mainId, int subId) {
-        
+    private void makeDiscussionLinkWithSubId(Model model, int mainId, int subId, int currentPageNumber) {
+        setPageNumbers(model, currentPageNumber, 1);
+        model.addAttribute("mainId", mainId);
+        model.addAttribute("subId", subId);
     }
     
     private void makeActivityList(Model model) {

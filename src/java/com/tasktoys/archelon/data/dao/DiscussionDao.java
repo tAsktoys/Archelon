@@ -30,41 +30,13 @@ public interface DiscussionDao {
     public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
     /**
-     * Find Discussions which created after a discussion made.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListAfter(long id, int n);
-    
-    /**
-     * Find Discussions which created before a discussion made.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListBefore(long id, int n);
-    
-    /**
      * Find Newest Discussions for each main category.
      * 
      * @param n number of discussions to return
      * @param main_id id of queried main category
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
+    //public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id);
     
     /**
      * Find Newest Discussions for each main and sub category.
@@ -74,18 +46,7 @@ public interface DiscussionDao {
      * @param sub_id if of queried sub category
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main and sub category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
+    //public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
     
     /**
      * Insert new discussion to database.
@@ -93,6 +54,6 @@ public interface DiscussionDao {
      */
     public void insertDiscussion(Discussion discussion);
     
-    public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n);
-    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryId, int n);
+    public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n, int offset);
+    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryId, int n, int offset);
 }

@@ -49,36 +49,27 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
     
     @Override
-    public List<Discussion> getDiscussionListAfter(long id, int n) {
-        return discussionDao.findDiscussionListAfter(id, n);
-    }
-
-    @Override
-    public List<Discussion> getDiscussionListBefore(long id, int n) {
-        return discussionDao.findDiscussionListBefore(id, n);
-    }
-
-    @Override
     public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
         List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
-        return discussionDao.findNewestDiscussionListByCategoryIdList(categoryList, n);
+        return discussionDao.findNewestDiscussionListByCategoryIdList(categoryList, n, 0);
     }
 
     @Override
-    public List<Discussion> getDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
-        return discussionDao.findDiscussionListWithMainCategoryBefore(id, n, main_id);
-    }
-
-    @Override
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
-        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId);
-    }
-
-    @Override
-    public List<Discussion> getDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
-        return discussionDao.findDiscussionListWithSubCategoryBefore(id, n, main_id, sub_id);
+    public List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset) {
+        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
+        return discussionDao.findNewestDiscussionListByCategoryIdList(categoryList, n, offset);
     }
     
+    @Override
+    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
+        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, 0);
+    }
+
+    @Override
+    public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
+        return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, offset);
+    }
+
     @Override
     public void insertDiscussion(Discussion discussion, DiscussionContent content) {
         discussionDao.insertDiscussion(discussion);
