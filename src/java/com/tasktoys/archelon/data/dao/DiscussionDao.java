@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.data.dao;
 
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface DiscussionDao {
     
     public int countDiscussion();
     public int countDiscussionByCategoryId(int categoryId);
-    public int countDiscussionByCategoryIdList(List<Integer> categoryIdList);
+    public int countDiscussionByCategoryList(List<Category> categoryList);
     
     /**
      * Find Newest Discussions.
@@ -30,30 +31,11 @@ public interface DiscussionDao {
     public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
     /**
-     * Find Newest Discussions for each main category.
-     * 
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @return list of discussion, or empty if not found.
-     */
-    //public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id);
-    
-    /**
-     * Find Newest Discussions for each main and sub category.
-     * 
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    //public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    
-    /**
      * Insert new discussion to database.
      * @param discussion <code>Discussion</code> to insert
      */
     public void insertDiscussion(Discussion discussion);
     
     public List<Discussion> findNewestDiscussionListByCategoryId(int categoryId, int n, int offset);
-    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryId, int n, int offset);
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> category, int n, int offset);
 }

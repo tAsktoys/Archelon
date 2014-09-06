@@ -4,11 +4,14 @@
 package com.tasktoys.archelon.data.dao.jdbc;
 
 import com.tasktoys.archelon.data.dao.DiscussionDao;
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +27,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
     private JdbcTemplate jdbcTemplate;
     private static final String TABLE_NAME = "discussion";
 
+    Logger log = Logger.getLogger(JdbcDiscussionDao.class.getName());
+    
     /**
      * Set data source. It invoke from Spring Framework.
      *
@@ -63,9 +68,9 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     @Override
-    public int countDiscussionByCategoryIdList(List<Integer> categoryIdList) {
+    public int countDiscussionByCategoryList(List<Category> categoryList) {
         String sql = "select count(*) from " + TABLE_NAME
-                + encodeCategoryIdListToWhere(categoryIdList);
+                + encodeCategoryIdListToWhere(categoryList);
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
@@ -97,9 +102,9 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     @Override
-    public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryIdList, int n, int offset) {
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset) {
         String sql = "select * from " + TABLE_NAME
-                + encodeCategoryIdListToWhere(categoryIdList)
+                + encodeCategoryIdListToWhere(categoryList)
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n
                 + " offset " + offset + ";";
@@ -139,15 +144,18 @@ public class JdbcDiscussionDao implements DiscussionDao {
         for (Column c : Column.values()) {
             sql += c.toString() + "=?,";
         }
-        return sql.substring(0, sql.length() - 1);
+        return sql.substring(0, sql.length() - ",".length());
     }
     
-    private String encodeCategoryIdListToWhere(List<Integer> categoryIdList) {
-        String sql = " where " + Column.CATEGORY_ID.toString() + " = ";
-        for (int i : categoryIdList) {
-            sql += i + " or ";
+    private String encodeCategoryIdListToWhere(List<Category> categoryList) {
+        if (categoryList == null || categoryList.isEmpty())
+            return "";
+        
+        String sql = " where " + Column.CATEGORY_ID.toString() + " in(";
+        for (Category c : categoryList) {
+            sql += c.getID() + ",";
         }
-        sql = sql.substring(0, sql.length() - 4);
-        return sql;
+        sql = sql.substring(0, sql.length() - ",".length());
+        return sql + ")";
     }
 }
