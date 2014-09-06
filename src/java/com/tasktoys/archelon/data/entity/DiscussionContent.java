@@ -4,6 +4,8 @@
 package com.tasktoys.archelon.data.entity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -105,11 +107,18 @@ public class DiscussionContent {
     public static class Post {
 
         private long authorId;
+        private Date postTimeStamp;
         private String description;
         private String math;
         private String fig;
         private String svg;
-
+        
+        public Post(){
+            Calendar cal = Calendar.getInstance();
+            this.postTimeStamp = cal.getTime();
+        }
+        
+        
         public long getAuthorId() {
             return authorId;
         }
@@ -148,6 +157,9 @@ public class DiscussionContent {
 
         public void setSvg(String svg) {
             this.svg = svg;
+        }
+        public Date getPost_date() {
+            return this.postTimeStamp;
         }
     }
 }
