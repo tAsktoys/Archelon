@@ -76,8 +76,15 @@ public class IndexController {
     }
 
     private static final String DISCUSSION_LIST = "discussion_list";
-    private static final int DISCUSSION_LIST_SIZE = 3;
+    private static final int DISCUSSION_LIST_SIZE = 10;
 
+    private static final String PAGE_NUMBER_LIST = "pageNumberList";
+    private static final String MAIN_ID = "mainId";
+    private static final String SUB_ID = "subId";
+    private static final String PREVIOUS_PAGE_NUMBER = "previousPageNumber";
+    private static final String CURRENT_PAGE_NUMBER = "currentPageNumber";
+    private static final String NEXT_PAGE_NUMBER = "nextPageNumber";
+    
     private static final String ACTIVITY_LIST = "activity_list";
     private static final int ACTIVITY_LIST_SIZE = 5;
 
@@ -196,15 +203,15 @@ public class IndexController {
             makeSubCategory(model, mainId, subId);
             makeDiscussionListBySubCategory(model, subId);
             makeDiscussionLinkWithSubCategory(model, mainId, subId, 1);
-            model.addAttribute("mainId", mainId);
-            model.addAttribute("subId", subId);
+            model.addAttribute(MAIN_ID, mainId);
+            model.addAttribute(SUB_ID, subId);
         } else if (isMainIdChoosen) {
             int mainId = Integer.valueOf(main);
             makeMainCategory(model, mainId);
             makeSubCategory(model, mainId);
             makeDiscussionListByMainCategory(model, mainId);
             makeDiscussionLinkWithMainCategory(model, mainId, 1);
-            model.addAttribute("mainId", mainId);
+            model.addAttribute(MAIN_ID, mainId);
         } else {
             makeMainCategory(model);
             makeNewestDiscussionList(model);
@@ -289,7 +296,7 @@ public class IndexController {
         for (int i = 1; i <= endPageNumber; i++) {
             nls.add(i);
         }
-        model.addAttribute("pageNumberList", nls);
+        model.addAttribute(PAGE_NUMBER_LIST, nls);
         
         int previousPageNumber = currentPageNumber - 1;
         int nextPageNumber = currentPageNumber + 1;
@@ -299,22 +306,22 @@ public class IndexController {
         if (endPageNumber <= nextPageNumber)
             nextPageNumber = endPageNumber;
         
-        model.addAttribute("previousPageNumber", previousPageNumber);
-        model.addAttribute("currentPageNumber", currentPageNumber);
-        model.addAttribute("nextPageNumber", nextPageNumber);
+        model.addAttribute(PREVIOUS_PAGE_NUMBER, previousPageNumber);
+        model.addAttribute(CURRENT_PAGE_NUMBER, currentPageNumber);
+        model.addAttribute(NEXT_PAGE_NUMBER, nextPageNumber);
     }
     
     private void makeDiscussionLinkWithMainCategory(Model model, int mainId, int currentPageNumber) {
         int endPageNumber = (int)(discussionService.countDiscussionByMainCategory(mainId) / DISCUSSION_LIST_SIZE) + 1;
         setPageNumbers(model, currentPageNumber, endPageNumber);
-        model.addAttribute("mainId", mainId);
+        model.addAttribute(MAIN_ID, mainId);
     }
     
     private void makeDiscussionLinkWithSubCategory(Model model, int mainId, int subId, int currentPageNumber) {
         int endPageNumber = (int)(discussionService.countDiscussionBySubCategory(subId) / DISCUSSION_LIST_SIZE) + 1;
         setPageNumbers(model, currentPageNumber, endPageNumber);
-        model.addAttribute("mainId", mainId);
-        model.addAttribute("subId", subId);
+        model.addAttribute(MAIN_ID, mainId);
+        model.addAttribute(SUB_ID, subId);
     }
     
     private void makeActivityList(Model model) {
