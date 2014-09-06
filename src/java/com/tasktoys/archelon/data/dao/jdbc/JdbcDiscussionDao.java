@@ -35,8 +35,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     /**
-     * This is columns in database.
-     * Each value is ordred by the same order as in the database.
+     * This is columns in database. Each value is ordred by the same order as in
+     * the database.
      */
     public enum Column {
 
@@ -48,31 +48,27 @@ public class JdbcDiscussionDao implements DiscussionDao {
             return name().toLowerCase();
         }
     }
-    
+
     @Override
     public int countDiscussion() {
         String sql = "select count(*) from " + TABLE_NAME;
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
-    
+
     @Override
     public int countDiscussionByCategoryId(int categoryId) {
         String sql = "select count(*) from " + TABLE_NAME
                 + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId;
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
-    
+
     @Override
     public int countDiscussionByCategoryIdList(List<Integer> categoryIdList) {
         String sql = "select count(*) from " + TABLE_NAME
-                + " where " ;
-        for (int i : categoryIdList) {
-            sql += Column.CATEGORY_ID.toString() + " = " + i + " or ";
-        }
-        sql = sql.substring(0, sql.length() - 4);
+                + encodeCategoryIdListToWhere(categoryIdList);
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
-    
+
     @Override
     public List<Discussion> findNewestDiscussionList(int n) {
         String sql = "select * from " + TABLE_NAME
@@ -80,7 +76,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " limit " + n + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
-    
+
     @Override
     public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset) {
         String sql = "select * from " + TABLE_NAME
@@ -90,25 +86,6 @@ public class JdbcDiscussionDao implements DiscussionDao {
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
-//    @Override
-//    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id) {
-//        String sql = "select * from " + TABLE_NAME
-//                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-//                + " order by " + Column.CREATE_TIME.toString() + " desc"
-//                + " limit " + n
-//                + " offset " + offset + ";";
-//        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-//    }
-//
-//    @Override
-//    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
-//        String sql = "select * from " + TABLE_NAME
-//                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-//                + " order by " + Column.CREATE_TIME.toString() + " desc"
-//                + " limit " + n + ";";
-//        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-//    }
-    
     @Override
     public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId, int offset) {
         String sql = "select * from " + TABLE_NAME
@@ -118,16 +95,12 @@ public class JdbcDiscussionDao implements DiscussionDao {
                 + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
-    
+
     @Override
     public List<Discussion> findNewestDiscussionListByCategoryIdList(List<Integer> categoryIdList, int n, int offset) {
         String sql = "select * from " + TABLE_NAME
-                + " where ";
-        for (int i : categoryIdList) {
-            sql += Column.CATEGORY_ID.toString() + " = " + i + " or ";
-        }
-        sql = sql.substring(0, sql.length() - 4);
-                sql += " order by " + Column.CREATE_TIME.toString() + " desc"
+                + encodeCategoryIdListToWhere(categoryIdList)
+                + " order by " + Column.CREATE_TIME.toString() + " desc"
                 + " limit " + n
                 + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
@@ -160,12 +133,21 @@ public class JdbcDiscussionDao implements DiscussionDao {
         }
         return dls;
     }
-    
+
     private String encodeColumnToSet() {
         String sql = " set ";
-        for(Column c : Column.values()) {
-            sql += c.toString() + "=?," ;
+        for (Column c : Column.values()) {
+            sql += c.toString() + "=?,";
         }
         return sql.substring(0, sql.length() - 1);
+    }
+    
+    private String encodeCategoryIdListToWhere(List<Integer> categoryIdList) {
+        String sql = " where " + Column.CATEGORY_ID.toString() + " = ";
+        for (int i : categoryIdList) {
+            sql += i + " or ";
+        }
+        sql = sql.substring(0, sql.length() - 4);
+        return sql;
     }
 }

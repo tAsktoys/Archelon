@@ -103,15 +103,4 @@ public class DiscussionServiceImpl implements DiscussionService {
         }
         return mls;
     }
-    
-//    @Override
-//    public int countDiscussionByMainId(int mainId) {
-//        List<Integer> categoryList = Category.list.toIdList(categoryDao.findSubCategories(mainId));
-//        return discussionDao.countDiscussionByCategoryIdList(categoryList);
-//    }
-//    
-//    @Override
-//    public int countDiscussionBySubId(int subId) {
-//        return discussionDao.countDiscussionByCategoryId(subId);
-//    }
 }

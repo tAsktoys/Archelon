@@ -287,7 +287,7 @@ public class IndexController {
     }
 
     private void makeDiscussionLink(Model model, int currentPageNumber) {
-        int endPageNumber = (int)(discussionService.countDiscussion() / DISCUSSION_LIST_SIZE) + 1;
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussion() / DISCUSSION_LIST_SIZE);
         setPageNumbers(model, currentPageNumber, endPageNumber);
     }
     
@@ -312,13 +312,13 @@ public class IndexController {
     }
     
     private void makeDiscussionLinkWithMainCategory(Model model, int mainId, int currentPageNumber) {
-        int endPageNumber = (int)(discussionService.countDiscussionByMainCategory(mainId) / DISCUSSION_LIST_SIZE) + 1;
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussionByMainCategory(mainId) / DISCUSSION_LIST_SIZE);
         setPageNumbers(model, currentPageNumber, endPageNumber);
         model.addAttribute(MAIN_ID, mainId);
     }
     
     private void makeDiscussionLinkWithSubCategory(Model model, int mainId, int subId, int currentPageNumber) {
-        int endPageNumber = (int)(discussionService.countDiscussionBySubCategory(subId) / DISCUSSION_LIST_SIZE) + 1;
+        int endPageNumber = (int)Math.ceil((double)discussionService.countDiscussionBySubCategory(subId) / DISCUSSION_LIST_SIZE);
         setPageNumbers(model, currentPageNumber, endPageNumber);
         model.addAttribute(MAIN_ID, mainId);
         model.addAttribute(SUB_ID, subId);
