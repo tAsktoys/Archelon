@@ -55,27 +55,27 @@
 
                     <!-- LInk to next and prev pages -->
                     <c:if test="${mainId != null and subId == null}">
-                        <a href="/archelon/page/${previousPageNumber}/mainid/${mainId}">Prev</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}">Prev</a>
                         <c:forEach var="pageNumber" items="${pageNumberList}">
-                            <a href="/archelon/page/${pageNumber}/mainid/${mainId}">[${pageNumber}]</a>
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="/archelon/page/${nextPageNumber}/mainid/${mainId}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}">Next</a>
                     </c:if>
 
                     <c:if test="${mainId != null and subId != null}">
-                        <a href="/archelon/page/${previousPageNumber}/mainid/${mainId}/subid/${subId}">Prev</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}/subid/${subId}">Prev</a>
                         <c:forEach var="pageNumber" items="${pageNumberList}">
-                            <a href="/archelon/page/${pageNumber}/mainid/${mainId}/subid/${subId}">[${pageNumber}]</a>
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}/subid/${subId}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="/archelon/page/${nextPageNumber}/mainid/${mainId}/subid/${subId}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}/subid/${subId}">Next</a>
                     </c:if>
 
                     <c:if test="${mainId == null}">
-                        <a href="/archelon/page/${previousPageNumber}">Prev</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}">Prev</a>
                         <c:forEach var="pageNumber" items="${pageNumberList}">
-                            <a href="/archelon/page/${pageNumber}">[${pageNumber}]</a>
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="/archelon/page/${nextPageNumber}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}">Next</a>
                     </c:if>
                     <br />
                 </div>
