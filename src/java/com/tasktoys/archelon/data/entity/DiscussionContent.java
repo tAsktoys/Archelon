@@ -112,13 +112,12 @@ public class DiscussionContent {
         private String math;
         private String fig;
         private String svg;
-        
-        public Post(){
+
+        public Post() {
             Calendar cal = Calendar.getInstance();
             this.postTimeStamp = cal.getTime();
         }
-        
-        
+
         public long getAuthorId() {
             return authorId;
         }
@@ -158,8 +157,9 @@ public class DiscussionContent {
         public void setSvg(String svg) {
             this.svg = svg;
         }
-        public Date getPost_date() {
-            return this.postTimeStamp;
+
+        public Date getPostTimeStamp() {
+            return postTimeStamp;
         }
     }
 }
