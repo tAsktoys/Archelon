@@ -260,10 +260,10 @@ public class IndexController {
                         discussionService.getNewestDiscussionListWithOffset(DISCUSSION_LIST_SIZE, offset)));
     }
 
-    private void makeDiscussionListByMainCategory(Model model, int main_id) {
+    private void makeDiscussionListByMainCategory(Model model, int mainId) {
         model.addAttribute(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
+                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, mainId)));
     }
     
     private void makeDiscussionListByMainCategoryWithOffset(Model model, int mainId, int offset) {
@@ -292,11 +292,11 @@ public class IndexController {
     }
     
     private void setPageNumbers(Model model, int currentPageNumber, int endPageNumber) {
-        List<Integer> nls = new ArrayList<>();
+        List<Integer> pageNumberList = new ArrayList<>();
         for (int i = 1; i <= endPageNumber; i++) {
-            nls.add(i);
+            pageNumberList.add(i);
         }
-        model.addAttribute(PAGE_NUMBER_LIST, nls);
+        model.addAttribute(PAGE_NUMBER_LIST, pageNumberList);
         
         int previousPageNumber = currentPageNumber - 1;
         int nextPageNumber = currentPageNumber + 1;

@@ -16,9 +16,9 @@ import java.util.List;
  */
 public interface DiscussionDao {
     
-    public int countDiscussion();
-    public int countDiscussionByCategoryId(int categoryId);
-    public int countDiscussionByCategoryList(List<Category> categoryList);
+    public int countDiscussions();
+    public int countDiscussionsByCategoryId(int categoryId);
+    public int countDiscussionsByCategoryList(List<Category> categoryList);
     
     /**
      * Find Newest Discussions.

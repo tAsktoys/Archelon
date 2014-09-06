@@ -55,20 +55,20 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     @Override
-    public int countDiscussion() {
+    public int countDiscussions() {
         String sql = "select count(*) from " + TABLE_NAME;
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     @Override
-    public int countDiscussionByCategoryId(int categoryId) {
+    public int countDiscussionsByCategoryId(int categoryId) {
         String sql = "select count(*) from " + TABLE_NAME
                 + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId;
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
     @Override
-    public int countDiscussionByCategoryList(List<Category> categoryList) {
+    public int countDiscussionsByCategoryList(List<Category> categoryList) {
         String sql = "select count(*) from " + TABLE_NAME
                 + encodeCategoryIdListToWhere(categoryList);
         return jdbcTemplate.queryForObject(sql, Integer.class);

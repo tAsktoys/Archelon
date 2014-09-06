@@ -39,17 +39,17 @@ public class DiscussionServiceImpl implements DiscussionService {
     
     @Override
     public int countDiscussion() {
-        return discussionDao.countDiscussion();
+        return discussionDao.countDiscussions();
     }
     
     @Override
     public int countDiscussionByMainCategory(int mainId) {
-        return discussionDao.countDiscussionByCategoryList(categoryDao.findSubCategories(mainId));
+        return discussionDao.countDiscussionsByCategoryList(categoryDao.findSubCategories(mainId));
     }
     
     @Override
     public int countDiscussionBySubCategory(int subId) {
-        return discussionDao.countDiscussionByCategoryId(subId);
+        return discussionDao.countDiscussionsByCategoryId(subId);
     }
     
     @Override
