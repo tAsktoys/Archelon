@@ -69,7 +69,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
         for (int i : categoryIdList) {
             sql += Column.CATEGORY_ID.toString() + " = " + i + " or ";
         }
-        sql = sql.substring(sql.length() - 4);
+        sql = sql.substring(0, sql.length() - 4);
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
     
