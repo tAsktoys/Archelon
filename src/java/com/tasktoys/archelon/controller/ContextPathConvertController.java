@@ -34,7 +34,12 @@ public class ContextPathConvertController {
     }
     
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
-    public View handleGetdWithName(@PathVariable String name) {
+    public View handleGetWithName(@PathVariable String name) {
+        return new RedirectView(properties.getProperty(CONTEXT_PATH) + name);
+    }
+    
+    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
+    public View handlePostWithName(@PathVariable String name) {
         return new RedirectView(properties.getProperty(CONTEXT_PATH) + name);
     }
 }
