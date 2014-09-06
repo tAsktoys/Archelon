@@ -4,7 +4,7 @@
 <div id="menu">
     <!-- Ranking -->
     <h2><spring:message code="ranking.title" /></h2>
-    <p><a href="ranking">Show ranking</a></p>
+    <p><a href="<spring:eval expression="@properties.getProperty('contextpath')" />ranking">Show ranking</a></p>
     <!-- Ads fragment -->
     <%@include file="/WEB-INF/jspf/ads.jspf" %>
 </div>
