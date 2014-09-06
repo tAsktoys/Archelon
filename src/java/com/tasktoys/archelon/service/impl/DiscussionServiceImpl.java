@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.service.impl;
 
@@ -13,11 +13,9 @@ import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 /**
  *
@@ -34,34 +32,34 @@ public class DiscussionServiceImpl implements DiscussionService {
     private UserDao userDao;
     @Autowired
     private CategoryDao categoryDao;
-    
-    Logger log = Logger.getLogger(DiscussionServiceImpl.class.getName());
-    
+
+    static final Logger log = Logger.getLogger(DiscussionServiceImpl.class.getName());
+
     @Override
     public int countDiscussion() {
         return discussionDao.countDiscussions();
     }
-    
+
     @Override
     public int countDiscussionByMainCategory(int mainId) {
         return discussionDao.countDiscussionsByCategoryList(categoryDao.findSubCategories(mainId));
     }
-    
+
     @Override
     public int countDiscussionBySubCategory(int subId) {
         return discussionDao.countDiscussionsByCategoryId(subId);
     }
-    
+
     @Override
     public List<Discussion> getNewestDiscussionList(int n) {
         return discussionDao.findNewestDiscussionList(n);
     }
-    
+
     @Override
     public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
         return discussionDao.findNewestDiscussionListWithOffset(n, offset);
     }
-    
+
     @Override
     public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
         return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, 0);
@@ -71,7 +69,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     public List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset) {
         return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, offset);
     }
-    
+
     @Override
     public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
         return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, 0);

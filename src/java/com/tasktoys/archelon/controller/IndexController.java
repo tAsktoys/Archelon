@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller of index.jsp
@@ -183,11 +182,10 @@ public class IndexController {
     }
     
     private DiscussionContent makeNewDiscussionContent(Map<String, String> params, UserSession userSession) {
-        String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
+        String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
         DiscussionContent content = new DiscussionContent();
         
-        content.setSubject(CreateDiscussionParam.SUBJECT.toString());
-        content.setDescription(description);
+        content.setSubject(subject);
         content.addPost(userSession.getUser().getId());
         return content;
     }
