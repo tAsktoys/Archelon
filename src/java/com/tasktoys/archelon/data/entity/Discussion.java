@@ -5,9 +5,7 @@ package com.tasktoys.archelon.data.entity;
 
 import com.tasktoys.archelon.data.dao.DiscussionContentDao;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +28,7 @@ public class Discussion {
     @Autowired
     private DiscussionContentDao discussionContentDao;
 
+    @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public enum Column {
 
         ID, AUTHOR_ID, CATEGORY_ID, STATE, CREATE_TIME, UPDATE_TIME, SUBJECT,
@@ -116,6 +115,7 @@ public class Discussion {
         return discussionContentDao.findByDiscussionId(id);
     }
 
+    @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public Object[] toObject() {
         return new Object[]{
             (id == Builder.ILLEGAL_ID ? null : id), (authorID == Builder.ILLEGAL_ID ? null : authorID),
@@ -123,14 +123,8 @@ public class Discussion {
             subject, participants, posts
         };
     }
-//    
-//    public Object[] toObjectWithoutID() {
-//        return new Object[] {
-//            authorID, categoryID, state.ordinal(), createTime, updateTime,
-//            subject, participants, posts
-//        };
-//    }
 
+    @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         map.put(Column.ID.toString(), String.valueOf(id));
@@ -299,17 +293,6 @@ public class Discussion {
             this.participants(DEFAULT_PARTICIPANTS);
             this.posts(DEFAULT_POSTS);
             return new Discussion(this);
-        }
-    }
-
-    public static class list {
-
-        public static List<Map<String, String>> toMapList(List<Discussion> dls) {
-            List<Map<String, String>> mls = new ArrayList<>();
-            for (Discussion dis : dls) {
-                mls.add(dis.toMap());
-            }
-            return mls;
         }
     }
 }
