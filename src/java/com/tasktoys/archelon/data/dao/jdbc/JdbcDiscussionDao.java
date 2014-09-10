@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
     private JdbcTemplate jdbcTemplate;
     private static final String TABLE_NAME = "discussion";
 
-    Logger log = Logger.getLogger(JdbcDiscussionDao.class.getName());
+    static final Logger log = Logger.getLogger(JdbcDiscussionDao.class.getName());
     
     /**
      * Set data source. It invoke from Spring Framework.
@@ -153,7 +152,7 @@ public class JdbcDiscussionDao implements DiscussionDao {
         
         String sql = " where " + Column.CATEGORY_ID.toString() + " in(";
         for (Category c : categoryList) {
-            sql += c.getID() + ",";
+            sql += c.getId() + ",";
         }
         sql = sql.substring(0, sql.length() - ",".length());
         return sql + ")";

@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.service;
 
@@ -14,11 +14,6 @@ import java.util.Map;
  */
 public interface DiscussionService {
     
-    /** Discussion Dao wrapper
-     * 
-     * @param n
-     * @return 
-     */
     public int countDiscussion();
     public int countDiscussionByMainCategory(int mainId);
     public int countDiscussionBySubCategory(int subId);
