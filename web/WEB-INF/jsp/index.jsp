@@ -26,7 +26,7 @@
                                 <spring:message code="category.category1.all" />
                             </option>
                             <c:forEach var="item" items="${main_category_list}">
-                                <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                <option value="${item.id}" <c:if test="${mainId eq item.id}">selected</c:if>>${item.name}</option>                                    
                             </c:forEach>
                         </select>
                         <spring:message code="category.category2" />
@@ -35,7 +35,7 @@
                                 <spring:message code="category.category2.all" />
                             </option>
                             <c:forEach var="item" items="${sub_category_list}">
-                                <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                <option value="${item.id}" <c:if test="${subId eq item.id}">selected</c:if>>${item.name}</option>
                             </c:forEach>
                         </select>
                     </form>
@@ -98,7 +98,7 @@
                                                     <spring:message code="category.category1.all" />
                                                 </option>
                                                 <c:forEach var="item" items="${main_category_list}">
-                                                    <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                                    <option value="${item.id}" <c:if test="${mainId eq item.id}">selected</c:if>>${item.name}</option>
                                                 </c:forEach>
                                             </select>
                                         </div>
@@ -109,7 +109,7 @@
                                                     <spring:message code="category.category2.all" />
                                                 </option>
                                                 <c:forEach var="item" items="${sub_category_list}">
-                                                    <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                                    <option value="${item.id}" <c:if test="${subId eq item.id}">selected</c:if>>${item.name}</option>
                                                 </c:forEach>
                                         </div>
                                     </td>
