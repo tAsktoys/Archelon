@@ -3,6 +3,7 @@
  */
 package com.tasktoys.archelon.data.dao;
 
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import java.util.List;
 
@@ -16,6 +17,26 @@ import java.util.List;
 public interface DiscussionDao {
     
     /**
+     * Count up all descussions.
+     * @return number of discussion.
+     */
+    public int countDiscussions();
+    
+    /**
+     * Count up discussions which are in a category.
+     * @param categoryId
+     * @return number of discussions which are specified by a category id
+     */
+    public int countDiscussionsByCategoryId(int categoryId);
+    
+    /**
+     * Count up all of discussions which are in categories.
+     * @param categoryList
+     * @return number of discussions which are specified by category ids.
+     */
+    public int countDiscussionsByCategoryList(List<Category> categoryList);
+    
+    /**
      * Find Newest Discussions.
      * 
      * @param n number of discussions to return
@@ -24,63 +45,31 @@ public interface DiscussionDao {
     public List<Discussion> findNewestDiscussionList(int n);
     
     /**
-     * Find Discussions which created after a discussion made.
-     * 
-     * @param id id of discussion as an origin
+     * Find Newest Discussions with offset.
      * @param n number of discussions to return
+     * @param offset number of discussions to omit
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findDiscussionListAfter(long id, int n);
+    public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset);
     
     /**
-     * Find Discussions which created before a discussion made.
-     * 
-     * @param id id of discussion as an origin
+     * Find newest discussions in a category.
      * @param n number of discussions to return
+     * @param categoryId category id to specify discussions
+     * @param offset number of discussions to omit
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findDiscussionListBefore(long id, int n);
+    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId, int offset);
     
     /**
-     * Find Newest Discussions for each main category.
-     * 
+     * Find newest discussions in categories.
+     * @param categoryList list of categories to specify discussions
      * @param n number of discussions to return
-     * @param main_id id of queried main category
+     * @param offset number of discussions to omit
      * @return list of discussion, or empty if not found.
      */
-    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id);
-    
-    /**
-     * Find Newest Discussions for each main and sub category.
-     * 
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id);
-    
-    /**
-     * Find Discussions which created before a discussion made with main and sub category.
-     * 
-     * @param id id of discussion as an origin
-     * @param n number of discussions to return
-     * @param main_id id of queried main category
-     * @param sub_id if of queried sub category
-     * @return list of discussion, or empty if not found.
-     */
-    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id);
-    
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset);
+
     /**
      * Insert new discussion to database.
      * @param discussion <code>Discussion</code> to insert

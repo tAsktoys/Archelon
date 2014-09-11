@@ -4,11 +4,13 @@
 package com.tasktoys.archelon.data.dao.jdbc;
 
 import com.tasktoys.archelon.data.dao.DiscussionDao;
+import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +26,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
     private JdbcTemplate jdbcTemplate;
     private static final String TABLE_NAME = "discussion";
 
+    static final Logger log = Logger.getLogger(JdbcDiscussionDao.class.getName());
+    
     /**
      * Set data source. It invoke from Spring Framework.
      *
@@ -35,8 +39,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     /**
-     * This is columns in database.
-     * Each value is ordred by the same order as in the database.
+     * This is columns in database. Each value is ordred by the same order as in
+     * the database.
      */
     public enum Column {
 
@@ -50,6 +54,26 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     @Override
+    public int countDiscussions() {
+        String sql = "select count(*) from " + TABLE_NAME;
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Override
+    public int countDiscussionsByCategoryId(int categoryId) {
+        String sql = "select count(*) from " + TABLE_NAME
+                + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId;
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Override
+    public int countDiscussionsByCategoryList(List<Category> categoryList) {
+        String sql = "select count(*) from " + TABLE_NAME
+                + encodeCategoryIdListToWhere(categoryList);
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Override
     public List<Discussion> findNewestDiscussionList(int n) {
         String sql = "select * from " + TABLE_NAME
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
@@ -58,58 +82,31 @@ public class JdbcDiscussionDao implements DiscussionDao {
     }
 
     @Override
-    public List<Discussion> findDiscussionListAfter(long id, int n) {
+    public List<Discussion> findNewestDiscussionListWithOffset(int n, int offset) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.ID + " > " + Long.toString(id)
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
     @Override
-    public List<Discussion> findDiscussionListBefore(long id, int n) {
+    public List<Discussion> findNewestDiscussionListByCategoryId(int n, int categoryId, int offset) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.ID + " < " + Long.toString(id)
+                + " where " + Column.CATEGORY_ID.toString() + " = " + categoryId
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
     @Override
-    public List<Discussion> findNewestDiscussionListByMainCategory(int n, int main_id) {
+    public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset) {
         String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
+                + encodeCategoryIdListToWhere(categoryList)
                 + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findDiscussionListWithMainCategoryBefore(long id, int n, int main_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " and " + Column.ID + " < " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findNewestDiscussionListBySubCategory(int n, int main_id, int sub_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
-        return responseToDiscussionList(jdbcTemplate.queryForList(sql));
-    }
-
-    @Override
-    public List<Discussion> findDiscussionListWithSubCategoryBefore(long id, int n, int main_id, int sub_id) {
-        String sql = "select * from " + TABLE_NAME
-                + " where " + Column.CATEGORY_ID.toString() + " = " + main_id
-                + " and " + Column.ID + " < " + Long.toString(id)
-                + " order by " + Column.CREATE_TIME.toString() + " desc"
-                + " limit " + n + ";";
+                + " limit " + n
+                + " offset " + offset + ";";
         return responseToDiscussionList(jdbcTemplate.queryForList(sql));
     }
 
@@ -140,12 +137,24 @@ public class JdbcDiscussionDao implements DiscussionDao {
         }
         return dls;
     }
-    
+
     private String encodeColumnToSet() {
         String sql = " set ";
-        for(Column c : Column.values()) {
-            sql += c.toString() + "=?," ;
+        for (Column c : Column.values()) {
+            sql += c.toString() + "=?,";
         }
-        return sql.substring(0, sql.length() - 1);
+        return sql.substring(0, sql.length() - ",".length());
+    }
+    
+    private String encodeCategoryIdListToWhere(List<Category> categoryList) {
+        if (categoryList == null || categoryList.isEmpty())
+            return "";
+        
+        String sql = " where " + Column.CATEGORY_ID.toString() + " in(";
+        for (Category c : categoryList) {
+            sql += c.getId() + ",";
+        }
+        sql = sql.substring(0, sql.length() - ",".length());
+        return sql + ")";
     }
 }

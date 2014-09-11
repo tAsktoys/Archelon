@@ -83,7 +83,6 @@ public class UserController {
         model.addAttribute(DESCRIPTION, user.getDescription());
         List<Map<String, String>> mls = new ArrayList<>();
         mls.add(makeLabelValueMap(STATE_LABEL, user.getState().toString()));
-        mls.add(makeLabelValueMap(EMAIL_LABEL, user.getEmail()));
         String birthdate = user.getBirthdate() == null ? null : String.valueOf(calcAge(user.getBirthdate())); 
         mls.add(makeLabelValueMap(BIRTHDATE_LABEL, birthdate));
         mls.add(makeLabelValueMap(LOCATION_LABEL, user.getLocation()));

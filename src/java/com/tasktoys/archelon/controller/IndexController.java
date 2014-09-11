@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.controller;
 
@@ -9,6 +9,7 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class IndexController {
 
     @Autowired
-    private CategoryService categorysService;
+    private CategoryService categoryService;
     @Autowired
     private DiscussionService discussionService;
 
@@ -43,20 +44,12 @@ public class IndexController {
 
     private static final String CATEGORY_SELECTION = "category_selection";
     private static final String CREATE_DISCUSSION = "create_discussion";
+    private static final String MAIN_CATEGORY_LIST = "main_category_list";
+    private static final String SUB_CATEGORY_LIST = "sub_category_list";
 
     private enum CategorySelectionParam {
 
         MAIN_CATEGORY_ID, SUB_CATEGORY_ID;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
-    private enum CategorySelectBox {
-
-        MAIN_CATEGORY_LIST, SUB_CATEGORY_LIST;
 
         @Override
         public String toString() {
@@ -76,50 +69,56 @@ public class IndexController {
 
     private static final String DISCUSSION_LIST = "discussion_list";
     private static final int DISCUSSION_LIST_SIZE = 10;
-    private static final String LAST_DISCUSSION_ID = "last_discussion_id";
+
+    private static final String PAGE_NUMBER_LIST = "pageNumberList";
+    private static final String MAIN_ID = "mainId";
+    private static final String SUB_ID = "subId";
+    
+    private static final int DEFAULT_PAGE_NUMBER = 1;
+    private static final String PREVIOUS_PAGE_NUMBER = "previousPageNumber";
+    private static final String CURRENT_PAGE_NUMBER = "currentPageNumber";
+    private static final String NEXT_PAGE_NUMBER = "nextPageNumber";
 
     private static final String ACTIVITY_LIST = "activity_list";
     private static final int ACTIVITY_LIST_SIZE = 5;
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleRequest(Model model) {
-        makeMainCategory(model);
-        makeNewestDiscussionList(model);
-        makeActivityList(model);
+        model.addAllAttributes(createMainCategories());
+        model.addAllAttributes(createDiscussions());
+        model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
+        model.addAllAttributes(createActivities());
         return VIEW;
     }
 
-    @RequestMapping(value = "next/{discussion_id}", method = RequestMethod.GET)
-    public String getNextDiscussionList(@PathVariable long discussion_id, Model model) {
-        makeMainCategory(model);
-        makeNewestDiscussionListBefore(model, discussion_id);
-        makeActivityList(model);
+    @RequestMapping(value = "page/{pageNumber}", method = RequestMethod.GET)
+    public String handleNewPageRequest(@PathVariable int pageNumber, Model model) {
+        model.addAllAttributes(createMainCategories());
+        model.addAllAttributes(createDiscussions(calculateOffset(pageNumber)));
+        model.addAllAttributes(createDiscussionLink(pageNumber));
+        model.addAllAttributes(createActivities());
         return VIEW;
     }
 
-    @RequestMapping(value = "prev/{discussion_id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionList(@PathVariable long discussion_id, Model model) {
-        makeMainCategory(model);
-        makeNewestDiscussionListAfter(model, discussion_id);
-        makeActivityList(model);
+    @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}", method = RequestMethod.GET)
+    public String handleNewPageRequestWithMainId(@PathVariable int pageNumber,
+            @PathVariable int mainId, Model model) {
+        model.addAllAttributes(createCategorySelects(mainId));
+        model.addAllAttributes(createDiscussionsByMainCategory(
+                mainId, calculateOffset(pageNumber)));
+        model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
+        model.addAllAttributes(createActivities());
         return VIEW;
     }
 
-    @RequestMapping(value = "next/{discussion_id}/main_category_id/{main_category_id}", method = RequestMethod.GET)
-    public String getNextDiscussionListWithMainID(@PathVariable long discussion_id,
-            @PathVariable int main_category_id, Model model) {
-        makeMainCategory(model, main_category_id);
-        makeDiscussionListBefore(model, discussion_id, main_category_id);
-        makeActivityList(model);
-        return VIEW;
-    }
-
-    @RequestMapping(value = "prev/{discussion_id}/main_category_id/{main_id}", method = RequestMethod.GET)
-    public String getPreviousDiscussionListWithMainID(@PathVariable long discussion_id,
-            @PathVariable int main_category_id, Model model) {
-        makeMainCategory(model, main_category_id);
-        makeDiscussionListBefore(model, discussion_id, main_category_id);
-        makeActivityList(model);
+    @RequestMapping(value = "page/{pageNumber}/mainid/{mainId}/subid/{subId}", method = RequestMethod.GET)
+    public String handleNewPageRequestWithSubId(@PathVariable int pageNumber,
+            @PathVariable int mainId, @PathVariable int subId, Model model) {
+        model.addAllAttributes(createCategorySelects(mainId));
+        model.addAllAttributes(createDiscussionsBySubCategory(
+                subId, calculateOffset(pageNumber)));
+        model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
+        model.addAllAttributes(createActivities());
         return VIEW;
     }
 
@@ -128,7 +127,7 @@ public class IndexController {
         makeCategorySelect(model,
                 params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                 params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
-        makeActivityList(model);
+        model.addAllAttributes(createActivities());
         return VIEW;
     }
 
@@ -143,21 +142,20 @@ public class IndexController {
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                     params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
         }
-        makeActivityList(model);
+        model.addAllAttributes(createActivities());
         return VIEW;
+    }
+    
+    private int calculateOffset(int currentPageNumber) {
+        return (currentPageNumber - 1) * DISCUSSION_LIST_SIZE;
     }
 
     private boolean hasAllParameters(Map<String, String> params) {
         for (String key : params.keySet()) {
             // the smallest category is used for category_id.
-            // if sub_category_id is not choosed, i.e., all is choosed,
-            // "" is in params.get("sub_category_id")
-            if (key.equals(CreateDiscussionParam.SUB_CATEGORY_ID.toString())) {
-                try {
-                    Integer.parseInt(params.get(CreateDiscussionParam.SUB_CATEGORY_ID.toString()));
-                } catch (NumberFormatException e) {
-                    return false;
-                }
+            if (key.equals(CreateDiscussionParam.SUB_CATEGORY_ID.toString())
+                    && !isChoosenSelection(params.get(key))) {
+                return false;
             }
             if (params.get(key).isEmpty()) {
                 return false;
@@ -176,94 +174,170 @@ public class IndexController {
         builder.authorID(userSession.getUser().getId());
         return builder.buildForInsert();
     }
-    
+
     private DiscussionContent makeNewDiscussionContent(Map<String, String> params, UserSession userSession) {
-        String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
+        String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
         DiscussionContent content = new DiscussionContent();
-        
-        content.setSubject(CreateDiscussionParam.SUBJECT.toString());
-        content.setDescription(description);
+
+        content.setSubject(subject);
         content.addPost(userSession.getUser().getId());
         return content;
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {
-        try {
-            Integer main_id = Integer.valueOf(main);
-            makeMainCategory(model, main_id);
-            try {
-                Integer sub_id = Integer.valueOf(sub);
-                makeSubCategory(model, main_id, sub_id);
-                makeDiscussionList(model, main_id, sub_id);
-            } catch (NumberFormatException e) {
-                makeSubCategory(model, main_id);
-                makeDiscussionList(model, main_id);
-            }
-        } catch (NumberFormatException e) {
-            makeMainCategory(model);
-            makeNewestDiscussionList(model);
+        boolean isMainIdChoosen = isChoosenSelection(main);
+        boolean isSubIdChoosen = isChoosenSelection(sub);
+
+        if (isMainIdChoosen && isSubIdChoosen) {
+            int mainId = Integer.valueOf(main);
+            int subId = Integer.valueOf(sub);
+            model.addAllAttributes(createCategorySelects(mainId));
+            model.addAllAttributes(createDiscussionsBySubCategory(subId));
+            model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER, mainId, subId));
+            model.addAttribute(MAIN_ID, mainId);
+            model.addAttribute(SUB_ID, subId);
+        } else if (isMainIdChoosen) {
+            int mainId = Integer.valueOf(main);
+            model.addAllAttributes(createCategorySelects(mainId));
+            model.addAllAttributes(createDiscussionsByMainCategory(mainId));
+            model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER, mainId));
+            model.addAttribute(MAIN_ID, mainId);
+        } else {
+            model.addAllAttributes(createMainCategories());
+            model.addAllAttributes(createDiscussions());
+            model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
         }
     }
 
-    private void makeMainCategory(Model model) {
-        model.addAttribute(CategorySelectBox.MAIN_CATEGORY_LIST.toString(),
-                Category.list.toMapList(categorysService.getMainCategoryList()));
+    // if category is not choosen, "" is in it.
+    private boolean isChoosenSelection(String categoryId) {
+        try {
+            Integer.valueOf(categoryId);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    private Map<String, List<Map<String, String>>> createCategorySelects(int mainId) {
+        Map<String, List<Map<String, String>>> subModel = new HashMap<>();
+        subModel.putAll(createMainCategories());
+        subModel.putAll(createSubCategories(mainId));
+        return subModel;
     }
 
-    private void makeMainCategory(Model model, int selected_id) {
-        model.addAttribute(CategorySelectBox.MAIN_CATEGORY_LIST.toString(),
-                Category.list.toMapList(categorysService.getMainCategoryList(), selected_id));
+    private Map<String, List<Map<String, String>>> createMainCategories() {
+        return Collections.singletonMap(MAIN_CATEGORY_LIST,
+                toMapList(categoryService.getMainCategoryList()));
     }
 
-    private void makeSubCategory(Model model, int selected_main_id) {
-        model.addAttribute(CategorySelectBox.SUB_CATEGORY_LIST.toString(),
-                Category.list.toMapList(categorysService.getSubCategoryList(selected_main_id)));
+    private Map<String, List<Map<String, String>>> createSubCategories(int selectedMainId) {
+        return Collections.singletonMap(SUB_CATEGORY_LIST,
+                toMapList(categoryService.getSubCategoryList(selectedMainId)));
     }
 
-    private void makeSubCategory(Model model, int selected_main_id, int selected_sub_id) {
-        model.addAttribute(CategorySelectBox.SUB_CATEGORY_LIST.toString(),
-                Category.list.toMapList(categorysService.getSubCategoryList(selected_main_id), selected_sub_id));
-    }
-
-    private void makeNewestDiscussionList(Model model) {
-        List<Discussion> dls = discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE);
-        List<Map<String, String>> mls = discussionService.replaceAuthorIDToAuthorName(dls);
-        model.addAttribute(DISCUSSION_LIST, mls);
-        //model.addAttribute(LAST_DISCUSSION_ID, dls.get(dls.size() - 1).getID().toString());
-    }
-
-    private void makeNewestDiscussionListAfter(Model model, long id) {
-        model.addAttribute(DISCUSSION_LIST,
+    private Map<String, List<Map<String, String>>> createDiscussions() {
+        return Collections.singletonMap(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListAfter(id, DISCUSSION_LIST_SIZE)));
+                        discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE)));
     }
 
-    private void makeNewestDiscussionListBefore(Model model, long id) {
-        model.addAttribute(DISCUSSION_LIST,
+    private Map<String, List<Map<String, String>>> createDiscussions(int offset) {
+        return Collections.singletonMap(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListBefore(id, DISCUSSION_LIST_SIZE)));
+                        discussionService.getNewestDiscussionListWithOffset(
+                                DISCUSSION_LIST_SIZE, offset)));
     }
 
-    private void makeDiscussionList(Model model, int main_id) {
-        model.addAttribute(DISCUSSION_LIST,
+    private Map<String, List<Map<String, String>>> createDiscussionsByMainCategory(int mainId) {
+        return Collections.singletonMap(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListByMainCategory(DISCUSSION_LIST_SIZE, main_id)));
+                        discussionService.getNewestDiscussionListByMainCategory(
+                                DISCUSSION_LIST_SIZE, mainId)));
     }
 
-    private void makeDiscussionListBefore(Model model, long id, int main_id) {
-        model.addAttribute(DISCUSSION_LIST,
+    private Map<String, List<Map<String, String>>> createDiscussionsByMainCategory(int mainId, int offset) {
+        return Collections.singletonMap(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getDiscussionListWithMainCategoryBefore(id, DISCUSSION_LIST_SIZE, main_id)));
+                        discussionService.getNewestDiscussionListByMainCategoryWithOffset(
+                                DISCUSSION_LIST_SIZE, mainId, offset)));
     }
 
-    private void makeDiscussionList(Model model, int main_id, int sub_id) {
-        model.addAttribute(DISCUSSION_LIST,
+    private Map<String, List<Map<String, String>>> createDiscussionsBySubCategory(int subId) {
+        return Collections.singletonMap(DISCUSSION_LIST,
                 discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListBySubCategory(DISCUSSION_LIST_SIZE, main_id, sub_id)));
+                        discussionService.getNewestDiscussionListBySubCategory(
+                                DISCUSSION_LIST_SIZE, subId)));
     }
 
-    private void makeActivityList(Model model) {
-        model.addAttribute(ACTIVITY_LIST, ActivityDaoStub.findNewestActivity(ACTIVITY_LIST_SIZE));
+    private Map<String, List<Map<String, String>>> createDiscussionsBySubCategory(int subId, int offset) {
+        return Collections.singletonMap(DISCUSSION_LIST,
+                discussionService.replaceAuthorIDToAuthorName(
+                        discussionService.getNewestDiscussionListBySubCategoryWithOffset(
+                                DISCUSSION_LIST_SIZE, subId, offset)));
+    }
+
+    private Map<String, List<Map<String, String>>> createActivities() {
+        return Collections.singletonMap(ACTIVITY_LIST,
+                ActivityDaoStub.findNewestActivity(ACTIVITY_LIST_SIZE));
+    }
+
+    private Map<String, Object> createDiscussionLink(int currentPageNumber) {
+        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussion());
+        return createPageNumbers(currentPageNumber, endPageNumber);
+    }
+
+    private int calculateEndPageNumber(int discussionNumber) {
+        return (int) Math.ceil((double) discussionNumber / DISCUSSION_LIST_SIZE);
+    }
+
+    private Map<String, Object> createDiscussionLink(int currentPageNumber, int mainId) {
+        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussionByMainCategory(mainId));
+        Map<String, Object> subModel = new HashMap<>();
+        subModel.putAll(createPageNumbers(currentPageNumber, endPageNumber));
+        subModel.put(MAIN_ID, mainId);
+        return subModel;
+    }
+
+    private Map<String, Object> createDiscussionLink(int currentPageNumber, int mainId, int subId) {
+        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussionBySubCategory(subId));
+        Map<String, Object> subModel = new HashMap<>();
+        subModel.putAll(createPageNumbers(currentPageNumber, endPageNumber));
+        subModel.put(MAIN_ID, mainId);
+        subModel.put(SUB_ID, subId);
+        return subModel;
+    }
+
+    private Map<String, Object> createPageNumbers(int currentPageNumber, int endPageNumber) {
+        Map<String, Object> subModel = new HashMap<>();
+        List<Integer> pageNumberList = new ArrayList<>();
+        for (int i = 1; i <= endPageNumber; i++) {
+            pageNumberList.add(i);
+        }
+        subModel.put(PAGE_NUMBER_LIST, pageNumberList);
+        int previousPageNumber = currentPageNumber - 1;
+        int nextPageNumber = currentPageNumber + 1;
+        if (currentPageNumber >= 1) {
+            previousPageNumber = 1;
+        }
+        if (endPageNumber <= nextPageNumber) {
+            nextPageNumber = endPageNumber;
+        }
+        subModel.put(PREVIOUS_PAGE_NUMBER, previousPageNumber);
+        subModel.put(CURRENT_PAGE_NUMBER, currentPageNumber);
+        subModel.put(NEXT_PAGE_NUMBER, nextPageNumber);
+        return subModel;
+    }
+
+    private List<Map<String, String>> toMapList(List<Category> categories) {
+         List<Map<String, String>> list = new ArrayList<>();
+        for (Category category : categories) {
+            Map<String, String> map = new HashMap<>(2);
+            map.put("id", Integer.toString(category.getId()));
+            map.put("name", category.getName());
+            list.add(map);
+        }
+        return list;
     }
 
     private static class ActivityDaoStub {

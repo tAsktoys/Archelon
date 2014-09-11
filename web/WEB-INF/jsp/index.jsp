@@ -26,7 +26,7 @@
                                 <spring:message code="category.category1.all" />
                             </option>
                             <c:forEach var="item" items="${main_category_list}">
-                                <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                <option value="${item.id}" <c:if test="${mainId eq item.id}">selected</c:if>>${item.name}</option>                                    
                             </c:forEach>
                         </select>
                         <spring:message code="category.category2" />
@@ -35,7 +35,7 @@
                                 <spring:message code="category.category2.all" />
                             </option>
                             <c:forEach var="item" items="${sub_category_list}">
-                                <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                <option value="${item.id}" <c:if test="${subId eq item.id}">selected</c:if>>${item.name}</option>
                             </c:forEach>
                         </select>
                     </form>
@@ -49,10 +49,34 @@
                             <th><spring:message code="discussion.createdate" /></th>
                         </tr>
                         <c:forEach var="row" items="${discussion_list}">
-                            <tr><td>${row.id}</td><td><a href="discussion/${row.id}">${row.subject}</a></td><td><a href="user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
+                            <tr><td>${row.id}</td><td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />discussion/${row.id}">${row.subject}</a></td><td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
                                 </c:forEach>
                     </table>
-                    <a href="prev/${last_discussion_id}">Prev</a>|[1][2][3]...[10]<a href="next/${last_discussion_id}">Next</a>
+
+                    <!-- LInk to next and prev pages -->
+                    <c:if test="${mainId != null and subId == null}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}">Next</a>
+                    </c:if>
+
+                    <c:if test="${mainId != null and subId != null}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}/subid/${subId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}/subid/${subId}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}/subid/${subId}">Next</a>
+                    </c:if>
+
+                    <c:if test="${mainId == null}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}">Prev</a>
+                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                            <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}">[${pageNumber}]</a>
+                        </c:forEach>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}">Next</a>
+                    </c:if>
                     <br />
                 </div>
                 <!-- Create a discussion -->
@@ -74,7 +98,7 @@
                                                     <spring:message code="category.category1.all" />
                                                 </option>
                                                 <c:forEach var="item" items="${main_category_list}">
-                                                    <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                                    <option value="${item.id}" <c:if test="${mainId eq item.id}">selected</c:if>>${item.name}</option>
                                                 </c:forEach>
                                             </select>
                                         </div>
@@ -85,7 +109,7 @@
                                                     <spring:message code="category.category2.all" />
                                                 </option>
                                                 <c:forEach var="item" items="${sub_category_list}">
-                                                    <option value="${item.id}" ${item.selected}>${item.name}</option>
+                                                    <option value="${item.id}" <c:if test="${subId eq item.id}">selected</c:if>>${item.name}</option>
                                                 </c:forEach>
                                         </div>
                                     </td>
