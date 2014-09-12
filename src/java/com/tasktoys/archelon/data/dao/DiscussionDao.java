@@ -5,6 +5,7 @@ package com.tasktoys.archelon.data.dao;
 
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -70,6 +71,10 @@ public interface DiscussionDao {
      */
     public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset);
 
+    public void updateUpdateTime(long discussionId, Timestamp updateTime);
+    public void incrementParticipants(long discussionId);
+    public void incrementPosts(long discussionId);
+    
     /**
      * Insert new discussion to database.
      * @param discussion <code>Discussion</code> to insert

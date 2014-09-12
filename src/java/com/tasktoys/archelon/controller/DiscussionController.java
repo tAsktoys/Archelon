@@ -7,6 +7,7 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
+import com.tasktoys.archelon.service.DiscussionService;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,8 @@ public class DiscussionController {
     @Autowired
     private UserService userService;
     @Autowired
+    private DiscussionService discussionService;
+    @Autowired
     private DiscussionContentService discussionContentService;
     
     protected static final String VIEW = "discussion";
@@ -64,7 +67,7 @@ public class DiscussionController {
             UserSession userSession) {
         Post post = makePost(params, userSession.getUser());
         discussionContentService.insertPost(id, post);
-
+        updateDiscussionProperties(id);
         updatePage(model, id);
         return VIEW;
     }
@@ -105,5 +108,12 @@ public class DiscussionController {
         post.setAuthorId(user.getId());
         post.setDescription(params.get(POSTEDMESSAGE));
         return post;
+    }
+    
+    private void updateDiscussionProperties(long discussionId) {
+        
+        discussionService.incrementPosts(discussionId);
+        discussionService.updateUpdateTime(discussionId);
+
     }
 }

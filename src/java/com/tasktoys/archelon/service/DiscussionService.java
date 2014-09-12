@@ -24,6 +24,9 @@ public interface DiscussionService {
     public List<Discussion> getNewestDiscussionListBySubCategory(int n, int subId);
     public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int subId, int offset);
     public void insertDiscussion(Discussion discussion, DiscussionContent content);
+    public void updateUpdateTime(long discussionId);
+    public void incrementParticipants(long discussionId);
+    public void incrementPosts(long discussionId);
     
     /** Replace <code>long</code> author id to <code>String</code> author name in discussions
      * 

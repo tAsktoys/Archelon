@@ -42,15 +42,23 @@
                     <!-- Table of discussions -->
                     <table>
                         <tr>
-                            <th><spring:message code="discussion.no" /></th>
                             <th><spring:message code="discussion.title" /></th>
                             <th><spring:message code="discussion.owner" /></th>
                             <th><spring:message code="discussion.participants" /></th>
+                            <th>posts</th>
                             <th><spring:message code="discussion.createdate" /></th>
+                            <th>Updated Time</th>
                         </tr>
                         <c:forEach var="row" items="${discussion_list}">
-                            <tr><td>${row.id}</td><td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />discussion/${row.id}">${row.subject}</a></td><td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />user/${row.author_id}">${row.author_id}</a></td><td>${row.participants}</td><td>${row.create_time}</td></tr>
-                                </c:forEach>
+                            <tr>
+                                <td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />discussion/${row.id}">${row.subject}</a></td>
+                                <td><a href="<spring:eval expression="@properties.getProperty('contextpath')" />user/${row.author_id}">${row.author_id}</a></td>
+                                <td>${row.participants}</td>
+                                <td>${row.posts}</td>
+                                <td>${row.create_time}</td>
+                                <td>${row.update_time}</td>
+                            </tr>
+                        </c:forEach>
                     </table>
 
                     <!-- LInk to next and prev pages -->
