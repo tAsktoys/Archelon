@@ -7,6 +7,8 @@ import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.UserService;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,7 @@ public class UsersettingController {
 
     @Autowired
     private UserService userService;
+    static final Logger log = Logger.getLogger(UsersettingController.class.getName());
 
     /**
      * User setting view.
@@ -97,6 +100,7 @@ public class UsersettingController {
         if (isCorrectPassword(userSession, params)) {
             return updateUserInformation(redirect, params, userSession);
         } else {
+            setUserValueToForm(model, userSession.getUser());
             return errorHandle(model, Error.USERSETTING_PASSWORD_MISSMATCH.toString());
         }
     }
@@ -124,8 +128,26 @@ public class UsersettingController {
     private void setUserValueToForm(Model model, User user) {
         Map<String, String> map = user.toSecureMap();
         for (String key : map.keySet()) {
-            model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
+            if (key.equals("birthdate"))
+                model.addAttribute(CULLENT_VALUE_PREFIX + key, decrementMonth(map.get(key)));
+            else
+                model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
         }
+    }
+    
+    private String decrementMonth(String date) {
+        log.log(Level.INFO, date);
+        if (date != null && !date.isEmpty()) {
+            // date format is year-month-date
+            String[] yyyy_mm_dd = date.split("-");
+            int mm = Integer.parseInt(yyyy_mm_dd[1]) - 1;
+        log.log(Level.INFO, yyyy_mm_dd[0] + "-" + String.valueOf(mm) + "-" + yyyy_mm_dd[2]);
+        if (mm < 10)
+                return yyyy_mm_dd[0] + "-0" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
+            else
+                return yyyy_mm_dd[0] + "-" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
+        }
+        return date;
     }
 
     private boolean isCorrectPassword(UserSession userSession, Map<String, String> params) {
