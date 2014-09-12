@@ -102,7 +102,7 @@ public final class User implements Serializable {
 
     public enum State {
 
-        ACTIVE, INACTIVE, BANNED, DELETED;
+        ACTIVE, INACTIVE, BANNED, WITHDREW;
     }
 
     public long getId() {

@@ -255,7 +255,7 @@ public class UsersettingController {
 
     private String setUserStateToDeleted(UserSession userSession) {
         User.Builder builder = new User.Builder(userSession.getUser());
-        builder.state(User.State.DELETED);
+        builder.state(User.State.WITHDREW);
         try {
             User deleted = builder.build();
             userService.updateUser(deleted);

@@ -42,7 +42,7 @@ public class Discussion {
 
     public enum State {
 
-        ACTIVE, INACTIVE, SOLVED, DELETED;
+        ACTIVE, INACTIVE, SOLVED, CLOSED;
 
         @Override
         public String toString() {
