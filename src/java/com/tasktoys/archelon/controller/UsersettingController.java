@@ -128,24 +128,24 @@ public class UsersettingController {
     private void setUserValueToForm(Model model, User user) {
         Map<String, String> map = user.toSecureMap();
         for (String key : map.keySet()) {
-            if (key.equals("birthdate"))
+            if (key.equals("birthdate")) {
                 model.addAttribute(CULLENT_VALUE_PREFIX + key, decrementMonth(map.get(key)));
-            else
+            } else {
                 model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
+            }
         }
     }
-    
+
     private String decrementMonth(String date) {
-        log.log(Level.INFO, date);
         if (date != null && !date.isEmpty()) {
             // date format is year-month-date
             String[] yyyy_mm_dd = date.split("-");
             int mm = Integer.parseInt(yyyy_mm_dd[1]) - 1;
-        log.log(Level.INFO, yyyy_mm_dd[0] + "-" + String.valueOf(mm) + "-" + yyyy_mm_dd[2]);
-        if (mm < 10)
+            if (mm < 10) {
                 return yyyy_mm_dd[0] + "-0" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
-            else
+            } else {
                 return yyyy_mm_dd[0] + "-" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
+            }
         }
         return date;
     }
