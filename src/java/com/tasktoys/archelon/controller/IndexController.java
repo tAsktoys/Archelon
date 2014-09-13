@@ -180,7 +180,9 @@ public class IndexController {
         DiscussionContent content = new DiscussionContent();
 
         content.setSubject(subject);
-        content.addPost(userSession.getUser().getId());
+        long userId = userSession.getUser().getId();
+        content.addPost(userId);
+        content.addParticipants(userId);
         return content;
     }
 

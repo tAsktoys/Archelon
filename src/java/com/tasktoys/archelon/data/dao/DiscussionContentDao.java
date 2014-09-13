@@ -33,6 +33,18 @@ public interface DiscussionContentDao {
      */
     public void update(DiscussionContent.Post post);
     
+    /**
+     *
+     * @param discussionId
+     * @param post
+     */
     public void insertPost(long discussionId, DiscussionContent.Post post);
+    
+    /**
+     *
+     * @param discussionId
+     * @param userId
+     */
+    public void insertParticipants(long discussionId, long userId);
 
 }

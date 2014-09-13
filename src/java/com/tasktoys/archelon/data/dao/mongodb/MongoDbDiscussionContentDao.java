@@ -52,4 +52,12 @@ public class MongoDbDiscussionContentDao implements DiscussionContentDao {
         log.log(Level.INFO, wr.toString());
         log.log(Level.INFO, Boolean.toString(wr.isUpdateOfExisting()));
     }
+
+    @Override
+    public void insertParticipants(long discussionId, long userId) {
+        Query query = new Query(Criteria.where("discussionId").is(discussionId));
+        mongoTemplate.updateFirst(query,
+                new Update().addToSet("participants", userId),
+                DiscussionContent.class);
+    }
 }
