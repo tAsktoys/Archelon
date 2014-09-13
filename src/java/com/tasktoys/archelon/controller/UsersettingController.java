@@ -128,26 +128,8 @@ public class UsersettingController {
     private void setUserValueToForm(Model model, User user) {
         Map<String, String> map = user.toSecureMap();
         for (String key : map.keySet()) {
-            if (key.equals("birthdate")) {
-                model.addAttribute(CULLENT_VALUE_PREFIX + key, decrementMonth(map.get(key)));
-            } else {
-                model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
-            }
+            model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
         }
-    }
-
-    private String decrementMonth(String date) {
-        if (date != null && !date.isEmpty()) {
-            // date format is year-month-date
-            String[] yyyy_mm_dd = date.split("-");
-            int mm = Integer.parseInt(yyyy_mm_dd[1]) - 1;
-            if (mm < 10) {
-                return yyyy_mm_dd[0] + "-0" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
-            } else {
-                return yyyy_mm_dd[0] + "-" + String.valueOf(mm) + "-" + yyyy_mm_dd[2];
-            }
-        }
-        return date;
     }
 
     private boolean isCorrectPassword(UserSession userSession, Map<String, String> params) {
@@ -199,7 +181,8 @@ public class UsersettingController {
             try {
                 String[] yyyy_mm_dd = birthdate.split("-");
                 year = Integer.parseInt(yyyy_mm_dd[0]);
-                month = Integer.parseInt(yyyy_mm_dd[1]);
+                // due to the difference of data format
+                month = Integer.parseInt(yyyy_mm_dd[1]) - 1;
                 day = Integer.parseInt(yyyy_mm_dd[2]);
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);

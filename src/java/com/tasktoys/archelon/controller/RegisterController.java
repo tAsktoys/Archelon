@@ -116,7 +116,8 @@ public class RegisterController {
             try {
                 String[] yyyy_mm_dd = birthdate.split("-");
                 year = Integer.parseInt(yyyy_mm_dd[0]);
-                month = Integer.parseInt(yyyy_mm_dd[1]);
+                // due to the difference of data format
+                month = Integer.parseInt(yyyy_mm_dd[1]) - 1;
                 day = Integer.parseInt(yyyy_mm_dd[2]);
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
