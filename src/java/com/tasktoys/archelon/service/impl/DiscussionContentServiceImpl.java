@@ -33,6 +33,6 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     
     @Override
     public void insertParticipants(long discussionId, long usetId) {
-        ;
+        mongoDbDiscussionContentDao.insertParticipants(discussionId, usetId);
     }
 }
