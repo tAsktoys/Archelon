@@ -45,9 +45,9 @@
                             <th><spring:message code="discussion.title" /></th>
                             <th><spring:message code="discussion.owner" /></th>
                             <th><spring:message code="discussion.participants" /></th>
-                            <th>posts</th>
-                            <th><spring:message code="discussion.createdate" /></th>
-                            <th>Updated Time</th>
+                            <th><spring:message code="discussion.posts" /></th>
+                            <th><spring:message code="discussion.createtime" /></th>
+                            <th><spring:message code="discussion.updatetime" /></th>
                         </tr>
                         <c:forEach var="row" items="${discussion_list}">
                             <tr>
@@ -61,7 +61,7 @@
                         </c:forEach>
                     </table>
 
-                    <!-- LInk to next and prev pages -->
+                    <!-- Link to next and previous pages -->
                     <c:if test="${mainId != null and subId == null}">
                         <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}">Prev</a>
                         <c:forEach var="pageNumber" items="${pageNumberList}">
@@ -87,6 +87,7 @@
                     </c:if>
                     <br />
                 </div>
+
                 <!-- Create a discussion -->
                 <div id="create">
                     <h2><spring:message code="discussion.new" /></h2>
@@ -99,27 +100,14 @@
                                 <tr>
                                     <th><spring:message code="category.name" /></th>
                                     <td>
-                                        <div>
-                                            <spring:message code="category.category1" />
-                                            <select name="main_category_id" onchange="submit(this.form)">
-                                                <option value="">
-                                                    <spring:message code="category.category1.all" />
-                                                </option>
-                                                <c:forEach var="item" items="${main_category_list}">
-                                                    <option value="${item.id}" <c:if test="${mainId eq item.id}">selected</c:if>>${item.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <spring:message code="category.category2" />
-                                            <select name="sub_category_id" onchange="submit(this.form)">
-                                                <option value="">
-                                                    <spring:message code="category.category2.all" />
-                                                </option>
-                                                <c:forEach var="item" items="${sub_category_list}">
-                                                    <option value="${item.id}" <c:if test="${subId eq item.id}">selected</c:if>>${item.name}</option>
-                                                </c:forEach>
-                                        </div>
+                                        <c:if test="${subId == null}">
+                                            <spring:message code="category.missing" />
+                                        </c:if>
+                                        <c:if test="${subId != null}">
+                                            <c:forEach var="item" items="${sub_category_list}">
+                                                <c:if test="${subId eq item.id}">${item.name}</c:if>
+                                            </c:forEach> 
+                                        </c:if>
                                     </td>
                                 </tr>
                                 <tr><th><spring:message code="discussion.description" /></th>
@@ -131,7 +119,7 @@
                                                 </td>
                                             </tr>
                                             <tr><td>
-                                                    <textarea name="description"></textarea>                       
+                                                    <textarea name="description" id="discussion_field"></textarea>                       
                                                 </td>
                                             </tr>
                                         </table>
