@@ -55,6 +55,7 @@ public class DiscussionController {
     private static final String USERNAME = "username";
     private static final String MESSAGE = "message";
     private static final String POSTEDMESSAGE = "postedMessage";
+    private static final String POSTTIMESTAMP = "postTimeStamp"; 
 
     @RequestMapping(value = "{" + ID + "}", method = RequestMethod.GET)
     public String handleGet(@PathVariable long id, Model model) {
@@ -100,6 +101,7 @@ public class DiscussionController {
         map.put(USERPAGE, properties.getProperty("contextpath") + "user/" + userName);
         map.put(USERNAME, userName);
         map.put(MESSAGE, post.getDescription());
+        map.put(POSTTIMESTAMP, post.getPostTimeStamp().toString());
         return map;
     }
     
