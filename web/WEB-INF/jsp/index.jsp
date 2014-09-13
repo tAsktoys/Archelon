@@ -104,9 +104,13 @@
                                             <spring:message code="category.missing" />
                                         </c:if>
                                         <c:if test="${subId != null}">
-                                            <c:forEach var="item" items="${sub_category_list}">
-                                                <c:if test="${subId eq item.id}">${item.name}</c:if>
-                                            </c:forEach> 
+                                            <select name="sub_category_id">
+                                                <c:forEach var="item" items="${sub_category_list}">
+                                                    <c:if test="${subId eq item.id}">
+                                                        <option value="${item.id}">${item.name}</option>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </select>
                                         </c:if>
                                     </td>
                                 </tr>

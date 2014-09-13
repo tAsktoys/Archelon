@@ -67,7 +67,7 @@ public class DiscussionController {
             UserSession userSession) {
         Post post = makePost(params, userSession.getUser());
         discussionContentService.insertPost(id, post);
-        updateDiscussionProperties(id);
+        updateDiscussionProperties(id, userSession);
         updatePage(model, id);
         return VIEW;
     }
@@ -110,10 +110,15 @@ public class DiscussionController {
         return post;
     }
     
-    private void updateDiscussionProperties(long discussionId) {
-        
+    private void updateDiscussionProperties(long discussionId, UserSession userSession) {
         discussionService.incrementPosts(discussionId);
         discussionService.updateUpdateTime(discussionId);
-
+        
+        List<Long> participateMember = discussionContentService.getDiscussionContent(discussionId).getParticipateMember();
+        long userId = userSession.getUser().getId();
+        if (!participateMember.contains(userId)) {
+            discussionContentService.insertParticipants(discussionId, userId);
+            discussionService.incrementParticipants(discussionId);
+        }
     }
 }

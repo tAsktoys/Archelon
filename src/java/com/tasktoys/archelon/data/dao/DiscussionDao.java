@@ -71,8 +71,23 @@ public interface DiscussionDao {
      */
     public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset);
 
+    /**
+     *
+     * @param discussionId
+     * @param updateTime
+     */
     public void updateUpdateTime(long discussionId, Timestamp updateTime);
+
+    /**
+     *
+     * @param discussionId
+     */
     public void incrementParticipants(long discussionId);
+
+    /**
+     *
+     * @param discussionId
+     */
     public void incrementPosts(long discussionId);
     
     /**

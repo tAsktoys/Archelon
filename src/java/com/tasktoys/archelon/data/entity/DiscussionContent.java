@@ -30,6 +30,9 @@ public class DiscussionContent {
 
     @Field
     private List<Post> posts;
+    
+    @Field
+    private List<Long> participants;
 
     public String getId() {
         return id;
@@ -66,6 +69,25 @@ public class DiscussionContent {
 
     public List<Post> getPosts() {
         return this.posts;
+    }
+    
+    public void addParticipants(long userId) {
+        if (participants == null) {
+            participants = new ArrayList<>();
+        }
+        participants.add(userId);
+    }
+    
+    public List<Long> getParticipateMember() {
+        return participants;
+    }
+    
+    public boolean isParticipate(long userId) {
+        return participants.contains(userId);
+    }
+    
+    public int getParticipants() {
+        return participants.size();
     }
 
     public long getFirstAuthorId() {
