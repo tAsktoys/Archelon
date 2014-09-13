@@ -73,8 +73,11 @@ public class DiscussionController {
             Locale locale, UserSession userSession) {
         dateFormat = createDateFormat(locale);
         Post post = makePost(params, userSession.getUser());
-        discussionContentService.insertPost(id, post);
-        updateDiscussionProperties(id, userSession);
+        Post lastPost = discussionContentService.getLastPost(id);
+        if (post.isNotEquals(lastPost)) {
+            discussionContentService.insertPost(id, post);
+            updateDiscussionProperties(id, userSession);
+        }
         updatePage(model, id);
         return VIEW;
     }
@@ -108,7 +111,7 @@ public class DiscussionController {
         return map;
     }
     
-    private DiscussionContent.Post makePost(Map<String, String> params, User user) {
+    private Post makePost(Map<String, String> params, User user) {
         Post post = new Post();
         post.setAuthorId(user.getId());
         post.setDescription(params.get(POSTEDMESSAGE));

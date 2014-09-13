@@ -5,7 +5,9 @@ package com.tasktoys.archelon.service.impl;
 
 import com.tasktoys.archelon.data.dao.mongodb.MongoDbDiscussionContentDao;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 import com.tasktoys.archelon.service.DiscussionContentService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,12 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     @Override
     public DiscussionContent getDiscussionContent(long discussionId) {
         return mongoDbDiscussionContentDao.findByDiscussionId(discussionId);
+    }
+    
+    @Override
+    public Post getLastPost(long discussionId) {
+        List<Post> posts = mongoDbDiscussionContentDao.findByDiscussionId(discussionId).getPosts();
+        return posts.get(posts.size() - 1);
     }
     
     @Override

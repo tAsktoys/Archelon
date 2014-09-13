@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.service;
 
 import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 
 /**
  * Interface definision of discussion content interactions.
@@ -15,6 +16,7 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 public interface DiscussionContentService {
     
     public DiscussionContent getDiscussionContent(long discussionId);
+    public Post getLastPost(long discussionId);
     public void insertPost(long discussionId, DiscussionContent.Post post);
     public void insertParticipants(long discussionId, long userId);
 }

@@ -154,5 +154,13 @@ public class DiscussionContent {
         public Date getPostTimeStamp() {
             return postTimeStamp;
         }
+        
+        public boolean isNotEquals(Post post) {
+            return this.authorId != post.getAuthorId()
+                    || (description == null ? post.getDescription() != null : !description.equals(post.getDescription()))
+                    || (math == null ? post.getMath() != null : !math.equals(post.getMath()))
+                    || (fig == null ? post.getFig() != null : !fig.equals(post.getFig()))
+                    || (svg == null ? post.getSvg() != null : !svg.equals(post.getSvg()));
+        }
     }
 }
