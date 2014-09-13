@@ -1,5 +1,5 @@
 /*
- * Copyright(C) 2014 tAsktoys Project. All rights reserved.
+ * Copyright(C) 2014 tAsktoys. All rights reserved.
  */
 package com.tasktoys.archelon.data.entity;
 
@@ -8,7 +8,8 @@ import java.text.ParseException;
 import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +36,8 @@ public class UserTest {
     @After
     public void tearDown() {
     }
-    
+
+    @Test
     public void testBuilder_fullDataCase() {
         long id = 1;
         String name = "password";
@@ -44,6 +46,7 @@ public class UserTest {
         String profile = "This is sample profile.";
         Date birthdate = parseDate("20141231");
         String place = "JAIST";
+        User.State state = User.State.ACTIVE;
         
         Builder builder = new Builder();
         builder.id(id);
@@ -53,6 +56,7 @@ public class UserTest {
         builder.description(profile);
         builder.birthdate(birthdate);
         builder.location(place);
+        builder.state(state);
         User user = builder.build();
         assertEquals(id, user.getId());
         assertEquals(name, user.getName());
@@ -61,19 +65,23 @@ public class UserTest {
         assertEquals(profile, user.getDescription());
         assertEquals(birthdate, user.getBirthdate());
         assertEquals(place, user.getLocation());
+        assertEquals(state, User.State.ACTIVE);
     }
-    
+
+    @Test
     public void testBuilder_mustOnlyCase() {
         long id = 1;
         String name = "password";
         String email = "test@test.com";
         String password = "password";
+        User.State state = User.State.ACTIVE;
         
         Builder builder = new Builder();
         builder.id(id);
         builder.name(name);
         builder.email(email);
         builder.password(password);
+        builder.state(state);
         User user = builder.build();
         assertEquals(id, user.getId());
         assertEquals(name, user.getName());
