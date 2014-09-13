@@ -9,9 +9,12 @@ import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
 import com.tasktoys.archelon.service.DiscussionService;
 import com.tasktoys.archelon.service.UserService;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,17 +58,20 @@ public class DiscussionController {
     private static final String USERNAME = "username";
     private static final String MESSAGE = "message";
     private static final String POSTEDMESSAGE = "postedMessage";
-    private static final String POSTTIMESTAMP = "postTimeStamp"; 
+    private static final String POSTTIMESTAMP = "postTimeStamp";
+    private DateFormat dateFormat;
 
     @RequestMapping(value = "{" + ID + "}", method = RequestMethod.GET)
-    public String handleGet(@PathVariable long id, Model model) {
+    public String handleGet(@PathVariable long id, Model model, Locale locale) {
+        dateFormat = createDateFormat(locale);
         updatePage(model, id);
         return VIEW;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, params = POSTEDMESSAGE)
     public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model,
-            UserSession userSession) {
+            Locale locale, UserSession userSession) {
+        dateFormat = createDateFormat(locale);
         Post post = makePost(params, userSession.getUser());
         discussionContentService.insertPost(id, post);
         updateDiscussionProperties(id, userSession);
@@ -75,13 +81,9 @@ public class DiscussionController {
     
     private void updatePage(Model model, long discussionId) {
         DiscussionContent content = discussionContentService.getDiscussionContent(discussionId);
-        updateDiscussionTheme(model, content.getSubject());
         updateDiscussionLog(model, content);
+        model.addAttribute(THEME, content.getSubject());
         model.addAttribute(ID, discussionId);
-    }
-
-    private void updateDiscussionTheme(Model model, String subject) {
-        model.addAttribute(THEME, subject);
     }
 
     private void updateDiscussionLog(Model model, DiscussionContent content) {
@@ -89,7 +91,6 @@ public class DiscussionController {
         for (DiscussionContent.Post post : content.getPosts()) {
             list.add(putPost(post));
         }
-
         model.addAttribute(DISCUSSION_LOG, list);
     }
 
@@ -101,7 +102,9 @@ public class DiscussionController {
         map.put(USERPAGE, properties.getProperty("contextpath") + "user/" + userName);
         map.put(USERNAME, userName);
         map.put(MESSAGE, post.getDescription());
-        map.put(POSTTIMESTAMP, post.getPostTimeStamp().toString());
+        if (dateFormat == null)
+            dateFormat = createDateFormat(null);
+        map.put(POSTTIMESTAMP, dateFormat.format(post.getPostTimeStamp()));
         return map;
     }
     
@@ -121,6 +124,16 @@ public class DiscussionController {
         if (!participateMember.contains(userId)) {
             discussionContentService.insertParticipants(discussionId, userId);
             discussionService.incrementParticipants(discussionId);
+        }
+    }
+
+    private DateFormat createDateFormat(Locale locale) {
+        if (locale == null) {
+            return new SimpleDateFormat();
+        } else if (locale.equals(Locale.JAPAN) || locale.equals(Locale.JAPANESE)) {
+            return new SimpleDateFormat("yyyy/MMM/dd (EEE) HH:mm:ss z", locale);
+        } else {
+            return new SimpleDateFormat();
         }
     }
 }
