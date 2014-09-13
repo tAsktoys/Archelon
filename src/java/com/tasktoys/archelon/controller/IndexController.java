@@ -6,6 +6,7 @@ package com.tasktoys.archelon.controller;
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class IndexController {
     private CategoryService categoryService;
     @Autowired
     private DiscussionService discussionService;
+    @Autowired
+    private ActivityService activityService;
 
     protected static final String VIEW = "index";
     protected static final String REDIRECT = "redirect:/";
@@ -87,7 +90,7 @@ public class IndexController {
         model.addAllAttributes(createMainCategories());
         model.addAllAttributes(createDiscussions());
         model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -96,7 +99,7 @@ public class IndexController {
         model.addAllAttributes(createMainCategories());
         model.addAllAttributes(createDiscussions(calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber));
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -107,7 +110,7 @@ public class IndexController {
         model.addAllAttributes(createDiscussionsByMainCategory(
                 mainId, calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -118,7 +121,7 @@ public class IndexController {
         model.addAllAttributes(createDiscussionsBySubCategory(
                 subId, calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -127,7 +130,7 @@ public class IndexController {
         makeCategorySelect(model,
                 params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                 params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -142,7 +145,7 @@ public class IndexController {
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                     params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
         }
-        model.addAllAttributes(createActivities());
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
         return VIEW;
     }
     
@@ -279,11 +282,6 @@ public class IndexController {
                                 DISCUSSION_LIST_SIZE, subId, offset)));
     }
 
-    private Map<String, List<Map<String, String>>> createActivities() {
-        return Collections.singletonMap(ACTIVITY_LIST,
-                ActivityDaoStub.findNewestActivity(ACTIVITY_LIST_SIZE));
-    }
-
     private Map<String, Object> createDiscussionLink(int currentPageNumber) {
         int endPageNumber = calculateEndPageNumber(discussionService.countDiscussion());
         return createPageNumbers(currentPageNumber, endPageNumber);
@@ -340,41 +338,5 @@ public class IndexController {
             list.add(map);
         }
         return list;
-    }
-
-    private static class ActivityDaoStub {
-
-        public static List<Map<String, String>> findNewestActivity(int n) {
-            List<Map<String, String>> als = new ArrayList<>();
-            while (als.size() < n) {
-                als.add(makeActivity());
-            }
-            return als;
-        }
-
-        private static Map<String, String> makeActivity() {
-            Map<String, String> map = new HashMap<>();
-            map.put("time", makeTime());
-            map.put("act", makeAct());
-            return map;
-        }
-
-        private static String makeTime() {
-            int i = (int) (Math.random() * 5);
-            if (i == 0) {
-                return "Just now";
-            }
-            return i + " minutes ago";
-        }
-
-        private static String makeAct() {
-            int n = (int) (Math.random() * 3);
-            if (n == 0) {
-                return "Someone made new discussion \"What's up?\"in sub_category1";
-            } else if (n == 1) {
-                return "Someone's discussion is ranked as the hottest discussion in main_category1";
-            }
-            return "Discussion \"How to make a simple web service\" is closed";
-        }
     }
 }
