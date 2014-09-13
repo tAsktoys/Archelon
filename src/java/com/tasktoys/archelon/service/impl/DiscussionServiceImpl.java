@@ -10,6 +10,7 @@ import com.tasktoys.archelon.data.dao.UserDao;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.DiscussionService;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,22 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
         return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, offset);
+    }
+    
+    @Override
+    public void updateUpdateTime(long discussionId) {
+        long unixtime = System.currentTimeMillis();
+        discussionDao.updateUpdateTime(discussionId, new Timestamp(unixtime));
+    }
+    
+    @Override
+    public void incrementParticipants(long discussionId) {
+        discussionDao.incrementParticipants(discussionId);
+    }
+    
+    @Override
+    public void incrementPosts(long discussionId) {
+        discussionDao.incrementPosts(discussionId);
     }
 
     @Override

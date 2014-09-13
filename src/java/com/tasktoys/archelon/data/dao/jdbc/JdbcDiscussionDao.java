@@ -115,7 +115,25 @@ public class JdbcDiscussionDao implements DiscussionDao {
         String sql = "insert into " + TABLE_NAME + encodeColumnToSet();
         jdbcTemplate.update(sql, discussion.toObject());
     }
-
+    
+    @Override
+    public void updateUpdateTime(long discussionId, Timestamp updateTime) {
+        String sql = "update " + TABLE_NAME + " set update_time=? where id=?"; 
+        jdbcTemplate.update(sql, updateTime, discussionId);
+    }
+    
+    @Override
+    public void incrementParticipants(long discussionId) {
+        String sql = "update " + TABLE_NAME + " set participants=participants+1 where id=?";
+        jdbcTemplate.update(sql, discussionId);
+    }
+    
+    @Override
+    public void incrementPosts(long discussionId) {
+        String sql = "update " + TABLE_NAME + " set posts=posts+1 where id=?";
+        jdbcTemplate.update(sql, discussionId);
+    }
+    
     private List<Discussion> responseToDiscussionList(List<Map<String, Object>> response) {
         List<Discussion> dls = new ArrayList<>();
         for (Map<String, Object> row : response) {

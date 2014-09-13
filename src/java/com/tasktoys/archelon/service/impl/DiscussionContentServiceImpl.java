@@ -30,4 +30,9 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     public void insertPost(long discussionId, DiscussionContent.Post post) {
         mongoDbDiscussionContentDao.insertPost(discussionId, post);
     }
+    
+    @Override
+    public void insertParticipants(long discussionId, long usetId) {
+        mongoDbDiscussionContentDao.insertParticipants(discussionId, usetId);
+    }
 }
