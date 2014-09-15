@@ -90,7 +90,7 @@ public class IndexController {
         model.addAllAttributes(createMainCategories());
         model.addAllAttributes(createDiscussions());
         model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -99,7 +99,7 @@ public class IndexController {
         model.addAllAttributes(createMainCategories());
         model.addAllAttributes(createDiscussions(calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -110,7 +110,7 @@ public class IndexController {
         model.addAllAttributes(createDiscussionsByMainCategory(
                 mainId, calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -121,7 +121,7 @@ public class IndexController {
         model.addAllAttributes(createDiscussionsBySubCategory(
                 subId, calculateOffset(pageNumber)));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -130,7 +130,7 @@ public class IndexController {
         makeCategorySelect(model,
                 params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                 params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
 
@@ -145,7 +145,7 @@ public class IndexController {
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                     params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
         }
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
     

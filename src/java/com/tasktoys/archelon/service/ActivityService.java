@@ -14,5 +14,5 @@ import java.util.Map;
  */
 public interface ActivityService {
     
-    public List<Map<String, String>> createActivities(int n);
+    public Map<String, List<Map<String, String>>> createActivities(String name, int n);
 }
