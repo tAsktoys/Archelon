@@ -18,7 +18,8 @@ public class Activity {
     private final Timestamp createdTime;
     private final Long targetDiscussionId;
     private final Long targetUserId;
-//    private final Long targetPostId;
+    private final String targetDiscussionContentId;
+    private final int targetPost;
 
     public enum ActivityType {
 
@@ -37,7 +38,8 @@ public class Activity {
         this.createdTime = builder.createdTime;
         this.targetDiscussionId = builder.targetDiscussionId;
         this.targetUserId = builder.targetUserId;
-//        this.targetPostId = builder.targetPostId;
+        this.targetDiscussionContentId = builder.targetDiscussionContentId;
+        this.targetPost = builder.targetPost;
     }
 
     public long getId() {
@@ -64,6 +66,14 @@ public class Activity {
         return targetUserId;
     }
 
+    public String getTargetDiscussionContentId() {
+        return targetDiscussionContentId;
+    }
+    
+    public int getTargetPost() {
+        return targetPost;
+    }
+    
     public static class Builder {
 
         public static final long ILLEGAL_ID = -1;
@@ -75,7 +85,8 @@ public class Activity {
         private Timestamp createdTime;
         private Long targetDiscussionId;
         private Long targetUserId;
-//        private Long targetPostId;
+        private String targetDiscussionContentId;
+        private int targetPost;
 
         public Builder() {
 
@@ -123,10 +134,16 @@ public class Activity {
             return this;
         }
 
-//        public Builder targetPostId(Long targetPostId) {
-//            this.targetPostId = targetPostId;
-//            return this;
-//        }
+        public Builder targetDiscussionConcentId(String targetDiscussionContentId) {
+            this.targetDiscussionContentId = targetDiscussionContentId;
+            return this;
+        }
+        
+        public Builder targetPost(int targetPost) {
+            this.targetPost = targetPost;
+            return this;
+        }
+        
         public Activity build() {
             if (this.id == ILLEGAL_ID) {
                 throw new IllegalStateException("illegal id: " + id);
