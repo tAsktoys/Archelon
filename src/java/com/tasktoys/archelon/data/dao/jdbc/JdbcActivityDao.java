@@ -30,6 +30,15 @@ public class JdbcActivityDao implements ActivityDao {
         return ls;
     }
     
+    @Override
+    public List<Activity> findLatestActivitiesByUserId(long userId, int n) {
+        List<Activity> ls = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            ls.add(makeActivity());
+        }
+        return ls;
+    }
+    
     private Activity makeActivity() {
         Builder builder = new Builder();
         long userId = (long)(Math.random() * 10);

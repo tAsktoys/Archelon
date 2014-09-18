@@ -140,7 +140,16 @@
                         <h2><spring:message code="activity.names" /></h2>
                         <table border="1">
                             <c:forEach var="activity" items="${activity_list}">
-                                <tr><td>${activity.time}</td><td>${activity.act}</td></tr>
+                                <tr>
+                                    <td>${activity.time}</td>
+                                    <td>
+                                        <c:forEach var="fragment" items="${activity.act}">
+                                            <spring:message code="${fragment.prefix}" />
+                                            ${fragment.string}
+                                            <spring:message code="${fragment.suffix}" />
+                                        </c:forEach>
+                                    </td>
+                                </tr>
                             </c:forEach>
                         </table>
                     </div>
