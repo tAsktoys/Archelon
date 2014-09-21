@@ -89,8 +89,9 @@ public class ActivityServiceImpl implements ActivityService {
        
     private Map<String, String> createUserName(long userId) {
         Map<String, String> subModel = new HashMap<>();
+        User user = userService.findUserById(userId);
         subModel.put(PREFIX, "activity.user.name.prefix");
-        subModel.put(STRING, userService.findUserById(userId).getName());
+        subModel.put(STRING, (user == null? "" : user.getName()));
         subModel.put(SUFFIX, "activity.user.name.suffix");
         return subModel;
     }

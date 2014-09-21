@@ -29,8 +29,8 @@
                     <c:forEach var="info" items="${overview}">
                         <c:if test="${info.value != null}">
                             <li class="user_information_item"><spring:message code="${info.label}" />${info.value}</li>
-                        </c:if>
-                    </c:forEach>
+                            </c:if>
+                        </c:forEach>
                 </ul>
                 <c:if test="${userSession.getName() == name}">
                     <a href="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/${name}"><spring:message code="user.update" /></a>
@@ -43,7 +43,9 @@
                     <div class="user_activity">
                         ${activity.time}
                         <c:forEach var="fragment" items="${activity.act}">
-                            ${fragment.string}<spring:message code="${fragment.message}" />
+                            <spring:message code="${fragment.prefix}" />
+                            ${fragment.string}
+                            <spring:message code="${fragment.suffix}" />
                         </c:forEach>
                     </div>
                 </c:forEach>

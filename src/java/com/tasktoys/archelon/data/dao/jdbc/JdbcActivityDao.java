@@ -41,7 +41,7 @@ public class JdbcActivityDao implements ActivityDao {
     
     private Activity makeActivity() {
         Builder builder = new Builder();
-        long userId = (long)(Math.random() * 10);
+        long userId = (long)(Math.random() * 3);
         long discussionId = (long)(Math.random() * 1000);
         ActivityType type = (Math.random() < 0.5 ? ActivityType.CREATE_DISCUSSION
                 : (Math.random() < 0.5 ? ActivityType.SOLVE_DISCUSSION : ActivityType.CLOSE_DISCUSSION));
