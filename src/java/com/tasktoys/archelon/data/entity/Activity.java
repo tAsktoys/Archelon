@@ -12,6 +12,9 @@ import java.sql.Timestamp;
  */
 public class Activity {
 
+    public static final long ILLEGAL_ID = -1;
+    public static final long ILLEGAL_USER_ID = -1;
+
     private final long id;
     private final ActivityType activityType;
     private final long userId;
@@ -19,7 +22,7 @@ public class Activity {
     private final Long targetDiscussionId;
     private final Long targetUserId;
     private final String targetDiscussionContentId;
-    private final int targetPost;
+    private final Integer targetPost;
 
     public enum ActivityType {
 
@@ -69,15 +72,12 @@ public class Activity {
     public String getTargetDiscussionContentId() {
         return targetDiscussionContentId;
     }
-    
+
     public int getTargetPost() {
         return targetPost;
     }
-    
-    public static class Builder {
 
-        public static final long ILLEGAL_ID = -1;
-        public static final long ILLEGAL_USER_ID = -1;
+    public static class Builder {
 
         private long id = ILLEGAL_ID;
         private ActivityType activityType;
@@ -98,6 +98,16 @@ public class Activity {
             }
             this.id = id;
             return this;
+        }
+        
+        public Builder activityType(int activityType) {
+            for (ActivityType type : ActivityType.values()) {
+                if (activityType == type.ordinal()) {
+                    this.activityType = type;
+                    return this;
+                }
+            }
+            throw new IllegalArgumentException("illegal activity type : " + activityType);
         }
 
         public Builder activityType(ActivityType activityType) {
@@ -138,15 +148,31 @@ public class Activity {
             this.targetDiscussionContentId = targetDiscussionContentId;
             return this;
         }
-        
-        public Builder targetPost(int targetPost) {
+
+        public Builder targetPost(Integer targetPost) {
             this.targetPost = targetPost;
             return this;
         }
-        
+
         public Activity build() {
             if (this.id == ILLEGAL_ID) {
                 throw new IllegalStateException("illegal id: " + id);
+            }
+            if (this.userId == ILLEGAL_USER_ID) {
+                throw new IllegalStateException("illegal user id: " + userId);
+            }
+            if (this.activityType == null) {
+                throw new IllegalStateException("activity type is null");
+            }
+            if (this.createdTime == null) {
+                throw new IllegalStateException("created time is null");
+            }
+            return new Activity(this);
+        }
+
+        public Activity buildForInsert() {
+            if (this.id != ILLEGAL_ID) {
+                throw new IllegalStateException("id is specified: " + id);
             }
             if (this.userId == ILLEGAL_USER_ID) {
                 throw new IllegalStateException("illegal user id: " + userId);

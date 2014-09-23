@@ -17,4 +17,5 @@ public interface ActivityService {
     
     public Map<String, List<Map<String, Object>>> createActivities(String name, int n);
     public Map<String, List<Map<String, Object>>> createActivities(String name, User user, int n);
+    public void discussionMadeBy(User user);
 }

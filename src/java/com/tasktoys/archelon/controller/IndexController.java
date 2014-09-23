@@ -138,6 +138,7 @@ public class IndexController {
     public String handleCreateDiscussion(@RequestParam Map<String, String> params,
             Model model, UserSession userSession) {
         if (hasAllParameters(params)) {
+            activityService.discussionMadeBy(userSession.getUser());
             discussionService.insertDiscussion(makeNewDiscussion(params, userSession),
                     makeNewDiscussionContent(params, userSession));
         } else {

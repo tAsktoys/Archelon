@@ -1,11 +1,12 @@
 /*
  *   Copyright(C) 2014 tAsktoys. All rights reserved.
  */
-
 package com.tasktoys.archelon.service.impl;
 
 import com.tasktoys.archelon.data.dao.ActivityDao;
 import com.tasktoys.archelon.data.entity.Activity;
+import com.tasktoys.archelon.data.entity.Activity.ActivityType;
+import com.tasktoys.archelon.data.entity.Activity.Builder;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.DiscussionService;
@@ -33,23 +34,32 @@ public class ActivityServiceImpl implements ActivityService {
     private UserService userService;
     @Autowired
     private DiscussionService discussionService;
-    
+
     private static final String TIME = "time";
     private static final String ACT = "act";
     private static final String STRING = "string";
     private static final String PREFIX = "prefix";
     private static final String SUFFIX = "suffix";
-    
+
     @Override
     public Map<String, List<Map<String, Object>>> createActivities(String name, int n) {
         return Collections.singletonMap(name, toMapList(activityDao.findLatestActivities(n)));
     }
-    
+
     @Override
     public Map<String, List<Map<String, Object>>> createActivities(String name, User user, int n) {
         return Collections.singletonMap(name, toMapList(activityDao.findLatestActivitiesByUserId(user.getId(), n)));
     }
-    
+
+    @Override
+    public void discussionMadeBy(User user) {
+        Builder builder = new Builder();
+        builder.activityType(ActivityType.CREATE_DISCUSSION)
+                .userId(user.getId())
+                .createdTime(new Timestamp(System.currentTimeMillis()));
+        activityDao.insertActivity(builder.buildForInsert());
+    }
+
     private List<Map<String, Object>> toMapList(List<Activity> activityList) {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (Activity activity : activityList) {
@@ -57,7 +67,7 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return mapList;
     }
-    
+
     private Map<String, Object> toMap(Activity activity) {
         Map<String, Object> subModel = createTime(activity.getCreatedTime());
         switch (activity.getActivityType()) {
@@ -69,16 +79,17 @@ public class ActivityServiceImpl implements ActivityService {
                 return subModel;
             case CLOSE_DISCUSSION:
                 subModel.put(ACT, closeDiscussionActivity(activity));
-                return subModel;        }
+                return subModel;
+        }
         throw new IllegalStateException("activity type is illegal :" + activity.getActivityType());
     }
-    
+
     private Map<String, Object> createTime(Timestamp createdTime) {
         Map<String, Object> subModel = new HashMap<>();
         subModel.put(TIME, createdTime.toString());
         return subModel;
     }
-     
+
     private List<Map<String, String>> createDiscussionActivity(Activity activity) {
         List<Map<String, String>> fragments = new ArrayList<>();
         fragments.add(createUserName(activity.getUserId()));
@@ -86,25 +97,25 @@ public class ActivityServiceImpl implements ActivityService {
         fragments.add(createCreateDiscussion());
         return fragments;
     }
-       
+
     private Map<String, String> createUserName(long userId) {
         Map<String, String> subModel = new HashMap<>();
         User user = userService.findUserById(userId);
         subModel.put(PREFIX, "activity.user.name.prefix");
-        subModel.put(STRING, (user == null? "" : user.getName()));
+        subModel.put(STRING, (user == null ? "" : user.getName()));
         subModel.put(SUFFIX, "activity.user.name.suffix");
         return subModel;
     }
-    
+
     private Map<String, String> createDiscussionName(Long discussionId) {
         Map<String, String> subModel = new HashMap<>();
         subModel.put(PREFIX, "activity.discussion.title.prefix");
 //        subModel.put(STRING, discussionService.findDiscussionById(discussionId).getSubject());
-        subModel.put(STRING, ""+discussionId);
+        subModel.put(STRING, "" + discussionId);
         subModel.put(SUFFIX, "activity.discussion.title.suffix");
         return subModel;
     }
-    
+
     private Map<String, String> createCreateDiscussion() {
         Map<String, String> subModel = new HashMap<>();
         subModel.put(PREFIX, "activity.discussion.create.prefix");
@@ -112,7 +123,7 @@ public class ActivityServiceImpl implements ActivityService {
         subModel.put(SUFFIX, "activity.discussion.create.suffix");
         return subModel;
     }
-    
+
     private List<Map<String, String>> solveDiscussionActivity(Activity activity) {
         List<Map<String, String>> fragments = new ArrayList<>();
         fragments.add(createUserName(activity.getUserId()));
@@ -120,7 +131,7 @@ public class ActivityServiceImpl implements ActivityService {
         fragments.add(createSolveDiscussion());
         return fragments;
     }
-    
+
     private Map<String, String> createSolveDiscussion() {
         Map<String, String> subModel = new HashMap<>();
         subModel.put(PREFIX, "activity.discussion.solve.prefix");
@@ -128,7 +139,7 @@ public class ActivityServiceImpl implements ActivityService {
         subModel.put(SUFFIX, "activity.discussion.solve.suffix");
         return subModel;
     }
-    
+
     private List<Map<String, String>> closeDiscussionActivity(Activity activity) {
         List<Map<String, String>> fragments = new ArrayList<>();
         fragments.add(createUserName(activity.getUserId()));
@@ -136,8 +147,8 @@ public class ActivityServiceImpl implements ActivityService {
         fragments.add(createCloseDiscussion());
         return fragments;
     }
-    
-        private Map<String, String> createCloseDiscussion() {
+
+    private Map<String, String> createCloseDiscussion() {
         Map<String, String> subModel = new HashMap<>();
         subModel.put(PREFIX, "activity.discussion.close.prefix");
         subModel.put(STRING, null);

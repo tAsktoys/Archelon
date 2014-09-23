@@ -16,4 +16,5 @@ public interface ActivityDao {
     
     public List<Activity> findLatestActivities(int n);
     public List<Activity> findLatestActivitiesByUserId(long userId, int n);
+    public void insertActivity(Activity activity);
 }
