@@ -72,6 +72,21 @@ public interface DiscussionDao {
     public List<Discussion> findNewestDiscussionListByCategoryList(List<Category> categoryList, int n, int offset);
 
     /**
+     * Find discussion by its id
+     * @param id id of discussion to find
+     * @return found discussion
+     */
+    public Discussion findDiscussionById(long id);
+
+    /**
+     * Find latest discussions which is created by an author
+     * @param authorId author id of discussions to find
+     * @param n number of discussions to return
+     * @return List of discussions found, if not found, return empty list
+     */
+    public List<Discussion> findLatestDiscussionsByAuthorId(long authorId, int n);
+    
+    /**
      *
      * @param discussionId
      * @param updateTime

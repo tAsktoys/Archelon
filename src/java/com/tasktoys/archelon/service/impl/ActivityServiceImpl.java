@@ -4,12 +4,13 @@
 package com.tasktoys.archelon.service.impl;
 
 import com.tasktoys.archelon.data.dao.ActivityDao;
+import com.tasktoys.archelon.data.dao.DiscussionDao;
 import com.tasktoys.archelon.data.entity.Activity;
 import com.tasktoys.archelon.data.entity.Activity.ActivityType;
 import com.tasktoys.archelon.data.entity.Activity.Builder;
+import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.ActivityService;
-import com.tasktoys.archelon.service.DiscussionService;
 import com.tasktoys.archelon.service.UserService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private UserService userService;
     @Autowired
-    private DiscussionService discussionService;
+    private DiscussionDao discussionDao;
 
     private static final String TIME = "time";
     private static final String ACT = "act";
@@ -54,10 +55,16 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void discussionMadeBy(User user) {
         Builder builder = new Builder();
-        builder.activityType(ActivityType.CREATE_DISCUSSION)
-                .userId(user.getId())
-                .createdTime(new Timestamp(System.currentTimeMillis()));
-        activityDao.insertActivity(builder.buildForInsert());
+        long authorId = user.getId();
+        List<Discussion> discussionList = discussionDao.findLatestDiscussionsByAuthorId(authorId, 1);
+        if (0 < discussionList.size()) {
+            Discussion madeDiscussion = discussionList.get(0);
+            builder.activityType(ActivityType.CREATE_DISCUSSION)
+                    .userId(authorId)
+                    .createdTime(madeDiscussion.getCreateTime())
+                    .targetDiscussionId(madeDiscussion.getID());
+            activityDao.insertActivity(builder.buildForInsert());
+        }
     }
 
     private List<Map<String, Object>> toMapList(List<Activity> activityList) {
@@ -102,16 +109,17 @@ public class ActivityServiceImpl implements ActivityService {
         Map<String, String> subModel = new HashMap<>();
         User user = userService.findUserById(userId);
         subModel.put(PREFIX, "activity.user.name.prefix");
-        subModel.put(STRING, (user == null ? "" : user.getName()));
+        subModel.put(STRING, (user == null ? "anonymous" : user.getName()));
         subModel.put(SUFFIX, "activity.user.name.suffix");
         return subModel;
     }
 
     private Map<String, String> createDiscussionName(Long discussionId) {
         Map<String, String> subModel = new HashMap<>();
+        Discussion discussion = discussionDao.findDiscussionById(discussionId);
+        String subject = (discussion == null ? "deleted" : discussion.getSubject());
         subModel.put(PREFIX, "activity.discussion.title.prefix");
-//        subModel.put(STRING, discussionService.findDiscussionById(discussionId).getSubject());
-        subModel.put(STRING, "" + discussionId);
+        subModel.put(STRING, subject);
         subModel.put(SUFFIX, "activity.discussion.title.suffix");
         return subModel;
     }

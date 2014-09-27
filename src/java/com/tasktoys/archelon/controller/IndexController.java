@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,7 +77,7 @@ public class IndexController {
     private static final String PAGE_NUMBER_LIST = "pageNumberList";
     private static final String MAIN_ID = "mainId";
     private static final String SUB_ID = "subId";
-    
+
     private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final String PREVIOUS_PAGE_NUMBER = "previousPageNumber";
     private static final String CURRENT_PAGE_NUMBER = "currentPageNumber";
@@ -138,9 +139,13 @@ public class IndexController {
     public String handleCreateDiscussion(@RequestParam Map<String, String> params,
             Model model, UserSession userSession) {
         if (hasAllParameters(params)) {
-            activityService.discussionMadeBy(userSession.getUser());
-            discussionService.insertDiscussion(makeNewDiscussion(params, userSession),
-                    makeNewDiscussionContent(params, userSession));
+            try {
+                discussionService.insertDiscussion(makeNewDiscussion(params, userSession),
+                        makeNewDiscussionContent(params, userSession));
+                activityService.discussionMadeBy(userSession.getUser());
+            } catch (DuplicateKeyException e) {
+                activityService.discussionMadeBy(userSession.getUser());
+            }
         } else {
             makeCategorySelect(model,
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
@@ -149,7 +154,7 @@ public class IndexController {
         model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
         return VIEW;
     }
-    
+
     private int calculateOffset(int currentPageNumber) {
         return (currentPageNumber - 1) * DISCUSSION_LIST_SIZE;
     }
@@ -224,7 +229,7 @@ public class IndexController {
             return false;
         }
     }
-    
+
     private Map<String, List<Map<String, String>>> createCategorySelects(int mainId) {
         Map<String, List<Map<String, String>>> subModel = new HashMap<>();
         subModel.putAll(createMainCategories());
@@ -331,7 +336,7 @@ public class IndexController {
     }
 
     private List<Map<String, String>> toMapList(List<Category> categories) {
-         List<Map<String, String>> list = new ArrayList<>();
+        List<Map<String, String>> list = new ArrayList<>();
         for (Category category : categories) {
             Map<String, String> map = new HashMap<>(2);
             map.put("id", Integer.toString(category.getId()));

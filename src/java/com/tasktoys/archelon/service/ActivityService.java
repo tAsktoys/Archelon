@@ -4,6 +4,7 @@
 
 package com.tasktoys.archelon.service;
 
+import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.User;
 import java.util.List;
 import java.util.Map;
