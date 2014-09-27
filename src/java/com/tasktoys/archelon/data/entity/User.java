@@ -24,6 +24,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 public final class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    public static final long ILLEGAL_ID = -1;
 
     /**
      * Archelon-unique user id.

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class Activity {
 
     public static final long ILLEGAL_ID = -1;
-    public static final long ILLEGAL_USER_ID = -1;
+    public static final long ILLEGAL_USER_ID = User.ILLEGAL_ID;
 
     private final long id;
     private final ActivityType activityType;
@@ -73,7 +73,7 @@ public class Activity {
         return targetDiscussionContentId;
     }
 
-    public int getTargetPost() {
+    public Integer getTargetPost() {
         return targetPost;
     }
 
@@ -93,13 +93,13 @@ public class Activity {
         }
 
         public Builder id(long id) {
-            if (id == ILLEGAL_ID) {
+            if (id <= ILLEGAL_ID) {
                 throw new IllegalArgumentException("illegal id: " + id);
             }
             this.id = id;
             return this;
         }
-        
+
         public Builder activityType(int activityType) {
             for (ActivityType type : ActivityType.values()) {
                 if (activityType == type.ordinal()) {
@@ -119,7 +119,7 @@ public class Activity {
         }
 
         public Builder userId(long userId) {
-            if (userId == ILLEGAL_USER_ID) {
+            if (userId <= ILLEGAL_USER_ID) {
                 throw new IllegalArgumentException("illegal usre id: " + userId);
             }
             this.userId = userId;
@@ -145,6 +145,10 @@ public class Activity {
         }
 
         public Builder targetDiscussionConcentId(String targetDiscussionContentId) {
+            if (targetDiscussionContentId != null && targetDiscussionContentId.length() != 24) {
+                throw new IllegalArgumentException("target discussion content id is wrong: "
+                        + targetDiscussionContentId);
+            }
             this.targetDiscussionContentId = targetDiscussionContentId;
             return this;
         }
@@ -155,10 +159,10 @@ public class Activity {
         }
 
         public Activity build() {
-            if (this.id == ILLEGAL_ID) {
+            if (this.id <= ILLEGAL_ID) {
                 throw new IllegalStateException("illegal id: " + id);
             }
-            if (this.userId == ILLEGAL_USER_ID) {
+            if (this.userId <= ILLEGAL_USER_ID) {
                 throw new IllegalStateException("illegal user id: " + userId);
             }
             if (this.activityType == null) {
@@ -174,7 +178,7 @@ public class Activity {
             if (this.id != ILLEGAL_ID) {
                 throw new IllegalStateException("id is specified: " + id);
             }
-            if (this.userId == ILLEGAL_USER_ID) {
+            if (this.userId <= ILLEGAL_USER_ID) {
                 throw new IllegalStateException("illegal user id: " + userId);
             }
             if (this.activityType == null) {
