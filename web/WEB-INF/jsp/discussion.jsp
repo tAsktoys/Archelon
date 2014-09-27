@@ -31,7 +31,12 @@
                         <li class="${item.type}">
                             <img src="${item.icon}" alt="" width="50" heigth="50" class="${item.type}">
                             <div class="${item.type}">
-                                <p><a href="${item.userpage}">${item.username}</a></p>
+                                <c:if test="${item.username == null}">
+                                    <p><spring:message code="user.default.name" /></p>
+                                </c:if>
+                                <c:if test="${item.username != null}">
+                                <p><a href="${item.userpage}">${item.username}</a></p>                                    
+                                </c:if>
                                 <p>${item.message} ${item.postTimeStamp} </p> 
                             </div>
                         </li>

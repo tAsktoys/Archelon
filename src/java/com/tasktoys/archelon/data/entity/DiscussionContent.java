@@ -30,7 +30,7 @@ public class DiscussionContent {
 
     @Field
     private List<Post> posts;
-    
+
     @Field
     private List<Long> participants;
 
@@ -70,22 +70,22 @@ public class DiscussionContent {
     public List<Post> getPosts() {
         return this.posts;
     }
-    
+
     public void addParticipants(long userId) {
         if (participants == null) {
             participants = new ArrayList<>();
         }
         participants.add(userId);
     }
-    
+
     public List<Long> getParticipateMember() {
         return participants;
     }
-    
+
     public boolean isParticipate(long userId) {
         return participants.contains(userId);
     }
-    
+
     public int getParticipants() {
         return participants.size();
     }
@@ -99,7 +99,7 @@ public class DiscussionContent {
 
     public static class Post {
 
-        private long authorId;
+        private Long authorId;
         private Date postTimeStamp;
         private String description;
         private String math;
@@ -111,7 +111,7 @@ public class DiscussionContent {
             this.postTimeStamp = cal.getTime();
         }
 
-        public long getAuthorId() {
+        public Long getAuthorId() {
             return authorId;
         }
 
@@ -154,13 +154,16 @@ public class DiscussionContent {
         public Date getPostTimeStamp() {
             return postTimeStamp;
         }
-        
-        public boolean isNotEquals(Post post) {
-            return this.authorId != post.getAuthorId()
-                    || (description == null ? post.getDescription() != null : !description.equals(post.getDescription()))
-                    || (math == null ? post.getMath() != null : !math.equals(post.getMath()))
-                    || (fig == null ? post.getFig() != null : !fig.equals(post.getFig()))
-                    || (svg == null ? post.getSvg() != null : !svg.equals(post.getSvg()));
+
+        public boolean equals(Post post) {
+            if (post == null) {
+                return false;
+            }
+            return (authorId == null ? post.getAuthorId() == null : authorId.equals(post.getAuthorId()))
+                    && (description == null ? post.getDescription() == null : description.equals(post.getDescription()))
+                    && (math == null ? post.getMath() == null : math.equals(post.getMath()))
+                    && (fig == null ? post.getFig() == null : fig.equals(post.getFig()))
+                    && (svg == null ? post.getSvg() == null : svg.equals(post.getSvg()));
         }
     }
 }

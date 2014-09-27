@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequestMapping(value = "/discussion")
 @SessionAttributes(UserSession.SESSION_NAME)
 public class DiscussionController {
-    
+
     @Autowired
     private Properties properties;
     @Autowired
@@ -46,7 +46,7 @@ public class DiscussionController {
     private DiscussionService discussionService;
     @Autowired
     private DiscussionContentService discussionContentService;
-    
+
     protected static final String VIEW = "discussion";
 
     private static final String ID = "id";
@@ -72,16 +72,22 @@ public class DiscussionController {
     public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model,
             Locale locale, UserSession userSession) {
         dateFormat = createDateFormat(locale);
-        Post post = makePost(params, userSession.getUser());
+        Post post;
+        User author = userSession.getUser();
+        if (author == null) {
+            post = makeAnonymosPost(params);
+        } else {
+            post = makePost(params, author);
+        }
         Post lastPost = discussionContentService.getLastPost(id);
-        if (post.isNotEquals(lastPost)) {
+        if (!post.equals(lastPost)) {
             discussionContentService.insertPost(id, post);
             updateDiscussionProperties(id, userSession);
         }
         updatePage(model, id);
         return VIEW;
     }
-    
+
     private void updatePage(Model model, long discussionId) {
         DiscussionContent content = discussionContentService.getDiscussionContent(discussionId);
         updateDiscussionLog(model, content);
@@ -97,36 +103,49 @@ public class DiscussionController {
         model.addAttribute(DISCUSSION_LOG, list);
     }
 
-    private Map<String, String> putPost(DiscussionContent.Post post) {
+    private Map<String, String> putPost(Post post) {
         HashMap<String, String> map = new HashMap<>();
         map.put(TYPE, "others");
         map.put(ICON, "hoge");
-        String userName = userService.findUserById(post.getAuthorId()).getName();
-        map.put(USERPAGE, properties.getProperty("contextpath") + "user/" + userName);
-        map.put(USERNAME, userName);
+        Long authorId = post.getAuthorId();
+        if (authorId != null) {
+            String userName = userService.findUserById(post.getAuthorId()).getName();
+            map.put(USERPAGE, properties.getProperty("contextpath") + "user/" + userName);
+            map.put(USERNAME, userName);
+        }
         map.put(MESSAGE, post.getDescription());
-        if (dateFormat == null)
+        if (dateFormat == null) {
             dateFormat = createDateFormat(null);
+        }
         map.put(POSTTIMESTAMP, dateFormat.format(post.getPostTimeStamp()));
         return map;
     }
-    
+
     private Post makePost(Map<String, String> params, User user) {
         Post post = new Post();
         post.setAuthorId(user.getId());
         post.setDescription(params.get(POSTEDMESSAGE));
         return post;
     }
-    
+
+    private Post makeAnonymosPost(Map<String, String> params) {
+        Post post = new Post();
+        post.setDescription(params.get(POSTEDMESSAGE));
+        return post;
+    }
+
     private void updateDiscussionProperties(long discussionId, UserSession userSession) {
         discussionService.incrementPosts(discussionId);
         discussionService.updateUpdateTime(discussionId);
-        
+
         List<Long> participateMember = discussionContentService.getDiscussionContent(discussionId).getParticipateMember();
-        long userId = userSession.getUser().getId();
-        if (!participateMember.contains(userId)) {
-            discussionContentService.insertParticipants(discussionId, userId);
-            discussionService.incrementParticipants(discussionId);
+        User author = userSession.getUser();
+        if (author != null) {
+            long userId = author.getId();
+            if (!participateMember.contains(userId)) {
+                discussionContentService.insertParticipants(discussionId, userId);
+                discussionService.incrementParticipants(discussionId);
+            }
         }
     }
 
