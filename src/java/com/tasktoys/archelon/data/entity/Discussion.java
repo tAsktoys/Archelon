@@ -12,8 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  *
  * @author YuichiroSato
+ * @since 0.1
  */
 public class Discussion {
+
+    public static final long ILLEGAL_ID = -1;
+    public static final long ILLEGAL_AUTHOR_ID = User.ILLEGAL_ID;
+    public static final int ILLEGAL_CATEGORY = Category.ILLEGAL_ID;
+    public static final int ILLEGAL_PARTICIPANTS = -1;
+    public static final int ILLEGAL_POSTS = -1;
 
     private final long id;
     private final long authorID;
@@ -24,7 +31,7 @@ public class Discussion {
     private final String subject;
     private final int participants;
     private final int posts;
-    
+
     @Autowired
     private DiscussionContentDao discussionContentDao;
 
@@ -110,7 +117,7 @@ public class Discussion {
     public int getPosts() {
         return this.posts;
     }
-    
+
     public DiscussionContent getContent() {
         return discussionContentDao.findByDiscussionId(id);
     }
@@ -118,7 +125,7 @@ public class Discussion {
     @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public Object[] toObject() {
         return new Object[]{
-            (id == Builder.ILLEGAL_ID ? null : id), (authorID == Builder.ILLEGAL_ID ? null : authorID),
+            (id == Discussion.ILLEGAL_ID ? null : id), (authorID == Discussion.ILLEGAL_AUTHOR_ID ? null : authorID),
             categoryID, state.ordinal(), createTime, updateTime,
             subject, participants, posts
         };
@@ -147,11 +154,6 @@ public class Discussion {
     }
 
     public static class Builder {
-
-        public static final long ILLEGAL_ID = -1;
-        public static final int ILLEGAL_CATEGORY = -1;
-        public static final int ILLEGAL_PARTICIPANTS = -1;
-        public static final int ILLEGAL_POSTS = -1;
 
         public static final int DEFAULT_PARTICIPANTS = 1;
         public static final int DEFAULT_POSTS = 0;
@@ -285,7 +287,7 @@ public class Discussion {
             if (categoryID == ILLEGAL_CATEGORY) {
                 throw new IllegalStateException("category id is not specified.");
             }
-            
+
             this.state(State.ACTIVE);
             long unixtime = System.currentTimeMillis();
             this.createTime(new Timestamp(unixtime));

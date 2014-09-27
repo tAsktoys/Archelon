@@ -5,6 +5,7 @@ package com.tasktoys.archelon.data.dao.jdbc;
 
 import com.tasktoys.archelon.data.dao.CategoryDao;
 import com.tasktoys.archelon.data.entity.Category;
+import com.tasktoys.archelon.data.entity.Category.Builder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class JdbcCategoryDao implements CategoryDao {
         for (Map<String, Object> map : response) {
             Integer id = (Integer)map.get(Column.ID.toString());
             String name = (String)map.get(Column.NAME.toString());
-            list.add(Category.builder.build(id, name));
+            list.add(new Builder().build(id, name));
         }
         return list;
     }
@@ -91,7 +92,7 @@ public class JdbcCategoryDao implements CategoryDao {
         public Category mapRow(ResultSet result, int row) throws SQLException {
             int id = result.getInt(Column.ID.toString());
             String name = result.getString(Column.NAME.toString());
-            return Category.builder.build(id, name);
+            return new Builder().build(id, name);
         }
     }
 }
