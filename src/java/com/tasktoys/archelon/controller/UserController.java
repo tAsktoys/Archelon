@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.User;
+import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ActivityService activityService;
 
     private final String ID = "id";
     private final String NAME = "name";
@@ -56,12 +59,13 @@ public class UserController {
     
     private final String LABEL = "label";
     private final String VALUE = "value";
+    
+    private static final int ACTIVITY_SIZE = 10;
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleEmptyRequest(Model model) {
         model.addAttribute(NAME, "Guest");
         updateUserInformation(model, null);
-        updateUserActivity(model);
         return VIEW;
     }
 
@@ -75,7 +79,7 @@ public class UserController {
         }
         model.addAttribute(NAME, name);
         updateUserInformation(model, user);
-        updateUserActivity(model);
+        updateUserActivity(model, user);
         return VIEW;
     }
 
@@ -102,12 +106,8 @@ public class UserController {
         return map;
     }
 
-    private void updateUserActivity(Model model) {
-        List<String> list = new ArrayList<>();
-        list.add("\"hoge!hoge!hoge!\"");
-        list.add("\"Hooaaaaaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa  aaaa aaaaaaa aaaaaaaaa !!!!!!!!!! !!!!!!!!!!!! !!!!!!!! !!!!!!!!!!!! !!!! !!!!!!!!!!!!!1\"");
-        list.add("Discussion title \"Foo\" is made");
-        model.addAttribute(user_activity, list);
+    private void updateUserActivity(Model model, User user) {
+        model.addAllAttributes(activityService.createActivities(user_activity, user, ACTIVITY_SIZE));
     }
 
     private int calcAge(Date birthdate) {
