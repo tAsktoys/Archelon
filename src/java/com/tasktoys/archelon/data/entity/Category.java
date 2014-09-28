@@ -43,11 +43,7 @@ public final class Category implements Serializable {
 
     public static class Builder {
 
-        public Builder() {
-
-        }
-
-        public Category build(Integer id, String name) {
+        public static Category build(Integer id, String name) {
             if (id == null) {
                 throw new IllegalArgumentException("category id is null.");
             } else if (name == null) {

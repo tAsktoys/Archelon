@@ -62,7 +62,7 @@ public class RegisterController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleGet(Model model, UserSession userSession, RedirectAttributes redirect) {
-        if (0 <= userSession.getUser().getId()) {
+        if (userSession.getUser() != null) {
             redirect.addFlashAttribute(ErrorController.ATTR_MESSAGE, "error.auth.alreadyloggedin");
             return ErrorController.REDIRECT;
         }

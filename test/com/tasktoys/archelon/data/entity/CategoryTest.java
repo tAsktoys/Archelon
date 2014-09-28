@@ -16,18 +16,18 @@ public class CategoryTest {
 
     @Test
     public void testBuild() {
-        Category category = new Builder().build(1, "math");
+        Category category = Builder.build(1, "math");
         assertEquals(1, category.getId());
         assertEquals("math", category.getName());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalCategoryId() {
-        new Builder().build(null, "math");
+        Builder.build(null, "math");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalName() {
-        new Builder().build(1, null);
+        Builder.build(1, null);
     }
 }
