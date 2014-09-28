@@ -457,19 +457,7 @@ public final class User implements Serializable {
         }
 
         public Builder htmlDateFormatBirthdate(String birthdate) {
-            int year, month, day;
-            try {
-                String[] yyyy_mm_dd = birthdate.split("-");
-                year = Integer.parseInt(yyyy_mm_dd[0]);
-                month = Integer.parseInt(yyyy_mm_dd[1]) - 1;
-                day = Integer.parseInt(yyyy_mm_dd[2]);
-            } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("birthdate format is wrong: " + birthdate);
-            }
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, day, 0, 0, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            Date date = calendar.getTime();
+            Date date = parseHtmlDate(birthdate);
             if (isFuture(date)) {
                 throw new IllegalArgumentException("birthdate is future: " + date);
             }
@@ -670,7 +658,7 @@ public final class User implements Serializable {
          * otherwise
          * @see InternetAddress#validate()
          */
-        public boolean isValidEmailAddress(String email) {
+        public static boolean isValidEmailAddress(String email) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);
                 emailAddr.validate();
@@ -679,8 +667,40 @@ public final class User implements Serializable {
                 return false;
             }
         }
+        
+        public static boolean isHtmlDateFormat(String date) {
+            try {
+                String[] yyyy_mm_dd = date.split("-");
+                Integer.parseInt(yyyy_mm_dd[0]);
+                Integer.parseInt(yyyy_mm_dd[1]);
+                Integer.parseInt(yyyy_mm_dd[2]);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                return false;
+            }
+            return true;
+        }
+        
+        private static Date parseHtmlDate(String date) {
+            int year, month, day;
+            try {
+                String[] yyyy_mm_dd = date.split("-");
+                year = Integer.parseInt(yyyy_mm_dd[0]);
+                month = Integer.parseInt(yyyy_mm_dd[1]) - 1;
+                day = Integer.parseInt(yyyy_mm_dd[2]);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("birthdate format is wrong: " + date);
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day, 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+        
+        public static boolean isFuture(String date) {
+            return isFuture(parseHtmlDate(date));
+        }
 
-        public boolean isFuture(Date date) {
+        public static boolean isFuture(Date date) {
             return date.compareTo(Calendar.getInstance().getTime()) > 0;
         }
     }
