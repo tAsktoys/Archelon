@@ -28,9 +28,11 @@
                 <ul id="user_information_list">
                     <c:forEach var="info" items="${overview}">
                         <c:if test="${info.value != null}">
-                            <li class="user_information_item"><spring:message code="${info.label}" />${info.value}</li>
-                            </c:if>
-                        </c:forEach>
+                            <li class="user_information_item">
+                                <spring:message code="${info.label}" />${info.value}
+                            </li>
+                        </c:if>
+                    </c:forEach>
                 </ul>
                 <c:if test="${userSession.getName() == name}">
                     <a href="<spring:eval expression="@properties.getProperty('contextpath')" />usersetting/${name}"><spring:message code="user.update" /></a>

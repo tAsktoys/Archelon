@@ -196,7 +196,7 @@ public class UsersettingController {
 
         User current = builder.build();
         userService.updateUser(current);
-        userSession.setUser(current);
+        userSession.setUser(userService.findUserById(userSession.getUser().getId()));
         setUserValueToForm(model, userSession.getUser());
         return UserController.REDIRECT + "/" + current.getName();
     }
@@ -236,7 +236,7 @@ public class UsersettingController {
                 .build();
 
         userService.updateUser(current);
-        userSession.setUser(current);
+        userSession.setUser(userService.findUserById(userSession.getUser().getId()));
         setUserValueToForm(model, userSession.getUser());
         return UserController.REDIRECT + "/" + current.getName();
     }
