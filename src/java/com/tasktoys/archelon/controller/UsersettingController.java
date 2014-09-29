@@ -130,7 +130,6 @@ public class UsersettingController {
         Map<String, String> map = user.toSecureMap();
         for (String key : map.keySet()) {
             model.addAttribute(CULLENT_VALUE_PREFIX + key, map.get(key));
-            log.log(Level.INFO, map.get(key));
         }
     }
 
