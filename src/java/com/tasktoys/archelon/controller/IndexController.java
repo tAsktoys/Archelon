@@ -3,14 +3,12 @@
  */
 package com.tasktoys.archelon.controller;
 
-import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,19 +86,19 @@ public class IndexController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleRequest(Model model) {
-        model.addAllAttributes(createMainCategories());
+        model.addAllAttributes(createMainCategorySelect());
         model.addAllAttributes(createDiscussions());
         model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(createActivityList());
         return VIEW;
     }
 
     @RequestMapping(value = "page/{pageNumber}", method = RequestMethod.GET)
     public String handleNewPageRequest(@PathVariable int pageNumber, Model model) {
-        model.addAllAttributes(createMainCategories());
-        model.addAllAttributes(createDiscussions(calculateOffset(pageNumber)));
+        model.addAllAttributes(createMainCategorySelect());
+        model.addAllAttributes(createDiscussions(pageNumber));
         model.addAllAttributes(createDiscussionLink(pageNumber));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(createActivityList());
         return VIEW;
     }
 
@@ -109,9 +107,9 @@ public class IndexController {
             @PathVariable int mainId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
         model.addAllAttributes(createDiscussionsByMainCategory(
-                mainId, calculateOffset(pageNumber)));
+                mainId, pageNumber));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(createActivityList());
         return VIEW;
     }
 
@@ -120,18 +118,18 @@ public class IndexController {
             @PathVariable int mainId, @PathVariable int subId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
         model.addAllAttributes(createDiscussionsBySubCategory(
-                subId, calculateOffset(pageNumber)));
+                subId, pageNumber));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(createActivityList());
         return VIEW;
     }
 
     @RequestMapping(value = CATEGORY_SELECTION, method = RequestMethod.POST)
     public String handleCategorySelect(@RequestParam Map<String, String> params, Model model) {
-        makeCategorySelect(model,
-                params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
-                params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        String mainId = params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString());
+        String subId = params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString());
+        makeCategorySelect(model, mainId, subId);
+        model.addAllAttributes(createActivityList());
         return VIEW;
     }
 
@@ -151,12 +149,8 @@ public class IndexController {
                     params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
                     params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
         }
-        model.addAllAttributes(activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE));
+        model.addAllAttributes(createActivityList());
         return VIEW;
-    }
-
-    private int calculateOffset(int currentPageNumber) {
-        return (currentPageNumber - 1) * DISCUSSION_LIST_SIZE;
     }
 
     private boolean hasAllParameters(Map<String, String> params) {
@@ -214,7 +208,7 @@ public class IndexController {
             model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER, mainId));
             model.addAttribute(MAIN_ID, mainId);
         } else {
-            model.addAllAttributes(createMainCategories());
+            model.addAllAttributes(createMainCategorySelect());
             model.addAllAttributes(createDiscussions());
             model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER));
         }
@@ -230,62 +224,45 @@ public class IndexController {
         }
     }
 
+    private Map<String, List<Map<String, String>>> createMainCategorySelect() {
+        return categoryService.createMainCategories(MAIN_CATEGORY_LIST);
+    }
+
     private Map<String, List<Map<String, String>>> createCategorySelects(int mainId) {
         Map<String, List<Map<String, String>>> subModel = new HashMap<>();
-        subModel.putAll(createMainCategories());
-        subModel.putAll(createSubCategories(mainId));
+        subModel.putAll(createMainCategorySelect());
+        subModel.putAll(categoryService.createSubCategories(SUB_CATEGORY_LIST, mainId));
         return subModel;
     }
 
-    private Map<String, List<Map<String, String>>> createMainCategories() {
-        return Collections.singletonMap(MAIN_CATEGORY_LIST,
-                toMapList(categoryService.getMainCategoryList()));
-    }
-
-    private Map<String, List<Map<String, String>>> createSubCategories(int selectedMainId) {
-        return Collections.singletonMap(SUB_CATEGORY_LIST,
-                toMapList(categoryService.getSubCategoryList(selectedMainId)));
-    }
-
     private Map<String, List<Map<String, String>>> createDiscussions() {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionList(DISCUSSION_LIST_SIZE)));
+        return discussionService.createLatestDiscussionList(
+                DISCUSSION_LIST, DISCUSSION_LIST_SIZE);
     }
 
-    private Map<String, List<Map<String, String>>> createDiscussions(int offset) {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListWithOffset(
-                                DISCUSSION_LIST_SIZE, offset)));
+    private Map<String, List<Map<String, String>>> createDiscussions(int pageNumber) {
+        return discussionService.createDiscussionList(
+                DISCUSSION_LIST, pageNumber, DISCUSSION_LIST_SIZE);
     }
 
     private Map<String, List<Map<String, String>>> createDiscussionsByMainCategory(int mainId) {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListByMainCategory(
-                                DISCUSSION_LIST_SIZE, mainId)));
+        return discussionService.createLatestDiscussionListByMainCategory(
+                DISCUSSION_LIST, DISCUSSION_LIST_SIZE, mainId);
     }
 
-    private Map<String, List<Map<String, String>>> createDiscussionsByMainCategory(int mainId, int offset) {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListByMainCategoryWithOffset(
-                                DISCUSSION_LIST_SIZE, mainId, offset)));
+    private Map<String, List<Map<String, String>>> createDiscussionsByMainCategory(int mainId, int pageNumber) {
+        return discussionService.createDiscussionListByMainCategory(
+                DISCUSSION_LIST, pageNumber, DISCUSSION_LIST_SIZE, mainId);
     }
 
     private Map<String, List<Map<String, String>>> createDiscussionsBySubCategory(int subId) {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListBySubCategory(
-                                DISCUSSION_LIST_SIZE, subId)));
+        return discussionService.createLatestDiscussionListByMainCategory(
+                DISCUSSION_LIST, DISCUSSION_LIST_SIZE, subId);
     }
 
-    private Map<String, List<Map<String, String>>> createDiscussionsBySubCategory(int subId, int offset) {
-        return Collections.singletonMap(DISCUSSION_LIST,
-                discussionService.replaceAuthorIDToAuthorName(
-                        discussionService.getNewestDiscussionListBySubCategoryWithOffset(
-                                DISCUSSION_LIST_SIZE, subId, offset)));
+    private Map<String, List<Map<String, String>>> createDiscussionsBySubCategory(int subId, int pageNumber) {
+        return discussionService.createDiscussionListBySubCategory(
+                DISCUSSION_LIST, pageNumber, DISCUSSION_LIST_SIZE, subId);
     }
 
     private Map<String, Object> createDiscussionLink(int currentPageNumber) {
@@ -335,14 +312,7 @@ public class IndexController {
         return subModel;
     }
 
-    private List<Map<String, String>> toMapList(List<Category> categories) {
-        List<Map<String, String>> list = new ArrayList<>();
-        for (Category category : categories) {
-            Map<String, String> map = new HashMap<>(2);
-            map.put("id", Integer.toString(category.getId()));
-            map.put("name", category.getName());
-            list.add(map);
-        }
-        return list;
+    private Map<String, List<Map<String, Object>>> createActivityList() {
+        return activityService.createActivities(ACTIVITY_LIST, ACTIVITY_LIST_SIZE);
     }
 }

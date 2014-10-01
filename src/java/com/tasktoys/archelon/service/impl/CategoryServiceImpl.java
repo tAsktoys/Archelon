@@ -6,7 +6,11 @@ package com.tasktoys.archelon.service.impl;
 import com.tasktoys.archelon.data.dao.CategoryDao;
 import com.tasktoys.archelon.data.entity.Category;
 import com.tasktoys.archelon.service.CategoryService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +25,31 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryDao categoryDao;
     
     @Override
-    public List<Category> getMainCategoryList() {
+    public Map<String, List<Map<String, String>>> createMainCategories(String name) {
+        return Collections.singletonMap(name, toMapList(getMainCategoryList()));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createSubCategories(String name, int mainId) {
+        return Collections.singletonMap(name, toMapList(getSubCategoryList(mainId)));
+    }
+
+    private List<Category> getMainCategoryList() {
         return categoryDao.findMainCategories();
     }
     
-    @Override
-    public List<Category> getSubCategoryList(int selected_id) {
+    private List<Category> getSubCategoryList(int selected_id) {
         return categoryDao.findSubCategories(selected_id);
+    }
+    
+    private List<Map<String, String>> toMapList(List<Category> categories) {
+        List<Map<String, String>> list = new ArrayList<>();
+        for (Category category : categories) {
+            Map<String, String> map = new HashMap<>(2);
+            map.put("id", Integer.toString(category.getId()));
+            map.put("name", category.getName());
+            list.add(map);
+        }
+        return list;
     }
 }

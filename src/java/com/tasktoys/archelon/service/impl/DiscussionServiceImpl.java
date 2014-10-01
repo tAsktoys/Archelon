@@ -12,6 +12,7 @@ import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.service.DiscussionService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -51,33 +52,27 @@ public class DiscussionServiceImpl implements DiscussionService {
         return discussionDao.countDiscussionsByCategoryId(subId);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionList(int n) {
+    private List<Discussion> getNewestDiscussionList(int n) {
         return discussionDao.findNewestDiscussionList(n);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
+    private List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
         return discussionDao.findNewestDiscussionListWithOffset(n, offset);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
+    private List<Discussion> getNewestDiscussionListByMainCategory(int n, int mainId) {
         return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, 0);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset) {
+    private List<Discussion> getNewestDiscussionListByMainCategoryWithOffset(int n, int mainId, int offset) {
         return discussionDao.findNewestDiscussionListByCategoryList(categoryDao.findSubCategories(mainId), n, offset);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
+    private List<Discussion> getNewestDiscussionListBySubCategory(int n, int categoryId) {
         return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, 0);
     }
 
-    @Override
-    public List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
+    private List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
         return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, offset);
     }
     
@@ -118,5 +113,50 @@ public class DiscussionServiceImpl implements DiscussionService {
             mls.add(d.replaceAuthorIDToAuthorName(author_name));
         }
         return mls;
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createLatestDiscussionList(String name, int n) {
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(discussionDao.findNewestDiscussionList(n)));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createLatestDiscussionListByMainCategory(String name, int n, int mainId) {
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(
+                        getNewestDiscussionListByMainCategory(n, mainId)));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createLatestDiscussionListBySubCategory(String name, int n, int subId) {
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(
+                        getNewestDiscussionListBySubCategory(n, subId)));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createDiscussionList(String name, int pageNumber, int pageSize) {
+        int offset = calculateOffset(pageNumber, pageSize);
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(getNewestDiscussionListWithOffset(pageSize, offset)));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createDiscussionListByMainCategory(String name, int pageNumber, int pageSize, int mainId) {
+        int offset = calculateOffset(pageNumber, pageSize);
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(getNewestDiscussionListByMainCategoryWithOffset(pageSize, mainId, offset)));
+    }
+
+    @Override
+    public Map<String, List<Map<String, String>>> createDiscussionListBySubCategory(String name, int pageNumber, int pageSize, int subId) {
+        int offset = calculateOffset(pageNumber, pageSize);
+        return Collections.singletonMap(name,
+                replaceAuthorIDToAuthorName(getNewestDiscussionListBySubCategoryWithOffset(pageSize, subId, offset)));
+    }
+    
+    private int calculateOffset(int pageNumber, int pageSize) {
+        return pageSize * (pageNumber - 1);
     }
 }
