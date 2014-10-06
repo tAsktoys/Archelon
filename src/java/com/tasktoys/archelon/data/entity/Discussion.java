@@ -29,7 +29,7 @@ public class Discussion implements Serializable {
     public static final int ILLEGAL_POSTS = -1;
 
     public static final int DEFAULT_PARTICIPANTS = 1;
-    public static final int DEFAULT_POSTS = 0;
+    public static final int DEFAULT_POSTS = 1;
 
     private final long id;
     private final long authorId;

@@ -5,6 +5,7 @@ package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.Discussion;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
+import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
@@ -61,7 +62,7 @@ public class IndexController {
 
     private enum CreateDiscussionParam {
 
-        SUBJECT, MAIN_CATEGORY_ID, SUB_CATEGORY_ID, DESCRIPTION;
+        SUBJECT, CATEGORY_ID, DESCRIPTION;
 
         @Override
         public String toString() {
@@ -106,8 +107,7 @@ public class IndexController {
     public String handleNewPageRequestWithMainId(@PathVariable int pageNumber,
             @PathVariable int mainId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
-        model.addAllAttributes(createDiscussionsByMainCategory(
-                mainId, pageNumber));
+        model.addAllAttributes(createDiscussionsByMainCategory(mainId, pageNumber));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
         model.addAllAttributes(createActivityList());
         return VIEW;
@@ -117,8 +117,7 @@ public class IndexController {
     public String handleNewPageRequestWithSubId(@PathVariable int pageNumber,
             @PathVariable int mainId, @PathVariable int subId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
-        model.addAllAttributes(createDiscussionsBySubCategory(
-                subId, pageNumber));
+        model.addAllAttributes(createDiscussionsBySubCategory(subId, pageNumber));
         model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
         model.addAllAttributes(createActivityList());
         return VIEW;
@@ -137,18 +136,14 @@ public class IndexController {
     public String handleCreateDiscussion(@RequestParam Map<String, String> params,
             Model model, UserSession userSession) {
         if (hasAllParameters(params)) {
-            try {
-                discussionService.insertDiscussion(makeNewDiscussion(params, userSession),
-                        makeNewDiscussionContent(params, userSession));
-                activityService.discussionMadeBy(userSession.getUser());
-            } catch (DuplicateKeyException e) {
-                activityService.discussionMadeBy(userSession.getUser());
-            }
-        } else {
-            makeCategorySelect(model,
-                    params.get(CategorySelectionParam.MAIN_CATEGORY_ID.toString()),
-                    params.get(CategorySelectionParam.SUB_CATEGORY_ID.toString()));
+            String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
+            User author = userSession.getUser();
+            int category = Integer.parseInt(params.get(CreateDiscussionParam.CATEGORY_ID.toString()));
+            String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
+            
+            discussionService.saveNewDiscussion(subject, author, category, description);
         }
+        model.addAllAttributes(createDiscussions());
         model.addAllAttributes(createActivityList());
         return VIEW;
     }
@@ -156,7 +151,7 @@ public class IndexController {
     private boolean hasAllParameters(Map<String, String> params) {
         for (String key : params.keySet()) {
             // the smallest category is used for category_id.
-            if (key.equals(CreateDiscussionParam.SUB_CATEGORY_ID.toString())
+            if (key.equals(CreateDiscussionParam.CATEGORY_ID.toString())
                     && !isChoosenSelection(params.get(key))) {
                 return false;
             }
@@ -165,28 +160,6 @@ public class IndexController {
             }
         }
         return true;
-    }
-
-    private Discussion makeNewDiscussion(Map<String, String> params, UserSession userSession) {
-        String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
-        String category = params.get(CreateDiscussionParam.SUB_CATEGORY_ID.toString());
-
-        Discussion.Builder builder = new Discussion.Builder();
-        builder.subject(subject);
-        builder.categoryID(Integer.parseInt(category));
-        builder.authorID(userSession.getUser().getId());
-        return builder.buildForInsert();
-    }
-
-    private DiscussionContent makeNewDiscussionContent(Map<String, String> params, UserSession userSession) {
-        String subject = params.get(CreateDiscussionParam.SUBJECT.toString());
-        DiscussionContent content = new DiscussionContent();
-
-        content.setSubject(subject);
-        long userId = userSession.getUser().getId();
-        content.addPost(userId);
-        content.addParticipants(userId);
-        return content;
     }
 
     private void makeCategorySelect(Model model, String main, String sub) {

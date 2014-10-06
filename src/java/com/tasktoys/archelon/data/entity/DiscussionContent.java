@@ -57,16 +57,34 @@ public class DiscussionContent {
     public void setSubject(String subject) {
         this.subject = subject;
     }
-
-    public void addPost(long AuthorId) {
+    
+    public void addPost(Post post) {
         if (posts == null) {
             posts = new ArrayList<>();
         }
-        Post post = new Post();
-        post.setAuthorId(AuthorId);
         posts.add(post);
     }
 
+    public void addPost(long authorId) {
+        if (authorId <= User.ILLEGAL_ID) {
+            return;
+        }
+        Post post = new Post();
+        post.setAuthorId(authorId);
+        addPost(post);
+    }
+
+    
+    public void addPost(long authorId, String discription) {
+        if (authorId <= User.ILLEGAL_ID || discription == null) {
+            return;
+        }
+        Post post = new Post();
+        post.setAuthorId(authorId);
+        post.setDescription(discription);
+        addPost(post);
+    }
+    
     public List<Post> getPosts() {
         return this.posts;
     }
