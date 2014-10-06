@@ -18,5 +18,4 @@ public interface DiscussionContentService {
     public DiscussionContent getDiscussionContent(long discussionId);
     public Post getLastPost(long discussionId);
     public void insertPost(long discussionId, DiscussionContent.Post post);
-    public void insertParticipants(long discussionId, long userId);
 }

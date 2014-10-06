@@ -82,7 +82,7 @@ public class DiscussionController {
         Post lastPost = discussionContentService.getLastPost(id);
         if (!post.equals(lastPost)) {
             discussionContentService.insertPost(id, post);
-            updateDiscussionProperties(id, userSession);
+            discussionService.updateDiscussionProperties(id, userSession.getUser());
         }
         updatePage(model, id);
         return VIEW;
@@ -132,21 +132,6 @@ public class DiscussionController {
         Post post = new Post();
         post.setDescription(params.get(POSTEDMESSAGE));
         return post;
-    }
-
-    private void updateDiscussionProperties(long discussionId, UserSession userSession) {
-        discussionService.incrementPosts(discussionId);
-        discussionService.updateUpdateTime(discussionId);
-
-        List<Long> participateMember = discussionContentService.getDiscussionContent(discussionId).getParticipateMember();
-        User author = userSession.getUser();
-        if (author != null) {
-            long userId = author.getId();
-            if (!participateMember.contains(userId)) {
-                discussionContentService.insertParticipants(discussionId, userId);
-                discussionService.incrementParticipants(discussionId);
-            }
-        }
     }
 
     private DateFormat createDateFormat(Locale locale) {

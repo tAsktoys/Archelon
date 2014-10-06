@@ -201,4 +201,19 @@ public class DiscussionServiceImpl implements DiscussionService {
         }
     }
 
+    @Override
+    public void updateDiscussionProperties(long discussionId, User author) {
+        incrementPosts(discussionId);
+        updateUpdateTime(discussionId);
+
+        List<Long> participateMember = discussionContentDao.findByDiscussionId(discussionId).getParticipateMember();
+        if (author != null) {
+            long userId = author.getId();
+            if (!participateMember.contains(userId)) {
+                discussionContentDao.insertParticipants(discussionId, userId);
+                incrementParticipants(discussionId);
+            }
+        }
+    }
+
 }

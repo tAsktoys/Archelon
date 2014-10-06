@@ -32,4 +32,5 @@ public interface DiscussionService {
     
     public void saveNewDiscussion(String subject, User author, int categoryId, String discription);
 
+    public void updateDiscussionProperties(long discussionId, User user);
 }
