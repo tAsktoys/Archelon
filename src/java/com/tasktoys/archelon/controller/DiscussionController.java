@@ -72,18 +72,8 @@ public class DiscussionController {
     public String handlePost(@PathVariable long id, @RequestParam Map<String, String> params, Model model,
             Locale locale, UserSession userSession) {
         dateFormat = createDateFormat(locale);
-        Post post;
         User author = userSession.getUser();
-        if (author == null) {
-            post = makeAnonymosPost(params);
-        } else {
-            post = makePost(params, author);
-        }
-        Post lastPost = discussionContentService.getLastPost(id);
-        if (!post.equals(lastPost)) {
-            discussionContentService.insertPost(id, post);
-            discussionService.updateDiscussionProperties(id, userSession.getUser());
-        }
+        discussionContentService.insertPost(id, makeAnonymosPost(params), author);
         updatePage(model, id);
         return VIEW;
     }
@@ -119,13 +109,6 @@ public class DiscussionController {
         }
         map.put(POSTTIMESTAMP, dateFormat.format(post.getPostTimeStamp()));
         return map;
-    }
-
-    private Post makePost(Map<String, String> params, User user) {
-        Post post = new Post();
-        post.setAuthorId(user.getId());
-        post.setDescription(params.get(POSTEDMESSAGE));
-        return post;
     }
 
     private Post makeAnonymosPost(Map<String, String> params) {

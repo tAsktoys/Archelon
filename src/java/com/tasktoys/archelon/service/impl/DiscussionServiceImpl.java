@@ -81,28 +81,27 @@ public class DiscussionServiceImpl implements DiscussionService {
     private List<Discussion> getNewestDiscussionListBySubCategoryWithOffset(int n, int categoryId, int offset) {
         return discussionDao.findNewestDiscussionListByCategoryId(n, categoryId, offset);
     }
-    
-    @Override
-    public void updateUpdateTime(long discussionId) {
+
+    private void updateUpdateTime(long discussionId) {
         long unixtime = System.currentTimeMillis();
         discussionDao.updateUpdateTime(discussionId, new Timestamp(unixtime));
     }
-    
-    @Override
-    public void incrementParticipants(long discussionId) {
+
+    private void incrementParticipants(long discussionId) {
         discussionDao.incrementParticipants(discussionId);
     }
-    
-    @Override
-    public void incrementPosts(long discussionId) {
+
+    private void incrementPosts(long discussionId) {
         discussionDao.incrementPosts(discussionId);
     }
 
-    /** 
-     * Replace <code>long</code> author id to <code>String</code> author name in discussions
-     * 
+    /**
+     * Replace <code>long</code> author id to <code>String</code> author name in
+     * discussions
+     *
      * @param dls list of discussions
-     * @return list of discussions converted to maps with replacing author id to author name 
+     * @return list of discussions converted to maps with replacing author id to
+     * author name
      */
     private List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls) {
         List<Map<String, String>> mls = new ArrayList<>();
@@ -153,7 +152,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         return Collections.singletonMap(name,
                 replaceAuthorIDToAuthorName(getNewestDiscussionListBySubCategoryWithOffset(pageSize, subId, offset)));
     }
-    
+
     private int calculateOffset(int pageNumber, int pageSize) {
         return pageSize * (pageNumber - 1);
     }
@@ -168,8 +167,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         insertDiscussionContent(content, authorId);
         activityService.discussionMadeBy(author);
     }
-    
-    
+
     private Discussion makeNewDiscussion(String subject, long authorId, int categoryId) {
         Discussion.Builder builder = new Discussion.Builder();
         builder.subject(subject);
@@ -185,7 +183,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         content.addParticipants(authorId);
         return content;
     }
-    
+
     private void insertDiscussionContent(DiscussionContent content, long authorId) {
         List<Discussion> discussionList = discussionDao.findNewestDiscussionList(1); // TODO: replace by findDiscussionByAuthor
         for (Discussion d : discussionList) {
@@ -193,7 +191,7 @@ public class DiscussionServiceImpl implements DiscussionService {
                 content.setDiscussionId(d.getID());
             }
         }
-        
+
         try {
             discussionContentDao.insert(content);
         } catch (DuplicateKeyException e) {

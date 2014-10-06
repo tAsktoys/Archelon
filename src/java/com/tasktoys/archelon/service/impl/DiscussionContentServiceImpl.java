@@ -6,7 +6,9 @@ package com.tasktoys.archelon.service.impl;
 import com.tasktoys.archelon.data.dao.mongodb.MongoDbDiscussionContentDao;
 import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
+import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
+import com.tasktoys.archelon.service.DiscussionService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DiscussionContentServiceImpl implements DiscussionContentService {
     
+    @Autowired
+    private DiscussionService discussionService;
     @Autowired
     private MongoDbDiscussionContentDao mongoDbDiscussionContentDao;
     
@@ -35,7 +39,15 @@ public class DiscussionContentServiceImpl implements DiscussionContentService {
     }
     
     @Override
-    public void insertPost(long discussionId, DiscussionContent.Post post) {
-        mongoDbDiscussionContentDao.insertPost(discussionId, post);
+    public void insertPost(long discussionId, Post post, User author) {
+        if (author != null) {
+            post.setAuthorId(author.getId());
+        }
+        Post lastPost = getLastPost(discussionId);
+        if (!post.equals(lastPost)) {
+            mongoDbDiscussionContentDao.insertPost(discussionId, post);
+            discussionService.updateDiscussionProperties(discussionId, author);
+        }
+
     }
 }
