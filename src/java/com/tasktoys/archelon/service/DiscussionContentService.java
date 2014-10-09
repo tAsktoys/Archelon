@@ -3,9 +3,10 @@
  */
 package com.tasktoys.archelon.service;
 
-import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 import com.tasktoys.archelon.data.entity.User;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Interface definision of discussion content interactions.
@@ -16,7 +17,6 @@ import com.tasktoys.archelon.data.entity.User;
  */
 public interface DiscussionContentService {
     
-    public DiscussionContent getDiscussionContent(long discussionId);
-    public Post getLastPost(long discussionId);
+    public Map<String, Map<String, Object>> createDiscussionContent(String name, long discussionId, User user, Locale locale);
     public void insertPost(long discussionId, Post post, User author);
 }
