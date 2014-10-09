@@ -62,7 +62,7 @@ public class ActivityServiceImpl implements ActivityService {
             builder.activityType(ActivityType.CREATE_DISCUSSION)
                     .userId(authorId)
                     .createdTime(madeDiscussion.getCreateTime())
-                    .targetDiscussionId(madeDiscussion.getID());
+                    .targetDiscussionId(madeDiscussion.getId());
             activityDao.insertActivity(builder.buildForInsert());
         }
     }

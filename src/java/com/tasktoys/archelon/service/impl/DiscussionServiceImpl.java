@@ -106,7 +106,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     private List<Map<String, String>> replaceAuthorIDToAuthorName(List<Discussion> dls) {
         List<Map<String, String>> mls = new ArrayList<>();
         for (Discussion d : dls) {
-            String author_name = userDao.findUserByID(d.getAuthorID()).getName();
+            String author_name = userDao.findUserByID(d.getAuthorId()).getName();
             mls.add(d.replaceAuthorIDToAuthorName(author_name));
         }
         return mls;
@@ -171,8 +171,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     private Discussion makeNewDiscussion(String subject, long authorId, int categoryId) {
         Discussion.Builder builder = new Discussion.Builder();
         builder.subject(subject);
-        builder.categoryID(categoryId);
-        builder.authorID(authorId);
+        builder.categoryId(categoryId);
+        builder.authorId(authorId);
         return builder.buildForInsert();
     }
 
@@ -187,8 +187,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     private void insertDiscussionContent(DiscussionContent content, long authorId) {
         List<Discussion> discussionList = discussionDao.findNewestDiscussionList(1); // TODO: replace by findDiscussionByAuthor
         for (Discussion d : discussionList) {
-            if (d.getAuthorID() == authorId) {
-                content.setDiscussionId(d.getID());
+            if (d.getAuthorId() == authorId) {
+                content.setDiscussionId(d.getId());
             }
         }
 

@@ -75,11 +75,11 @@ public class Discussion implements Serializable {
         this.posts = builder.posts;
     }
 
-    public Long getID() {
+    public long getId() {
         return this.id;
     }
 
-    public Long getAuthorID() {
+    public long getAuthorId() {
         return this.authorId;
     }
 
@@ -166,7 +166,7 @@ public class Discussion implements Serializable {
             return this;
         }
 
-        public Builder authorID(long authorId) {
+        public Builder authorId(long authorId) {
             if (authorId <= ILLEGAL_AUTHOR_ID) {
                 throw new IllegalArgumentException("illegal author id: " + authorId);
             }
@@ -174,7 +174,7 @@ public class Discussion implements Serializable {
             return this;
         }
 
-        public Builder categoryID(int categoryId) {
+        public Builder categoryId(int categoryId) {
             if (categoryId <= ILLEGAL_CATEGORY_ID) {
                 throw new IllegalArgumentException("illegal category id: " + categoryId);
             }
@@ -247,9 +247,6 @@ public class Discussion implements Serializable {
             if (authorId <= ILLEGAL_AUTHOR_ID) {
                 throw new IllegalStateException("author is not specified.");
             }
-            if (subject == null) {
-                throw new IllegalStateException("Subject is null.");
-            }
             if (categoryId <= ILLEGAL_CATEGORY_ID) {
                 throw new IllegalStateException("category id is not specified.");
             }
@@ -261,6 +258,9 @@ public class Discussion implements Serializable {
             }
             if (updateTime == null) {
                 throw new IllegalStateException("update time is null.");
+            }
+            if (subject == null) {
+                throw new IllegalStateException("Subject is null.");
             }
             if (participants <= ILLEGAL_PARTICIPANTS) {
                 throw new IllegalStateException("participants is not specified.");
