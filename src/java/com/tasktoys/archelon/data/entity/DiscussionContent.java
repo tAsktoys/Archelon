@@ -5,6 +5,7 @@ package com.tasktoys.archelon.data.entity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
@@ -57,7 +58,7 @@ public class DiscussionContent {
     public void setSubject(String subject) {
         this.subject = subject;
     }
-    
+
     public void addPost(Post post) {
         if (posts == null) {
             posts = new ArrayList<>();
@@ -74,7 +75,6 @@ public class DiscussionContent {
         addPost(post);
     }
 
-    
     public void addPost(long authorId, String discription) {
         if (authorId <= User.ILLEGAL_ID || discription == null) {
             return;
@@ -84,8 +84,11 @@ public class DiscussionContent {
         post.setDescription(discription);
         addPost(post);
     }
-    
+
     public List<Post> getPosts() {
+        if (posts == null) {
+            return Collections.emptyList();
+        }
         return this.posts;
     }
 
@@ -97,15 +100,18 @@ public class DiscussionContent {
     }
 
     public List<Long> getParticipateMember() {
+        if (participants == null) {
+            return Collections.emptyList();
+        }
         return participants;
     }
 
     public boolean isParticipate(long userId) {
-        return participants.contains(userId);
+        return participants == null ? false : participants.contains(userId);
     }
 
     public int getParticipants() {
-        return participants.size();
+        return participants == null ? 0 : participants.size();
     }
 
     public long getFirstAuthorId() {
