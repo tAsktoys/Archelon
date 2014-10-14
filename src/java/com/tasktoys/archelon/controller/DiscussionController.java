@@ -3,20 +3,11 @@
  */
 package com.tasktoys.archelon.controller;
 
-import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.DiscussionContent.Post;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.DiscussionContentService;
-import com.tasktoys.archelon.service.DiscussionService;
-import com.tasktoys.archelon.service.UserService;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

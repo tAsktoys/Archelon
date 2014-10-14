@@ -15,6 +15,7 @@ import com.tasktoys.archelon.service.DiscussionService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -43,18 +44,21 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     static final Logger log = Logger.getLogger(DiscussionServiceImpl.class.getName());
 
-    @Override
-    public int countDiscussion() {
+    private static final String PAGE_NUMBER_LIST = "pageNumberList";
+    private static final String PREVIOUS = "previous";
+    private static final String CURRENT = "current";
+    private static final String NEXT = "next";
+    private static final String END = "end";
+
+    private int countDiscussion() {
         return discussionDao.countDiscussions();
     }
 
-    @Override
-    public int countDiscussionByMainCategory(int mainId) {
+    private int countDiscussionByMainCategory(int mainId) {
         return discussionDao.countDiscussionsByCategoryList(categoryDao.findSubCategories(mainId));
     }
 
-    @Override
-    public int countDiscussionBySubCategory(int subId) {
+    private int countDiscussionBySubCategory(int subId) {
         return discussionDao.countDiscussionsByCategoryId(subId);
     }
 
@@ -214,4 +218,62 @@ public class DiscussionServiceImpl implements DiscussionService {
         }
     }
 
+    @Override
+    public Map<String, Map<String, Object>> createDiscussionLink(String name,
+            int listSize, int currentPageNumber) {
+        int endPageNumber = calculateEndPageNumber(countDiscussion(), listSize);
+        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
+    }
+
+    private int calculateEndPageNumber(int discussionNumber, int size) {
+        return (int) Math.ceil((double) discussionNumber / size);
+    }
+
+    private Map<String, Map<String, Object>> createDiscussionLinkByEndPage(
+            String name, int currentPageNumber, int endPageNumber) {
+        Map<String, Object> subModel = createPageNumbers(endPageNumber);
+        return Collections.singletonMap(name,
+                setPageNumbers(subModel, currentPageNumber, endPageNumber));
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> createDiscussionLinkByMainCategory(
+            String name, int listSize, int currentPageNumber, int mainId) {
+        int endPageNumber = calculateEndPageNumber(countDiscussionByMainCategory(mainId), listSize);
+        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> createDiscussionLinkBySubCategory(
+            String name, int listSize, int currentPageNumber, int subId) {
+        int endPageNumber = calculateEndPageNumber(countDiscussionBySubCategory(subId), listSize);
+        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
+    }
+
+    private Map<String, Object> createPageNumbers(int endPageNumber) {
+        Map<String, Object> subModel = new HashMap<>();
+        List<Integer> pageNumberList = new ArrayList<>();
+        for (int i = 1; i <= endPageNumber; i++) {
+            pageNumberList.add(i);
+        }
+        subModel.put(PAGE_NUMBER_LIST, pageNumberList);
+        return subModel;
+    }
+
+    private Map<String, Object> setPageNumbers(Map<String, Object> subModel,
+            int currentPageNumber, int endPageNumber) {
+        int previousPageNumber = currentPageNumber - 1;
+        int nextPageNumber = currentPageNumber + 1;
+        if (currentPageNumber >= 1) {
+            previousPageNumber = 1;
+        }
+        if (endPageNumber <= nextPageNumber) {
+            nextPageNumber = endPageNumber;
+        }
+        subModel.put(PREVIOUS, previousPageNumber);
+        subModel.put(CURRENT, currentPageNumber);
+        subModel.put(NEXT, nextPageNumber);
+        subModel.put(END, endPageNumber);
+        return subModel;
+    }
 }

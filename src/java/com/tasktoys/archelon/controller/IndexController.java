@@ -3,18 +3,14 @@
  */
 package com.tasktoys.archelon.controller;
 
-import com.tasktoys.archelon.data.entity.Discussion;
-import com.tasktoys.archelon.data.entity.DiscussionContent;
 import com.tasktoys.archelon.data.entity.User;
 import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.CategoryService;
 import com.tasktoys.archelon.service.DiscussionService;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +45,7 @@ public class IndexController {
     private static final String CREATE_DISCUSSION = "create_discussion";
     private static final String MAIN_CATEGORY_LIST = "main_category_list";
     private static final String SUB_CATEGORY_LIST = "sub_category_list";
+    private static final String PAGE_NUMBERS = "page_numbers";
 
     private enum CategorySelectionParam {
 
@@ -73,14 +70,10 @@ public class IndexController {
     private static final String DISCUSSION_LIST = "discussion_list";
     private static final int DISCUSSION_LIST_SIZE = 10;
 
-    private static final String PAGE_NUMBER_LIST = "pageNumberList";
     private static final String MAIN_ID = "mainId";
     private static final String SUB_ID = "subId";
 
     private static final int DEFAULT_PAGE_NUMBER = 1;
-    private static final String PREVIOUS_PAGE_NUMBER = "previousPageNumber";
-    private static final String CURRENT_PAGE_NUMBER = "currentPageNumber";
-    private static final String NEXT_PAGE_NUMBER = "nextPageNumber";
 
     private static final String ACTIVITY_LIST = "activity_list";
     private static final int ACTIVITY_LIST_SIZE = 5;
@@ -108,8 +101,9 @@ public class IndexController {
             @PathVariable int mainId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
         model.addAllAttributes(createDiscussionsByMainCategory(mainId, pageNumber));
-        model.addAllAttributes(createDiscussionLink(pageNumber, mainId));
+        model.addAllAttributes(createDiscussionLinkByMainCategory(pageNumber, mainId));
         model.addAllAttributes(createActivityList());
+        setChoosenCategoryId(model, mainId);
         return VIEW;
     }
 
@@ -118,8 +112,9 @@ public class IndexController {
             @PathVariable int mainId, @PathVariable int subId, Model model) {
         model.addAllAttributes(createCategorySelects(mainId));
         model.addAllAttributes(createDiscussionsBySubCategory(subId, pageNumber));
-        model.addAllAttributes(createDiscussionLink(pageNumber, mainId, subId));
+        model.addAllAttributes(createDiscussionLinkBySubCategory(pageNumber, subId));
         model.addAllAttributes(createActivityList());
+        setChoosenCategoryId(model, mainId, subId);
         return VIEW;
     }
 
@@ -140,7 +135,7 @@ public class IndexController {
             User author = userSession.getUser();
             int category = Integer.parseInt(params.get(CreateDiscussionParam.CATEGORY_ID.toString()));
             String description = params.get(CreateDiscussionParam.DESCRIPTION.toString());
-            
+
             discussionService.saveNewDiscussion(subject, author, category, description);
         }
         model.addAllAttributes(createDiscussions());
@@ -171,15 +166,14 @@ public class IndexController {
             int subId = Integer.valueOf(sub);
             model.addAllAttributes(createCategorySelects(mainId));
             model.addAllAttributes(createDiscussionsBySubCategory(subId));
-            model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER, mainId, subId));
-            model.addAttribute(MAIN_ID, mainId);
-            model.addAttribute(SUB_ID, subId);
+            model.addAllAttributes(createDiscussionLinkBySubCategory(DEFAULT_PAGE_NUMBER, subId));
+            setChoosenCategoryId(model, mainId, subId);
         } else if (isMainIdChoosen) {
             int mainId = Integer.valueOf(main);
             model.addAllAttributes(createCategorySelects(mainId));
             model.addAllAttributes(createDiscussionsByMainCategory(mainId));
-            model.addAllAttributes(createDiscussionLink(DEFAULT_PAGE_NUMBER, mainId));
-            model.addAttribute(MAIN_ID, mainId);
+            model.addAllAttributes(createDiscussionLinkByMainCategory(DEFAULT_PAGE_NUMBER, mainId));
+            setChoosenCategoryId(model, mainId);
         } else {
             model.addAllAttributes(createMainCategorySelect());
             model.addAllAttributes(createDiscussions());
@@ -238,51 +232,30 @@ public class IndexController {
                 DISCUSSION_LIST, pageNumber, DISCUSSION_LIST_SIZE, subId);
     }
 
-    private Map<String, Object> createDiscussionLink(int currentPageNumber) {
-        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussion());
-        return createPageNumbers(currentPageNumber, endPageNumber);
+    private Model setChoosenCategoryId(Model model, int mainId) {
+        model.addAttribute(MAIN_ID, mainId);
+        return model;
     }
 
-    private int calculateEndPageNumber(int discussionNumber) {
-        return (int) Math.ceil((double) discussionNumber / DISCUSSION_LIST_SIZE);
+    private Model setChoosenCategoryId(Model model, int mainId, int subId) {
+        model.addAttribute(MAIN_ID, mainId);
+        model.addAttribute(SUB_ID, subId);
+        return model;
     }
 
-    private Map<String, Object> createDiscussionLink(int currentPageNumber, int mainId) {
-        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussionByMainCategory(mainId));
-        Map<String, Object> subModel = new HashMap<>();
-        subModel.putAll(createPageNumbers(currentPageNumber, endPageNumber));
-        subModel.put(MAIN_ID, mainId);
-        return subModel;
+    private Map<String, Map<String, Object>> createDiscussionLink(int currentPageNumber) {
+        return discussionService.createDiscussionLink(
+                PAGE_NUMBERS, DISCUSSION_LIST_SIZE, currentPageNumber);
     }
 
-    private Map<String, Object> createDiscussionLink(int currentPageNumber, int mainId, int subId) {
-        int endPageNumber = calculateEndPageNumber(discussionService.countDiscussionBySubCategory(subId));
-        Map<String, Object> subModel = new HashMap<>();
-        subModel.putAll(createPageNumbers(currentPageNumber, endPageNumber));
-        subModel.put(MAIN_ID, mainId);
-        subModel.put(SUB_ID, subId);
-        return subModel;
+    private Map<String, Map<String, Object>> createDiscussionLinkByMainCategory(int currentPageNumber, int mainId) {
+        return discussionService.createDiscussionLinkByMainCategory(
+                PAGE_NUMBERS, DISCUSSION_LIST_SIZE, currentPageNumber, mainId);
     }
 
-    private Map<String, Object> createPageNumbers(int currentPageNumber, int endPageNumber) {
-        Map<String, Object> subModel = new HashMap<>();
-        List<Integer> pageNumberList = new ArrayList<>();
-        for (int i = 1; i <= endPageNumber; i++) {
-            pageNumberList.add(i);
-        }
-        subModel.put(PAGE_NUMBER_LIST, pageNumberList);
-        int previousPageNumber = currentPageNumber - 1;
-        int nextPageNumber = currentPageNumber + 1;
-        if (currentPageNumber >= 1) {
-            previousPageNumber = 1;
-        }
-        if (endPageNumber <= nextPageNumber) {
-            nextPageNumber = endPageNumber;
-        }
-        subModel.put(PREVIOUS_PAGE_NUMBER, previousPageNumber);
-        subModel.put(CURRENT_PAGE_NUMBER, currentPageNumber);
-        subModel.put(NEXT_PAGE_NUMBER, nextPageNumber);
-        return subModel;
+    private Map<String, Map<String, Object>> createDiscussionLinkBySubCategory(int currentPageNumber, int subId) {
+        return discussionService.createDiscussionLinkBySubCategory(
+                PAGE_NUMBERS, DISCUSSION_LIST_SIZE, currentPageNumber, subId);
     }
 
     private Map<String, List<Map<String, Object>>> createActivityList() {
