@@ -24,6 +24,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryDao categoryDao;
     
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    
     @Override
     public Map<String, List<Map<String, String>>> createMainCategories(String name) {
         return Collections.singletonMap(name, toMapList(getMainCategoryList()));
@@ -46,8 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
         List<Map<String, String>> list = new ArrayList<>();
         for (Category category : categories) {
             Map<String, String> map = new HashMap<>(2);
-            map.put("id", Integer.toString(category.getId()));
-            map.put("name", category.getName());
+            map.put(ID, Integer.toString(category.getId()));
+            map.put(NAME, category.getName());
             list.add(map);
         }
         return list;
