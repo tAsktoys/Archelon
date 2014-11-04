@@ -50,20 +50,12 @@ public class DiscussionServiceImpl implements DiscussionService {
     private static final String NEXT = "next";
     private static final String END = "end";
 
-    private int countDiscussion() {
-        return discussionDao.countDiscussions();
-    }
-
     private int countDiscussionByMainCategory(int mainId) {
         return discussionDao.countDiscussionsByCategoryList(categoryDao.findSubCategories(mainId));
     }
 
     private int countDiscussionBySubCategory(int subId) {
         return discussionDao.countDiscussionsByCategoryId(subId);
-    }
-
-    private List<Discussion> getNewestDiscussionList(int n) {
-        return discussionDao.findNewestDiscussionList(n);
     }
 
     private List<Discussion> getNewestDiscussionListWithOffset(int n, int offset) {
@@ -221,7 +213,8 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public Map<String, Map<String, Object>> createDiscussionLink(String name,
             int listSize, int currentPageNumber) {
-        int endPageNumber = calculateEndPageNumber(countDiscussion(), listSize);
+        int total = discussionDao.countDiscussions();
+        int endPageNumber = calculateEndPageNumber(total, listSize);
         return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
     }
 
@@ -234,20 +227,6 @@ public class DiscussionServiceImpl implements DiscussionService {
         Map<String, Object> subModel = createPageNumbers(endPageNumber);
         return Collections.singletonMap(name,
                 setPageNumbers(subModel, currentPageNumber, endPageNumber));
-    }
-
-    @Override
-    public Map<String, Map<String, Object>> createDiscussionLinkByMainCategory(
-            String name, int listSize, int currentPageNumber, int mainId) {
-        int endPageNumber = calculateEndPageNumber(countDiscussionByMainCategory(mainId), listSize);
-        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
-    }
-
-    @Override
-    public Map<String, Map<String, Object>> createDiscussionLinkBySubCategory(
-            String name, int listSize, int currentPageNumber, int subId) {
-        int endPageNumber = calculateEndPageNumber(countDiscussionBySubCategory(subId), listSize);
-        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
     }
 
     private Map<String, Object> createPageNumbers(int endPageNumber) {
@@ -264,7 +243,7 @@ public class DiscussionServiceImpl implements DiscussionService {
             int currentPageNumber, int endPageNumber) {
         int previousPageNumber = currentPageNumber - 1;
         int nextPageNumber = currentPageNumber + 1;
-        if (currentPageNumber >= 1) {
+        if (currentPageNumber <= 1) {
             previousPageNumber = 1;
         }
         if (endPageNumber <= nextPageNumber) {
@@ -275,5 +254,19 @@ public class DiscussionServiceImpl implements DiscussionService {
         subModel.put(NEXT, nextPageNumber);
         subModel.put(END, endPageNumber);
         return subModel;
+    }
+    
+    @Override
+    public Map<String, Map<String, Object>> createDiscussionLinkByMainCategory(
+            String name, int listSize, int currentPageNumber, int mainId) {
+        int endPageNumber = calculateEndPageNumber(countDiscussionByMainCategory(mainId), listSize);
+        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> createDiscussionLinkBySubCategory(
+            String name, int listSize, int currentPageNumber, int subId) {
+        int endPageNumber = calculateEndPageNumber(countDiscussionBySubCategory(subId), listSize);
+        return createDiscussionLinkByEndPage(name, currentPageNumber, endPageNumber);
     }
 }

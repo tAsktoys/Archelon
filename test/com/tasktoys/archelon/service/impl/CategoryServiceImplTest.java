@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -20,9 +24,11 @@ import org.junit.Test;
  */
 public class CategoryServiceImplTest {
 
+    CategoryServiceImpl categoryServiceImpl = new CategoryServiceImpl();
+    Class categoryServiceImplClass = CategoryServiceImpl.class;
+    
     @Test
     public void testtoMapList() {
-        Class categoryServiceImpl = CategoryServiceImpl.class;
         List<Category> categoryList = new ArrayList<>();
         categoryList.add(Category.Builder.build(2, "c1"));
         categoryList.add(Category.Builder.build(3, "c2"));
@@ -38,12 +44,13 @@ public class CategoryServiceImplTest {
         expected.add(map2);
 
         try {
-            Method toMapList = categoryServiceImpl.getDeclaredMethod("toMapList", List.class);
+            Method toMapList = categoryServiceImplClass.getDeclaredMethod("toMapList", List.class);
             toMapList.setAccessible(true);
             List<Map<String, String>> result
                     = (List<Map<String, String>>) toMapList.invoke(categoryServiceImpl, categoryList);
             assertEquals(expected, result);
-        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+        } catch (IllegalArgumentException | NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException e) {
+            fail();
         }
     }
 }
