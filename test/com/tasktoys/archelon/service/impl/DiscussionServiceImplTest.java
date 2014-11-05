@@ -3,15 +3,20 @@
  */
 package com.tasktoys.archelon.service.impl;
 
-import com.tasktoys.archelon.data.entity.Category;
+import com.tasktoys.archelon.data.entity.Discussion;
+import com.tasktoys.archelon.data.entity.Discussion.Builder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
@@ -24,6 +29,45 @@ public class DiscussionServiceImplTest {
 
     DiscussionServiceImpl discussionServiceImpl = new DiscussionServiceImpl();
     Class discussionServiceImplClass = DiscussionServiceImpl.class;
+
+    @Test
+    public void testreplacedMap() {
+        Class[] argsType = {Discussion.class, String.class};
+        Discussion discussion = new Builder()
+                .id(1)
+                .state(Discussion.State.ACTIVE)
+                .authorId(2)
+                .categoryId(3)
+                .createTime(new Timestamp(3))
+                .updateTime(new Timestamp(3))
+                .subject("hoge")
+                .participants(5)
+                .posts(6)
+                .build();
+        
+        try {
+            Method method = discussionServiceImplClass.getDeclaredMethod("replacedMap", argsType);
+            method.setAccessible(true);
+            Map<String, String> result 
+                    = (Map<String, String>) method.invoke(discussionServiceImpl, discussion, "replace");
+            assertEquals("replace", result.get("authorId"));
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testcalculateOffset() {
+        Class[] argsType = {int.class, int.class};
+        try {
+            Method method = discussionServiceImplClass.getDeclaredMethod("calculateOffset", argsType);
+            method.setAccessible(true);
+            int result = (int) method.invoke(discussionServiceImpl, 3, 10);
+            assertEquals(20, result);
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
+            fail();
+        }
+    }
 
     @Test
     public void testcalculateEndPageNumber() {

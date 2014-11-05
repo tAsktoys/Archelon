@@ -5,7 +5,7 @@ package com.tasktoys.archelon.data.entity;
 
 import com.tasktoys.archelon.data.entity.Discussion.Builder;
 import java.sql.Timestamp;
-import static org.junit.Assert.assertEquals;
+import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class DiscussionTest {
                 .subject("hoge")
                 .buildForInsert();
 
-        assertEquals(Discussion.ILLEGAL_ID, discussion.getId());
+        assertEquals(Builder.ILLEGAL_ID, discussion.getId());
         assertEquals(2, discussion.getAuthorId());
         assertEquals(3, discussion.getCategoryId());
         assertEquals(discussion.getCreateTime(), discussion.getUpdateTime());
@@ -223,5 +223,34 @@ public class DiscussionTest {
                 .authorId(2)
                 .categoryId(3)
                 .buildForInsert();
+    }
+
+    @Test
+    public void testtoMap() {
+        Timestamp created = new Timestamp(3);
+        Timestamp updated = new Timestamp(4);
+        Discussion discussion = new Builder()
+                .id(1)
+                .state(Discussion.State.ACTIVE)
+                .authorId(2)
+                .categoryId(3)
+                .createTime(created)
+                .updateTime(updated)
+                .subject("hoge")
+                .participants(5)
+                .posts(6)
+                .build();
+
+        Map<String, String> mapped = discussion.toMap();
+        assertEquals(10, mapped.size());
+        assertEquals("1", mapped.get("id"));
+        assertEquals(Discussion.State.ACTIVE.toString(), mapped.get("state"));
+        assertEquals("2", mapped.get("authorId"));
+        assertEquals("3", mapped.get("categoryId"));
+        assertEquals(created.toString(), mapped.get("createTime"));
+        assertEquals(updated.toString(), mapped.get("updateTime"));
+        assertEquals("hoge", mapped.get("subject"));
+        assertEquals("5", mapped.get("participants"));
+        assertEquals("6", mapped.get("posts"));
     }
 }
