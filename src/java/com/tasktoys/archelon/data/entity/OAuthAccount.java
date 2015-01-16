@@ -3,9 +3,6 @@
  */
 package com.tasktoys.archelon.data.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * @author mikan

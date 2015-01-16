@@ -63,27 +63,27 @@
 
                     <!-- Link to next and previous pages -->
                     <c:if test="${mainId != null and subId == null}">
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}">Prev</a>
-                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.previous}/mainid/${mainId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${page_numbers.pageNumberList}">
                             <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.next}/mainid/${mainId}">Next</a>
                     </c:if>
 
                     <c:if test="${mainId != null and subId != null}">
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}/mainid/${mainId}/subid/${subId}">Prev</a>
-                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.previous}/mainid/${mainId}/subid/${subId}">Prev</a>
+                        <c:forEach var="pageNumber" items="${page_numbers.pageNumberList}">
                             <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}/mainid/${mainId}/subid/${subId}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}/mainid/${mainId}/subid/${subId}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.next}/mainid/${mainId}/subid/${subId}">Next</a>
                     </c:if>
 
                     <c:if test="${mainId == null}">
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${previousPageNumber}">Prev</a>
-                        <c:forEach var="pageNumber" items="${pageNumberList}">
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.previous}">Prev</a>
+                        <c:forEach var="pageNumber" items="${page_numbers.pageNumberList}">
                             <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${pageNumber}">[${pageNumber}]</a>
                         </c:forEach>
-                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${nextPageNumber}">Next</a>
+                        <a href="<spring:eval expression="@properties.getProperty('contextpath')" />page/${page_numbers.next}">Next</a>
                     </c:if>
                     <br />
                 </div>
@@ -104,7 +104,7 @@
                                             <spring:message code="category.missing" />
                                         </c:if>
                                         <c:if test="${subId != null}">
-                                            <select name="sub_category_id">
+                                            <select name="category_id">
                                                 <c:forEach var="item" items="${sub_category_list}">
                                                     <c:if test="${subId eq item.id}">
                                                         <option value="${item.id}">${item.name}</option>

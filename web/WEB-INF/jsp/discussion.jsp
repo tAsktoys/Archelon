@@ -12,7 +12,7 @@
         <!-- Style fragment -->
         <%@include file="/WEB-INF/jspf/style.jspf" %>
 
-        <title>Discussion</title>
+        <title>${discussion_content.subject}</title>
     </head>
     <body>
         <!-- Header fragment -->
@@ -21,13 +21,12 @@
         <div id="main">
 
             <div id="discussion_theme">
-                ${theme}
+                ${discussion_content.subject}
             </div>
-            
+
             <div id="discussion_log">
                 <ul id="discussion_log_list">
-                    <c:forEach var="item" items="${discussion_log}">
-                       
+                    <c:forEach var="item" items="${discussion_content.posts}">
                         <li class="${item.type}">
                             <img src="${item.icon}" alt="" width="50" heigth="50" class="${item.type}">
                             <div class="${item.type}">
@@ -35,15 +34,18 @@
                                     <p><spring:message code="user.default.name" /></p>
                                 </c:if>
                                 <c:if test="${item.username != null}">
-                                <p><a href="${item.userpage}">${item.username}</a></p>                                    
+                                    <p>
+                                        <a href="${item.userpage}">${item.username}</a>
+                                    </p>                                    
                                 </c:if>
-                                <p>${item.message} ${item.postTimeStamp} </p> 
+                                <p>${item.message}</p>
+                                <p>${item.postTimeStamp}</p> 
                             </div>
                         </li>
                     </c:forEach>
                 </ul>
             </div>
-            
+
             <form action="<spring:eval expression="@properties.getProperty('contextpath')" />discussion/${id}" method="post" id="discussion_form">
                 <div id="discussion_selectors">
                     <input type="checkbox" name="q1" value="text" checked>text

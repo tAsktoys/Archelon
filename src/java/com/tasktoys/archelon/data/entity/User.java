@@ -4,10 +4,14 @@
 package com.tasktoys.archelon.data.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -24,6 +28,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 public final class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final long ILLEGAL_ID = -1;
 
     /**
      * Archelon-unique user id.
@@ -197,10 +203,11 @@ public final class User implements Serializable {
         builder.location(place);
         return builder.build();
     }
-    
+
     /**
      * Convert <code>User</code> propaties to Map.
-     * @return 
+     *
+     * @return
      */
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
@@ -222,11 +229,12 @@ public final class User implements Serializable {
         map.put("facebookSecret", (facebook == null ? null : facebook.getAccessSecret()));
         return map;
     }
-    
+
     /**
-     * Convert <code>User</code> propaties to Map without information 
-     * with security risk.
-     * @return 
+     * Convert <code>User</code> propaties to Map without information with
+     * security risk.
+     *
+     * @return
      */
     public Map<String, String> toSecureMap() {
         Map<String, String> map = toMap();
@@ -239,10 +247,10 @@ public final class User implements Serializable {
     }
 
     public Object[] toObject() {
-        Object[] twitterobj = (twitter == null ? new Object[]{ null, null, null } : twitter.toObject());
-        Object[] facebookobj = (facebook == null ? new Object[]{ null, null, null } : facebook.toObject()); 
+        Object[] twitterobj = (twitter == null ? new Object[]{null, null, null} : twitter.toObject());
+        Object[] facebookobj = (facebook == null ? new Object[]{null, null, null} : facebook.toObject());
         return new Object[]{
-            (id == Builder.ILLEGAL_ID ? null : id), state.ordinal(), name,
+            (id == ILLEGAL_ID ? null : id), state.ordinal(), name,
             email, password, description, birthdate, location, affiliate, url,
             twitterobj[0], twitterobj[1], twitterobj[2],
             facebookobj[0], facebookobj[1], facebookobj[2]};
@@ -256,10 +264,12 @@ public final class User implements Serializable {
     public static class Builder {
 
         private static final String DATE_FORMAT_STRING = "yyyyMMdd";
-        public static final SimpleDateFormat DATE_FORMAT
+        private static final SimpleDateFormat DATE_FORMAT
                 = new SimpleDateFormat(DATE_FORMAT_STRING);
 
-        public static final long ILLEGAL_ID = -1;
+        private static final int MAX_STRING_LENGTH = 64;
+        private static final int MAX_TWITTER_ID_LENGTH = 20;
+        private static final int MAX_FACEBOOK_ID_LENGTH = 64;
 
         private long id = ILLEGAL_ID;
         private State state = null;
@@ -300,193 +310,282 @@ public final class User implements Serializable {
          * Set user id.
          *
          * @param id user id
+         * @return
          * @throws IllegalArgumentException If specify illegal value
          */
-        public void id(long id) {
-            if (id < 0) {
-                throw new IllegalArgumentException("wrong id: " + id);
+        public Builder id(long id) {
+            if (id <= ILLEGAL_ID) {
+                throw new IllegalArgumentException("id is illegal: " + id);
             }
-            // TODO: check duplicate id here.
             this.id = id;
+            return this;
         }
 
         /**
          * Set user state.
          *
          * @param stateValue state
+         * @return
          * @throws NullPointerException If specify null
          */
-        public void state(int stateValue) {
+        public Builder state(int stateValue) {
             for (State s : State.values()) {
                 if (stateValue == s.ordinal()) {
                     this.state = s;
-                    return;
+                    return this;
                 }
             }
-            throw new IllegalArgumentException("illegal state: " + stateValue);
+            throw new IllegalArgumentException("state is illegal: " + stateValue);
         }
 
         /**
          * Set user state.
          *
          * @param state state
+         * @return
          */
-        public void state(State state) {
+        public Builder state(State state) {
+            if (state == null) {
+                throw new NullPointerException("state is null.");
+            }
             this.state = state;
+            return this;
         }
 
         /**
          * Set user name.
          *
          * @param name user name
+         * @return
          * @throws NullPointerException If specify null
          */
-        public void name(String name) {
+        public Builder name(String name) {
             if (name == null) {
                 throw new NullPointerException("name is null.");
             }
-            // TODO: length check
+            if (MAX_STRING_LENGTH < name.length()) {
+                throw new IllegalArgumentException("name is too long: " + name);
+            }
             this.name = name;
+            return this;
         }
 
         /**
          * Set e-mail address.
          *
          * @param email e-mail address
+         * @return
          * @throws NullPointerException If specify null
          * @throws IllegalArgumentException If specify illegal format
          * @see InternetAddress#validate()
          */
-        public void email(String email) {
+        public Builder email(String email) {
             if (email == null) {
                 throw new NullPointerException("email is null.");
             }
             if (!isValidEmailAddress(email)) {
                 throw new IllegalArgumentException("wrong email.");
             }
-            // TODO: length check
+            if (MAX_STRING_LENGTH < email.length()) {
+                throw new IllegalArgumentException("email is too long: " + email);
+            }
             this.email = email;
+            return this;
         }
 
         /**
          * Set user password.
          *
          * @param password user password
+         * @return
          * @throws NullPointerException If specify null
          * @throws IllegalArgumentException If specify empty string
          */
-        public void password(String password) {
+        public Builder password(String password) {
             if (password == null) {
                 throw new NullPointerException("password is null.");
             }
             if (password.isEmpty()) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("password is empty");
             }
-            // TODO: length check
+            if (MAX_STRING_LENGTH < password.length()) {
+                throw new IllegalArgumentException("password is too long: " + password);
+            }
             this.password = password;
+            return this;
         }
 
-        public void description(String description) {
-            if (description == null) {
-                return;
-            }
-            // TODO: length check
+        public Builder plainTextPassword(String plainTextPassword) {
+            return password(DigestUtils.sha256Hex(plainTextPassword));
+        }
+
+        public Builder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder nonEmptyDescription(String description) {
+            if (description != null && !description.isEmpty()) {
+                return description(description);
+            }
+            return this;
         }
 
         /**
          * Set birthdate.
          *
          * @param birthdate birthdate
-         * @throws IllegalArgumentException If specify invalid date
+         * @return
          */
-        public void birthdate(Date birthdate) {
-            if (birthdate == null) {
-                return;
-            }
+        public Builder birthdate(Date birthdate) {
             this.birthdate = birthdate;
+            return this;
         }
 
-        public void location(String place) {
-            if (place == null) {
-                return;
+        public Builder birthdate(String birthdate) {
+            Date date;
+            try {
+                date = DATE_FORMAT.parse(birthdate);
+            } catch (ParseException ex) {
+                throw new IllegalArgumentException("birthdate format is wrong: " + birthdate);
             }
-            // TODO: length check
-            this.location = place;
+            if (isFuture(date)) {
+                throw new IllegalArgumentException("birthdate is future: " + birthdate);
+            }
+            this.birthdate = date;
+            return this;
         }
 
-        public void affiliate(String affiliate) {
-            if (affiliate == null) {
-                return;
+        public Builder htmlDateFormatBirthdate(String birthdate) {
+            Date date = parseHtmlDate(birthdate);
+            if (isFuture(date)) {
+                throw new IllegalArgumentException("birthdate is future: " + date);
+            }
+            return birthdate(date);
+        }
+
+        public Builder nonEmptyBirthdate(String birthdate) {
+            if (birthdate != null && !birthdate.isEmpty()) {
+                return htmlDateFormatBirthdate(birthdate);
+            }
+            return this;
+        }
+
+        public Builder location(String location) {
+            if (location != null && MAX_STRING_LENGTH < location.length()) {
+                throw new IllegalArgumentException("location is too long: " + location);
+            }
+            this.location = location;
+            return this;
+        }
+
+        public Builder nonEmptyLocation(String location) {
+            if (location != null && !location.isEmpty()) {
+                return location(location);
+            }
+            return this;
+        }
+
+        public Builder affiliate(String affiliate) {
+            if (affiliate != null && MAX_STRING_LENGTH < affiliate.length()) {
+                throw new IllegalArgumentException("affiliate is too long: " + affiliate);
             }
             this.affiliate = affiliate;
+            return this;
         }
 
-        public void url(String url) {
-            if (url == null) {
-                return;
+        public Builder nonEmptyAffiliate(String affiliate) {
+            if (affiliate != null && !affiliate.isEmpty()) {
+                return affiliate(affiliate);
+            }
+            return this;
+        }
+
+        public Builder url(String url) {
+            if (url != null && MAX_STRING_LENGTH < url.length()) {
+                throw new IllegalArgumentException("url is too long: " + url);
             }
             this.url = url;
+            return this;
         }
 
-        public void twitterId(String id) {
+        public Builder nonEmptyUrl(String url) {
+            if (url != null && !url.isEmpty()) {
+                return url(url);
+            }
+            return this;
+        }
+
+        public Builder twitterId(String id) {
             if (id == null) {
-                return;
+                return this;
             }
             if (twitter == null) {
                 twitter = new OAuthAccount();
             }
+            if (MAX_TWITTER_ID_LENGTH < id.length()) {
+                throw new IllegalArgumentException("twitter id is too long: " + id);
+            }
             twitter.setId(id);
+            return this;
         }
 
-        public void twitterToken(String token) {
+        public Builder twitterToken(String token) {
             if (token == null) {
-                return;
+                return this;
             }
             if (twitter == null) {
                 twitter = new OAuthAccount();
             }
             twitter.setAccessToken(token);
+            return this;
         }
 
-        public void twitterSecret(String secret) {
+        public Builder twitterSecret(String secret) {
             if (secret == null) {
-                return;
+                return this;
             }
             if (twitter == null) {
                 twitter = new OAuthAccount();
             }
             twitter.setAccessSecret(secret);
+            return this;
         }
 
-        public void facebookId(String id) {
+        public Builder facebookId(String id) {
             if (id == null) {
-                return;
+                return this;
             }
             if (facebook == null) {
                 facebook = new OAuthAccount();
             }
+            if (MAX_FACEBOOK_ID_LENGTH < id.length()) {
+                throw new IllegalArgumentException("facebook id is too long: " + id);
+            }
             facebook.setId(id);
+            return this;
         }
 
-        public void facebookToken(String token) {
+        public Builder facebookToken(String token) {
             if (token == null) {
-                return;
+                return this;
             }
             if (facebook == null) {
                 facebook = new OAuthAccount();
             }
             facebook.setAccessToken(token);
+            return this;
         }
 
-        public void facebookSecret(String secret) {
+        public Builder facebookSecret(String secret) {
             if (secret == null) {
-                return;
+                return this;
             }
             if (facebook == null) {
                 facebook = new OAuthAccount();
             }
             facebook.setAccessSecret(secret);
+            return this;
         }
 
         /**
@@ -496,7 +595,7 @@ public final class User implements Serializable {
          * @throws IllegalStateException If not specify required information(s).
          */
         public User build() {
-            if (id == ILLEGAL_ID) {
+            if (id <= ILLEGAL_ID) {
                 throw new IllegalStateException("id not specified.");
             }
             if (state == null) {
@@ -559,7 +658,7 @@ public final class User implements Serializable {
          * otherwise
          * @see InternetAddress#validate()
          */
-        public boolean isValidEmailAddress(String email) {
+        public static boolean isValidEmailAddress(String email) {
             try {
                 InternetAddress emailAddr = new InternetAddress(email);
                 emailAddr.validate();
@@ -567,6 +666,42 @@ public final class User implements Serializable {
             } catch (AddressException ex) {
                 return false;
             }
+        }
+        
+        public static boolean isHtmlDateFormat(String date) {
+            try {
+                String[] yyyy_mm_dd = date.split("-");
+                Integer.parseInt(yyyy_mm_dd[0]);
+                Integer.parseInt(yyyy_mm_dd[1]);
+                Integer.parseInt(yyyy_mm_dd[2]);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                return false;
+            }
+            return true;
+        }
+        
+        private static Date parseHtmlDate(String date) {
+            int year, month, day;
+            try {
+                String[] yyyy_mm_dd = date.split("-");
+                year = Integer.parseInt(yyyy_mm_dd[0]);
+                month = Integer.parseInt(yyyy_mm_dd[1]) - 1;
+                day = Integer.parseInt(yyyy_mm_dd[2]);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("birthdate format is wrong: " + date);
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day, 0, 0, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
+        }
+        
+        public static boolean isFuture(String date) {
+            return isFuture(parseHtmlDate(date));
+        }
+
+        public static boolean isFuture(Date date) {
+            return date.compareTo(Calendar.getInstance().getTime()) > 0;
         }
     }
 }

@@ -159,8 +159,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
             Discussion.Builder builder = new Discussion.Builder();
             try {
                 builder.id((long) row.get(Column.ID.toString()));
-                builder.authorID((long) row.get(Column.AUTHOR_ID.toString()));
-                builder.categoryID((int) row.get(Column.CATEGORY_ID.toString()));
+                builder.authorId((long) row.get(Column.AUTHOR_ID.toString()));
+                builder.categoryId((int) row.get(Column.CATEGORY_ID.toString()));
                 builder.state((int) row.get(Column.STATE.toString()));
                 builder.createTime((Timestamp) row.get(Column.CREATE_TIME.toString()));
                 builder.updateTime((Timestamp) row.get(Column.UPDATE_TIME.toString()));
@@ -202,8 +202,8 @@ public class JdbcDiscussionDao implements DiscussionDao {
         public Discussion mapRow(ResultSet result, int row) throws SQLException {
             Builder builder = new Builder();
             builder.id(result.getLong(Column.ID.toString()));
-            builder.authorID(result.getLong(Column.AUTHOR_ID.toString()));
-            builder.categoryID(result.getInt(Column.CATEGORY_ID.toString()));
+            builder.authorId(result.getLong(Column.AUTHOR_ID.toString()));
+            builder.categoryId(result.getInt(Column.CATEGORY_ID.toString()));
             builder.state(result.getInt(Column.STATE.toString()));
             builder.createTime(result.getTimestamp(Column.CREATE_TIME.toString()));
             builder.updateTime(result.getTimestamp(Column.UPDATE_TIME.toString()));
