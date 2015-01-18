@@ -28,7 +28,9 @@
                 <ul id="user_information_list">
                     <c:forEach var="info" items="${overview}">
                         <c:if test="${info.value != null}">
-                            <li class="user_information_item"><spring:message code="${info.label}" />${info.value}</li>
+                            <li class="user_information_item">
+                                <spring:message code="${info.label}" />${info.value}
+                            </li>
                         </c:if>
                     </c:forEach>
                 </ul>
@@ -40,7 +42,14 @@
             <div id="user_activities">
                 <h3><spring:message code="user.activity.title" /></h3>
                 <c:forEach var="activity" items="${user_activity}">
-                    <div class="user_activity">${activity}</div>
+                    <div class="user_activity">
+                        ${activity.time}
+                        <c:forEach var="fragment" items="${activity.act}">
+                            <spring:message code="${fragment.prefix}" />
+                            ${fragment.string}
+                            <spring:message code="${fragment.suffix}" />
+                        </c:forEach>
+                    </div>
                 </c:forEach>
             </div>
 

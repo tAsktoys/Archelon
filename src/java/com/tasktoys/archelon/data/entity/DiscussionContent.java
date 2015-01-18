@@ -5,6 +5,7 @@ package com.tasktoys.archelon.data.entity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
@@ -31,6 +32,9 @@ public class DiscussionContent {
     @Field
     private List<Post> posts;
 
+    @Field
+    private List<Long> participants;
+
     public String getId() {
         return id;
     }
@@ -55,17 +59,59 @@ public class DiscussionContent {
         this.subject = subject;
     }
 
-    public void addPost(long AuthorId) {
+    public void addPost(Post post) {
         if (posts == null) {
             posts = new ArrayList<>();
         }
-        Post post = new Post();
-        post.setAuthorId(AuthorId);
         posts.add(post);
     }
 
+    public void addPost(long authorId) {
+        if (authorId <= User.ILLEGAL_ID) {
+            return;
+        }
+        Post post = new Post();
+        post.setAuthorId(authorId);
+        addPost(post);
+    }
+
+    public void addPost(long authorId, String discription) {
+        if (authorId <= User.ILLEGAL_ID || discription == null) {
+            return;
+        }
+        Post post = new Post();
+        post.setAuthorId(authorId);
+        post.setDescription(discription);
+        addPost(post);
+    }
+
     public List<Post> getPosts() {
+        if (posts == null) {
+            return Collections.emptyList();
+        }
         return this.posts;
+    }
+
+    public void addParticipants(long userId) {
+        if (participants == null) {
+            participants = new ArrayList<>();
+        }
+        participants.add(userId);
+    }
+
+    public List<Long> getParticipateMember() {
+        if (participants == null) {
+            return Collections.emptyList();
+        }
+        return participants;
+    }
+
+    public boolean isParticipate(long userId) {
+        return participants == null ? false : participants.contains(userId);
+    }
+
+    public int getParticipants() {
+        return participants == null ? 0 : participants.size();
     }
 
     public long getFirstAuthorId() {
@@ -77,7 +123,7 @@ public class DiscussionContent {
 
     public static class Post {
 
-        private long authorId;
+        private Long authorId;
         private Date postTimeStamp;
         private String description;
         private String math;
@@ -89,7 +135,7 @@ public class DiscussionContent {
             this.postTimeStamp = cal.getTime();
         }
 
-        public long getAuthorId() {
+        public Long getAuthorId() {
             return authorId;
         }
 
@@ -131,6 +177,17 @@ public class DiscussionContent {
 
         public Date getPostTimeStamp() {
             return postTimeStamp;
+        }
+
+        public boolean equals(Post post) {
+            if (post == null) {
+                return false;
+            }
+            return (authorId == null ? post.getAuthorId() == null : authorId.equals(post.getAuthorId()))
+                    && (description == null ? post.getDescription() == null : description.equals(post.getDescription()))
+                    && (math == null ? post.getMath() == null : math.equals(post.getMath()))
+                    && (fig == null ? post.getFig() == null : fig.equals(post.getFig()))
+                    && (svg == null ? post.getSvg() == null : svg.equals(post.getSvg()));
         }
     }
 }

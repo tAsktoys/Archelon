@@ -3,14 +3,14 @@
  */
 package com.tasktoys.archelon.service;
 
-import com.tasktoys.archelon.data.entity.Category;
 import java.util.List;
+import java.util.Map;
 /**
  *
  * @author YuichiroSato
  */
 public interface CategoryService {
     
-    public List<Category> getMainCategoryList();
-    public List<Category> getSubCategoryList(int selected_id);
+    public Map<String, List<Map<String, String>>> createMainCategories(String name);
+    public Map<String, List<Map<String, String>>> createSubCategories(String name, int mainId);
 }

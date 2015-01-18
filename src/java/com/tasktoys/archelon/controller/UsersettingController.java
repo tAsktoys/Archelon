@@ -4,10 +4,11 @@
 package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.User;
+import com.tasktoys.archelon.data.entity.User.Builder;
 import com.tasktoys.archelon.service.UserService;
-import java.util.Calendar;
 import java.util.Map;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class UsersettingController {
 
     @Autowired
     private UserService userService;
+    static final Logger log = Logger.getLogger(UsersettingController.class.getName());
 
     /**
      * User setting view.
@@ -97,6 +99,7 @@ public class UsersettingController {
         if (isCorrectPassword(userSession, params)) {
             return updateUserInformation(redirect, params, userSession);
         } else {
+            setUserValueToForm(model, userSession.getUser());
             return errorHandle(model, Error.USERSETTING_PASSWORD_MISSMATCH.toString());
         }
     }
@@ -107,6 +110,7 @@ public class UsersettingController {
         if (isCorrectPassword(userSession, params)) {
             return resetPassword(model, params, userSession);
         } else {
+            setUserValueToForm(model, userSession.getUser());
             return errorHandle(model, Error.PASSWORDRESET_PASSWORD_MISSMATCH.toString());
         }
     }
@@ -115,8 +119,9 @@ public class UsersettingController {
     public String handleWithdraw(@RequestParam Map<String, String> params, Model model, UserSession userSession) {
         model.addAttribute(ID, userSession.getName());
         if (isCorrectPassword(userSession, params)) {
-            return setUserStateToDeleted(userSession);
+            return setUserStateToWithdrew(userSession);
         } else {
+            setUserValueToForm(model, userSession.getUser());
             return errorHandle(model, Error.WITHDRAW_PASSWORD_MISSMATCH.toString());
         }
     }
@@ -134,14 +139,14 @@ public class UsersettingController {
         return user.isValidPasswordWithPlaneString(password);
     }
 
-    private String updateUserInformation(RedirectAttributes model, Map<String, String> params, UserSession userSession) {
-        User.Builder builder = new User.Builder();
+    private String updateUserInformation(RedirectAttributes model,
+            Map<String, String> params, UserSession userSession) {
 
-        builder.id(userSession.getUser().getId());
         // Get required fields.
         String userName = params.get(Param.USER_NAME.toString());
         String email = params.get(Param.EMAIL.toString());
 
+        // Error check
         if (userName == null || userName.isEmpty()) {
             return errorHandle(model, Error.NAME_MISS.toString());
         }
@@ -151,7 +156,7 @@ public class UsersettingController {
         if (email == null || email.isEmpty()) {
             return errorHandle(model, Error.EMAIL_MISS.toString());
         }
-        if (!builder.isValidEmailAddress(email)) {
+        if (!Builder.isValidEmailAddress(email)) {
             return errorHandle(model, Error.EMAIL_INVALID.toString());
         }
 
@@ -164,60 +169,35 @@ public class UsersettingController {
         String twitterId = params.get(Param.TWITTERID.toString());
         String facebookId = params.get(Param.FACEBOOKID.toString());
 
-        builder.name(userName);
-        builder.password(DigestUtils.sha256Hex(params.get(PASSWORD)));
-        builder.email(email);
-        builder.state(User.State.ACTIVE);
-        if (description != null && !description.isEmpty()) {
-            builder.description(description);
-        }
-
+        // Error check
         if (birthdate != null && !birthdate.isEmpty()) {
-            int year, month, day;
-            try {
-                String[] yyyy_mm_dd = birthdate.split("-");
-                year = Integer.parseInt(yyyy_mm_dd[0]);
-                month = Integer.parseInt(yyyy_mm_dd[1]);
-                day = Integer.parseInt(yyyy_mm_dd[2]);
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
-                if (isFuture(calendar)) {
-                    return errorHandle(model, Error.BIRTHDATE_FUTURE.toString());
-                }
-                builder.birthdate(calendar.getTime());
-            } catch (NumberFormatException e) {
+            if (!Builder.isHtmlDateFormat(birthdate)) {
                 return errorHandle(model, Error.BIRTHDATE_INVALID.toString());
             }
-        }
-        if (location != null && !location.isEmpty()) {
-            builder.location(location);
-        }
-        if (affiliate != null && !affiliate.isEmpty()) {
-            builder.affiliate(affiliate);
-        }
-        if (url != null && !url.isEmpty()) {
-            builder.url(url);
-        }
-        if (twitterId != null) {
-            builder.twitterId(null); // stub
-            builder.twitterToken(null);
-            builder.twitterSecret(null);
-        }
-        if (facebookId != null) {
-            builder.facebookId(null); // stub
-            builder.facebookToken(null);
-            builder.facebookSecret(null);
+            if (Builder.isFuture(birthdate)) {
+                return errorHandle(model, Error.BIRTHDATE_FUTURE.toString());
+            }
         }
 
-        try {
-            userService.updateUser(builder.build());
-            User current = userService.findUserByName(userName);
-            userSession.setUser(current);
-            setUserValueToForm(model, current);
-            return UserController.REDIRECT + "/" + current.getName();
-        } catch (IllegalStateException e) {
-            return REDIRECT + "/" + userSession.getName();
-        }
+        Builder builder = new Builder()
+                .id(userSession.getUser().getId())
+                .name(userName)
+                .plainTextPassword(params.get(PASSWORD))
+                .email(email)
+                .state(User.State.ACTIVE)
+                .nonEmptyDescription(description)
+                .nonEmptyBirthdate(birthdate)
+                .nonEmptyLocation(location)
+                .nonEmptyAffiliate(affiliate)
+                .nonEmptyUrl(url);
+        builder = twitterOAuth(twitterId, builder);
+        builder = facebookOAuth(facebookId, builder);
+
+        User current = builder.build();
+        userService.updateUser(current);
+        userSession.setUser(userService.findUserById(userSession.getUser().getId()));
+        setUserValueToForm(model, userSession.getUser());
+        return UserController.REDIRECT + "/" + current.getName();
     }
 
     private String errorHandle(Model model, String error_name) {
@@ -225,14 +205,21 @@ public class UsersettingController {
         return VIEW;
     }
 
-    private boolean isFuture(Calendar calendar) {
-        return calendar.compareTo(Calendar.getInstance()) > 0;
+    // TODO: implement
+    private Builder twitterOAuth(String id, Builder builder) {
+        return builder;
+    }
+
+    // TODO: implement
+    private Builder facebookOAuth(String id, Builder builder) {
+        return builder;
     }
 
     private String resetPassword(Model model, Map<String, String> params, UserSession userSession) {
-        User.Builder builder = new User.Builder(userSession.getUser());
         String userPassword = params.get(Param.NEW_USER_PASSWORD.toString());
         String userPasswordRepeat = params.get(Param.NEW_USER_PASSWORD_R.toString());
+
+        // Error check
         if (userPassword == null || userPassword.isEmpty()) {
             return errorHandle(model, Error.PASSWORD_MISS.toString());
         }
@@ -242,27 +229,24 @@ public class UsersettingController {
         if (!userPassword.equals(userPasswordRepeat)) {
             return errorHandle(model, Error.PASSWORD_MISSMATCH.toString());
         }
-        builder.password(DigestUtils.sha256Hex(userPassword));
-        try {
-            User current = builder.build();
-            userService.updateUser(current);
-            userSession.setUser(current);
-            return UserController.REDIRECT + "/" + current.getName();
-        } catch (IllegalStateException e) {
-            return REDIRECT;
-        }
+
+        User current = new Builder(userSession.getUser())
+                .plainTextPassword(userPassword)
+                .build();
+
+        userService.updateUser(current);
+        userSession.setUser(userService.findUserById(userSession.getUser().getId()));
+        setUserValueToForm(model, userSession.getUser());
+        return UserController.REDIRECT + "/" + current.getName();
     }
 
-    private String setUserStateToDeleted(UserSession userSession) {
-        User.Builder builder = new User.Builder(userSession.getUser());
-        builder.state(User.State.DELETED);
-        try {
-            User deleted = builder.build();
-            userService.updateUser(deleted);
-            userSession.clear();
-            return IndexController.VIEW;
-        } catch (IllegalStateException e) {
-            return REDIRECT;
-        }
+    private String setUserStateToWithdrew(UserSession userSession) {
+        User withdrew = new Builder(userSession.getUser())
+                .state(User.State.WITHDREW)
+                .build();
+
+        userService.updateUser(withdrew);
+        userSession.clear();
+        return IndexController.VIEW;
     }
 }

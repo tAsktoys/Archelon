@@ -4,6 +4,7 @@
 package com.tasktoys.archelon.controller;
 
 import com.tasktoys.archelon.data.entity.User;
+import com.tasktoys.archelon.service.ActivityService;
 import com.tasktoys.archelon.service.UserService;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,12 +38,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ActivityService activityService;
 
     private final String ID = "id";
     private final String NAME = "name";
     private final String DESCRIPTION = "description";
     private final String OVERVIEW = "overview";
-    private final String user_activity = "user_activity";
+    private final String USER_ACTIVITY = "user_activity";
 
     //Spring message values of each user infomation.
     private final String STATE_LABEL = "user.label.state";
@@ -53,61 +56,62 @@ public class UserController {
     private final String URL_LABEL = "user.label.url";
     private final String TWITTER_ID_LABEL = "user.label.twitter";
     private final String FACEBOOK_ID_LABEL = "user.label.facebook";
-    
+
     private final String LABEL = "label";
     private final String VALUE = "value";
+
+    private static final int ACTIVITY_SIZE = 10;
 
     @RequestMapping(method = RequestMethod.GET)
     public String handleEmptyRequest(Model model) {
         model.addAttribute(NAME, "Guest");
         updateUserInformation(model, null);
-        updateUserActivity(model);
         return VIEW;
     }
 
     @RequestMapping(value = "{name}", method = RequestMethod.GET)
     public String handleNameRequest(@PathVariable String name, Model model) {
-
         User user = userService.findUserByName(name);
         if (user == null) {
             model.addAttribute(NAME, "[NOT FOUND]");
-            return "user";
+            return VIEW;
         }
         model.addAttribute(NAME, name);
         updateUserInformation(model, user);
-        updateUserActivity(model);
+        updateUserActivity(model, user);
         return VIEW;
     }
 
     private void updateUserInformation(Model model, User user) {
         model.addAttribute(DESCRIPTION, user.getDescription());
-        List<Map<String, String>> mls = new ArrayList<>();
-        mls.add(makeLabelValueMap(STATE_LABEL, user.getState().toString()));
-        String birthdate = user.getBirthdate() == null ? null : String.valueOf(calcAge(user.getBirthdate())); 
-        mls.add(makeLabelValueMap(BIRTHDATE_LABEL, birthdate));
-        mls.add(makeLabelValueMap(LOCATION_LABEL, user.getLocation()));
-        mls.add(makeLabelValueMap(AFFILIATE_LABEL, user.getAffiliate()));
-        mls.add(makeLabelValueMap(URL_LABEL, user.getUrl()));
+        model.addAttribute(OVERVIEW, createOverview(user));
+    }
+    
+    private List<Map<String, String>> createOverview(User user) {
+        List<Map<String, String>> overview = new ArrayList<>(7);
+        String birthdate = user.getBirthdate() == null ? null : String.valueOf(calcAge(user.getBirthdate()));
         String twitterId = user.getTwitter() == null ? null : user.getTwitter().getId();
-        mls.add(makeLabelValueMap(TWITTER_ID_LABEL, twitterId));
         String facebookId = user.getFacebook() == null ? null : user.getFacebook().getId();
-        mls.add(makeLabelValueMap(FACEBOOK_ID_LABEL, facebookId));
-        model.addAttribute(OVERVIEW, mls);
+        
+        overview.add(makeLabelValueMap(STATE_LABEL, user.getState().toString()));
+        overview.add(makeLabelValueMap(BIRTHDATE_LABEL, birthdate));
+        overview.add(makeLabelValueMap(LOCATION_LABEL, user.getLocation()));
+        overview.add(makeLabelValueMap(AFFILIATE_LABEL, user.getAffiliate()));
+        overview.add(makeLabelValueMap(URL_LABEL, user.getUrl()));
+        overview.add(makeLabelValueMap(TWITTER_ID_LABEL, twitterId));
+        overview.add(makeLabelValueMap(FACEBOOK_ID_LABEL, facebookId));
+        return overview;
     }
 
     private Map<String, String> makeLabelValueMap(String label, String value) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(2);
         map.put(LABEL, label);
         map.put(VALUE, value);
         return map;
     }
 
-    private void updateUserActivity(Model model) {
-        List<String> list = new ArrayList<>();
-        list.add("\"hoge!hoge!hoge!\"");
-        list.add("\"Hooaaaaaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa  aaaa aaaaaaa aaaaaaaaa !!!!!!!!!! !!!!!!!!!!!! !!!!!!!! !!!!!!!!!!!! !!!! !!!!!!!!!!!!!1\"");
-        list.add("Discussion title \"Foo\" is made");
-        model.addAttribute(user_activity, list);
+    private void updateUserActivity(Model model, User user) {
+        model.addAllAttributes(activityService.createActivities(USER_ACTIVITY, user, ACTIVITY_SIZE));
     }
 
     private int calcAge(Date birthdate) {

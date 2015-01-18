@@ -3,46 +3,39 @@
  */
 package com.tasktoys.archelon.data.entity;
 
-import com.tasktoys.archelon.data.dao.DiscussionContentDao;
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author YuichiroSato
+ * @since 0.1
  */
-public class Discussion {
+public class Discussion implements Serializable {
+
+    /**
+     * Serial version 1.
+     *
+     * @since 0.2
+     */
+    private static final long serialVersionUID = 1L;
 
     private final long id;
-    private final long authorID;
-    private final int categoryID;
+    private final long authorId;
+    private final int categoryId;
     private final State state;
     private final Timestamp createTime;
     private final Timestamp updateTime;
     private final String subject;
     private final int participants;
     private final int posts;
-    
-    @Autowired
-    private DiscussionContentDao discussionContentDao;
-
-    @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
-    public enum Column {
-
-        ID, AUTHOR_ID, CATEGORY_ID, STATE, CREATE_TIME, UPDATE_TIME, SUBJECT,
-        PARTICIPANTS, POSTS;
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
 
     public enum State {
 
-        ACTIVE, INACTIVE, SOLVED, DELETED;
+        ACTIVE, INACTIVE, SOLVED, CLOSED;
 
         @Override
         public String toString() {
@@ -50,23 +43,10 @@ public class Discussion {
         }
     }
 
-    public Discussion(long id, long authorID, int categoryID, State state,
-            Timestamp createTime, Timestamp updateTime, String subject, int participants, int posts) {
-        this.id = id;
-        this.authorID = authorID;
-        this.categoryID = categoryID;
-        this.state = state;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-        this.subject = subject;
-        this.participants = participants;
-        this.posts = posts;
-    }
-
-    public Discussion(Builder builder) {
+    private Discussion(Builder builder) {
         this.id = builder.id;
-        this.authorID = builder.authorID;
-        this.categoryID = builder.categoryID;
+        this.authorId = builder.authorId;
+        this.categoryId = builder.categoryId;
         this.state = builder.state;
         this.createTime = builder.createTime;
         this.updateTime = builder.updateTime;
@@ -75,16 +55,16 @@ public class Discussion {
         this.posts = builder.posts;
     }
 
-    public Long getID() {
+    public long getId() {
         return this.id;
     }
 
-    public Long getAuthorID() {
-        return this.authorID;
+    public long getAuthorId() {
+        return this.authorId;
     }
 
     public int getCategoryId() {
-        return this.categoryID;
+        return this.categoryId;
     }
 
     public State getState() {
@@ -110,55 +90,41 @@ public class Discussion {
     public int getPosts() {
         return this.posts;
     }
-    
-    public DiscussionContent getContent() {
-        return discussionContentDao.findByDiscussionId(id);
-    }
 
     @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public Object[] toObject() {
         return new Object[]{
-            (id == Builder.ILLEGAL_ID ? null : id), (authorID == Builder.ILLEGAL_ID ? null : authorID),
-            categoryID, state.ordinal(), createTime, updateTime,
+            (id == Builder.ILLEGAL_ID ? null : id), (authorId == Builder.ILLEGAL_AUTHOR_ID ? null : authorId),
+            categoryId, state.ordinal(), createTime, updateTime,
             subject, participants, posts
         };
     }
 
-    @Deprecated // 特定の DB 向けのデータ構造をここに持ち込まないでください。
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
-        map.put(Column.ID.toString(), String.valueOf(id));
-        map.put(Column.AUTHOR_ID.toString(), String.valueOf(authorID));
-        map.put(Column.CATEGORY_ID.toString(), String.valueOf(categoryID));
-        map.put(Column.STATE.toString(), String.valueOf(state));
-        map.put(Column.CREATE_TIME.toString(), createTime.toString());
-        map.put(Column.UPDATE_TIME.toString(), updateTime.toString());
-        map.put(Column.SUBJECT.toString(), subject);
-        map.put(Column.PARTICIPANTS.toString(), String.valueOf(participants));
-        map.put(Column.POSTS.toString(), String.valueOf(posts));
-        return map;
-    }
-
-    public Map<String, String> replaceAuthorIDToAuthorName(String name) {
-        Map<String, String> map = this.toMap();
-        map.remove(Column.AUTHOR_ID.toString());
-        map.put(Column.AUTHOR_ID.toString(), name);
+        Field[] fields = Discussion.class.getDeclaredFields();
+        for (Field f : fields) {
+            try {
+                map.put(f.getName(), f.get(this).toString());
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+            }
+        }
         return map;
     }
 
     public static class Builder {
 
-        public static final long ILLEGAL_ID = -1;
-        public static final int ILLEGAL_CATEGORY = -1;
         public static final int ILLEGAL_PARTICIPANTS = -1;
+        public static final long ILLEGAL_ID = -1;
         public static final int ILLEGAL_POSTS = -1;
-
+        public static final int ILLEGAL_CATEGORY_ID = Category.ILLEGAL_ID;
+        public static final int DEFAULT_POSTS = 1;
         public static final int DEFAULT_PARTICIPANTS = 1;
-        public static final int DEFAULT_POSTS = 0;
+        public static final long ILLEGAL_AUTHOR_ID = User.ILLEGAL_ID;
 
         private long id = ILLEGAL_ID;
-        private long authorID = ILLEGAL_ID;
-        private int categoryID = ILLEGAL_CATEGORY;
+        private long authorId = ILLEGAL_AUTHOR_ID;
+        private int categoryId = ILLEGAL_CATEGORY_ID;
         private State state;
         private Timestamp createTime;
         private Timestamp updateTime;
@@ -170,88 +136,96 @@ public class Discussion {
 
         }
 
-        public void id(long id) {
-            if (id == ILLEGAL_ID) {
-                throw new NullPointerException("id is illegal.");
+        public Builder id(long id) {
+            if (id <= ILLEGAL_ID) {
+                throw new IllegalArgumentException("illegal id: " + id);
             }
             this.id = id;
+            return this;
         }
 
-        public void authorID(long authorID) {
-            if (authorID == ILLEGAL_ID) {
-                throw new NullPointerException("author id is illegal.");
+        public Builder authorId(long authorId) {
+            if (authorId <= ILLEGAL_AUTHOR_ID) {
+                throw new IllegalArgumentException("illegal author id: " + authorId);
             }
-            this.authorID = authorID;
+            this.authorId = authorId;
+            return this;
         }
 
-        public void categoryID(int categoryID) {
-            // here should be min_category_id <= category_id && category_id <= max_category_id
-            if (categoryID < 0) {
-                throw new NullPointerException("wrong category id : " + categoryID);
+        public Builder categoryId(int categoryId) {
+            if (categoryId <= ILLEGAL_CATEGORY_ID) {
+                throw new IllegalArgumentException("illegal category id: " + categoryId);
             }
-            this.categoryID = categoryID;
+            this.categoryId = categoryId;
+            return this;
         }
 
-        public void state(int state) {
+        public Builder state(int state) {
             for (State s : State.values()) {
                 if (state == s.ordinal()) {
                     this.state = s;
-                    return;
+                    return this;
                 }
             }
             throw new IllegalArgumentException("illegal state: " + state);
         }
 
-        public void state(State state) {
+        public Builder state(State state) {
+            if (state == null) {
+                throw new NullPointerException("state is null.");
+            }
             this.state = state;
+            return this;
         }
 
-        public void createTime(Timestamp createTime) {
+        public Builder createTime(Timestamp createTime) {
             if (createTime == null) {
                 throw new NullPointerException("create time is null.");
             }
             this.createTime = createTime;
+            return this;
         }
 
-        public void updateTime(Timestamp updateTime) {
+        public Builder updateTime(Timestamp updateTime) {
             if (updateTime == null) {
                 throw new NullPointerException("update time is null.");
             }
             this.updateTime = updateTime;
+            return this;
         }
 
-        public void subject(String subject) {
+        public Builder subject(String subject) {
             if (subject == null) {
                 throw new NullPointerException("subject is null.");
             }
             this.subject = subject;
+            return this;
         }
 
-        public void participants(int participants) {
-            if (participants < ILLEGAL_PARTICIPANTS) {
-                throw new NullPointerException("wrong participants : " + participants);
+        public Builder participants(int participants) {
+            if (participants <= ILLEGAL_PARTICIPANTS) {
+                throw new IllegalArgumentException("illegal participants: " + participants);
             }
             this.participants = participants;
+            return this;
         }
 
-        public void posts(int posts) {
-            if (posts < ILLEGAL_POSTS) {
-                throw new NullPointerException("wrong posts : " + posts);
+        public Builder posts(int posts) {
+            if (posts <= ILLEGAL_POSTS) {
+                throw new IllegalArgumentException("illegal posts: " + posts);
             }
             this.posts = posts;
+            return this;
         }
 
         public Discussion build() {
-            if (id == ILLEGAL_ID) {
+            if (id <= ILLEGAL_ID) {
                 throw new IllegalStateException("id is not specified.");
             }
-            if (authorID == ILLEGAL_ID) {
+            if (authorId <= ILLEGAL_AUTHOR_ID) {
                 throw new IllegalStateException("author is not specified.");
             }
-            if (subject == null) {
-                throw new IllegalStateException("Subject is null.");
-            }
-            if (categoryID == ILLEGAL_CATEGORY) {
+            if (categoryId <= ILLEGAL_CATEGORY_ID) {
                 throw new IllegalStateException("category id is not specified.");
             }
             if (state == null) {
@@ -263,10 +237,13 @@ public class Discussion {
             if (updateTime == null) {
                 throw new IllegalStateException("update time is null.");
             }
-            if (participants == ILLEGAL_PARTICIPANTS) {
+            if (subject == null) {
+                throw new IllegalStateException("Subject is null.");
+            }
+            if (participants <= ILLEGAL_PARTICIPANTS) {
                 throw new IllegalStateException("participants is not specified.");
             }
-            if (posts == ILLEGAL_POSTS) {
+            if (posts <= ILLEGAL_POSTS) {
                 throw new IllegalStateException("posts is not specified.");
             }
             return new Discussion(this);
@@ -276,16 +253,16 @@ public class Discussion {
             if (id != ILLEGAL_ID) {
                 throw new IllegalStateException("id is specified.");
             }
-            if (authorID == ILLEGAL_ID) {
+            if (authorId <= ILLEGAL_AUTHOR_ID) {
                 throw new IllegalStateException("author is not specified.");
             }
             if (subject == null) {
                 throw new IllegalStateException("Subject is null.");
             }
-            if (categoryID == ILLEGAL_CATEGORY) {
+            if (categoryId <= ILLEGAL_CATEGORY_ID) {
                 throw new IllegalStateException("category id is not specified.");
             }
-            
+
             this.state(State.ACTIVE);
             long unixtime = System.currentTimeMillis();
             this.createTime(new Timestamp(unixtime));
