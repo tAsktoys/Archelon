@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+    <!-- Define properties of database -->
+    <context:property-placeholder location="WEB-INF/classes/database.properties"/>
+    
+    <!-- Define data source -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}" />
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
+    
+    <!-- Configure MongoDB -->
+    <mongo:db-factory id="mongoDbFactory" dbname="discussion" host="${mongo.host}" port="${mongo.port}" />
+	
+    <mongo:mapping-converter id="mongoConverter" base-package="com.tasktoys.archelon.data">
+        <mongo:custom-converters base-package="com.tasktoys.archelon.data" />
+    </mongo:mapping-converter>
+	
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoDbFactory" />
+        <constructor-arg ref="mongoConverter" />
+        <property name="writeConcern" value="SAFE" />
+    </bean>
+	
+    <mongo:repositories base-package="com.tasktoys.archelon.data" />
+</beans>
